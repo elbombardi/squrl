@@ -1,2 +1,2 @@
-# Sushi
-URL Shortner API
+# squrl
+URL Shortner Service
