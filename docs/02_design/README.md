@@ -177,7 +177,8 @@ Here's a brief description of the API endpoints:
   }' \
   https://your-domain.com/api/admin/customer/
   ```
-  
+  Please note that you need to replace `{admin_api_key}` and `{customer_api_key}` with the actual API keys for authentication. Also, replace https://your-domain.com with the appropriate URL for your API endpoint.
+
 ## Redirection Server
 
 ## Database Design
