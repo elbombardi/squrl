@@ -19,6 +19,25 @@
 - The API server is stateless, it doesn't store any data, it only reads and writes data to the database.
 - The API server is secured using API key. Each customer has an API key stored in the database, and the admin has a specific API key stored as an environment variable.
 
+### Algorthims 
+
+#### Random alphanumeric string generator
+- The random n alphanumeric string generator is a function that generates a random alphanumeric string of n characters.
+- This function will be used to generate the customer prefix (3 characters), the short URL key (6 characters), and the API key (32 characters).
+- To guarantee unicity, the generated key will be checked against the database, if it already exists, a new key will be generated and checked again, until a unique key is found.
+
+```go
+...
+func generateRandomString(n int) string {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = alphanums[r.Intn(len(alphanums))]
+	}
+	return string(b)
+}
+```
+
 ### API Endpoints
 Here's a brief description of the API endpoints:
 1. Create Customer:
@@ -180,6 +199,11 @@ Here's a brief description of the API endpoints:
   Please note that you need to replace `{admin_api_key}` and `{customer_api_key}` with the actual API keys for authentication. Also, replace https://your-domain.com with the appropriate URL for your API endpoint.
 
 ## Redirection Server
+- The redirection server is the server that handle all the redirection requests from the public.
+- The redirection server is an http server, it's built using Golang & GoFiber (a fast HTTP framework).
+- The redirection server is stateless, it doesn't store any data, it only reads data from the database and stores clicks information.
+- It exposes a unique endpoint, which is responsible for handling all the redirection.
+- 
 
 ## Database Design
 
