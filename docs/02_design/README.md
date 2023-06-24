@@ -9,7 +9,6 @@
 - The separation between the two components has two benefits : 
     - The servers can be scaled independently of each other.
     - Security: The API server is not exposed to public users, it's only used by authenticated users. The redirection server is exposed to public users, it doesn't require authentication, but it doesn't modify customer and short URL data, it only reads data, and inserts tracking data.
-- This architecture can later be deployed as microservices, where each component is a microservice.
 
 <p align="center"><img src="images/ArchitectureDiagrams.drawio.png"/></p>
 
@@ -19,9 +18,7 @@
 - The API server is stateless, it doesn't store any data, it only reads and writes data to the database.
 - The API server is secured using API key. Each customer has an API key stored in the database, and the admin has a specific API key stored as an environment variable.
 
-### Algorthims 
-
-#### Random alphanumeric string generator
+### Simple random string generation algorithm : 
 - The random alphanumerics (a-z, A-Z and 0-9) string generator is a function that generates a random alphanumeric string of n characters.
 - This function will be used to generate the customer prefix (3 characters), the short URL key (6 characters), and the API key (32 characters).
 - To guarantee unicity, the generated key will be checked against the database, if it already exists, a new key will be generated and checked again, until a unique key is found.
@@ -201,8 +198,8 @@ Here's a brief description of the API endpoints:
 
 ## Redirection Server
 - The redirection server is the server that handle all the redirection requests from the public.
-- The redirection server is an http server, it's built using Golang & GoFiber (a fast HTTP framework).
-- The redirection server is stateless, it doesn't store any data, it only reads data from the database and stores clicks information.
+- The redirection server is an http server, it's built using Golang & **GoFiber** (a fast HTTP framework).
+- The redirection server is stateless, it doesn't store any data locally, it only reads and stores data from and to the database, which make it easy to scale.
 - It exposes a unique endpoint `https://<domain.name>/{customer_prefix}/{short_url_key}`
 - The end point has 2 functions: 
     - Redirect the user to the destination URL.
