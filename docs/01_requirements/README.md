@@ -30,14 +30,14 @@ This group is accessible only for Admin user.
 ### Group 2: Short URL APIs
 This group is accessible using a customer's username and password.
 
-#### 2. Create ShortURL:
+#### 1. Create ShortURL:
 - Purpose: Used to create a ShortURL.
 - Request data:
     - Long URL
 - Response data:
     - Short URL
 
-#### 3. Update ShortURL:
+#### 2. Update ShortURL:
 - Purpose: Used to update ShortURL information such as the long url or to disable/enable url tracking.
 - Request data:
     - Short URL

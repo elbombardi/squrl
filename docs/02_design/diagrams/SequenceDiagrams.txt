@@ -1,0 +1,171 @@
+title Submitting A New Order
+
+Frontend->Orders_API:POST /order
+activate Orders_API
+Orders_API->Database: Retreive Account Information
+Orders_API<--Database: Account Info.
+activate Orders_API
+Orders_API<-Orders_API: Input validation
+deactivate Orders_API
+alt #ffcccc Invalid Input
+Orders_API-#red>Frontend:HTTP 422, Error
+end
+Orders_API->Validation_API: Post /validateOrder
+activate Validation_API
+alt #ffcccc Invalid Order
+Validation_API-#red>Orders_API:HTTP 422, Error
+Orders_API-#red>Frontend:HTTP 422, Error
+end
+Validation_API-#green>Orders_API: HTTP 200, OK
+deactivate Validation_API
+Orders_API->Database: Store Order (Status: Submitting)
+Orders_API->Kafka: Submit Order (orders_<transactionType>_topic)
+activate Kafka
+Orders_API<--Kafka:
+deactivate Kafka
+Orders_API->Database: Update Order (Status: Pending)
+Orders_API-#green>Frontend: HTTP 200, Order UUID
+deactivate Orders_API
+
+
+------------------
+title Reading Order Information
+
+Frontend->Orders_API:GET /order/{UUID}
+activate Orders_API
+Orders_API->Database: Retreive Order by UUID
+activate Database
+alt #ffcccc Order Not Found
+Database->Orders_API: No Match 
+Orders_API-#red>Frontend:HTTP 404, "Order Not Found"
+end
+Database->Orders_API: Order
+deactivate Database
+Orders_API->Frontend: HTTP 200, Order Details
+deactivate Orders_API
+
+----------------
+title Listing Orders (Most recent first)
+
+Frontend->Orders_API:**Load Page 1** : \n GET /orders?offset=**0**&page_size=**10**
+activate Orders_API
+Orders_API->Database: SELECT * FROM order_info \nOrder By created_at Desc\nOffset **0**\nLimit **10**\n 
+activate Database
+Database->Orders_API: Orders
+deactivate Database
+Orders_API->Frontend: HTTP 200, Orders
+deactivate Orders_API
+
+Frontend->Orders_API:**Load Page 2** : \n GET /orders?offset=**10**&page_size=**10**
+activate Orders_API
+Orders_API->Database: SELECT * FROM order_info \nOrder By created_at Desc\nOffset **10**\nLimit **10**\n 
+activate Database
+Database->Orders_API: Orders
+deactivate Database
+Orders_API->Frontend: HTTP 200, Orders
+deactivate Orders_API
+
+Frontend->Orders_API:**Load Page 3** : \n GET /orders?offset=**20**&page_size=**10**
+activate Orders_API
+Orders_API->Database: SELECT * FROM order_info \nOrder By created_at Desc\nOffset **20**\nLimit **10**\n 
+activate Database
+Database->Orders_API: Empty Result
+deactivate Database
+Orders_API-#red>Frontend: HTTP 404, "No More Orders"
+deactivate Orders_API
+
+----------------
+title Cancelling An Order
+
+Frontend/Matcher->Orders_API:**Cancel Order** : \n DELETE /order/{UUID}
+activate Orders_API
+Orders_API->Database: Read Order Information 
+activate Database
+alt #ffcccc Order Not Found
+Database->Orders_API: No Match 
+Orders_API-#red>Frontend/Matcher:HTTP 404, "Order Not Found"
+end
+Database->Orders_API: Order Information
+deactivate Database
+
+activate Orders_API
+Orders_API->Orders_API: Verify Status
+deactivate Orders_API
+
+alt #ffcccc Invalid Status
+Orders_API-#red>Frontend/Matcher:HTTP 422, "Order cannot be cancelled"
+end
+
+Orders_API->Database: UPDATE order_info... 
+activate Database
+Database-->Orders_API: 
+deactivate Database
+Orders_API->Kafka: Dispatch Event (order_cancel_topic)
+activate Kafka
+Kafka-->Orders_API: 
+deactivate Kafka
+Orders_API-#green>Frontend/Matcher: HTTP 200, Cancelled Order
+deactivate Orders_API
+
+----------------------
+title Update An Order : Registering a new match
+
+Matcher_Service->Orders_API:**Update Order status** : \n  PUT /order/{UUID}
+activate Orders_API
+Orders_API->Database: Read Order Information 
+activate Database
+alt #ffcccc Order Not Found
+Database->Orders_API: No Match 
+Orders_API-#red>Matcher_Service:HTTP 404, "Order Not Found"
+end
+Database->Orders_API: Order Information
+deactivate Database
+
+activate Orders_API
+Orders_API->Orders_API: Verify Update 
+deactivate Orders_API
+
+alt #ffcccc Invalid Update
+Orders_API-#red>Matcher_Service:HTTP 422, "Invalid update"
+end
+
+Orders_API->Database:**Updating the database:** \n   INSERT INTO order_matching_info... \n   UPDATE order_info...
+activate Database
+Database-->Orders_API: 
+deactivate Database
+Orders_API-#green>Matcher_Service: HTTP 200, Updated Order
+deactivate Orders_API
+
+----------------------
+title Update An Order : Cancel a match
+
+Matcher_Service->Orders_API:**Update Order status** : \n  PUT /order/{UUID}
+activate Orders_API
+Orders_API->Database: Read Order Information 
+activate Database
+alt #ffcccc Order Not Found
+Database->Orders_API: No Match 
+Orders_API-#red>Matcher_Service:HTTP 404, "Order Not Found"
+end
+Database->Orders_API: Order Information
+deactivate Database
+
+activate Orders_API
+Orders_API->Orders_API: Verify Update 
+deactivate Orders_API
+
+alt #ffcccc Invalid Update
+Orders_API-#red>Matcher_Service:HTTP 422, "Invalid update"
+end
+
+Orders_API->Database:**Updating the database:** \n   DELETE FROM order_matching_info... \n   UPDATE order_info...
+activate Database
+Database-->Orders_API: 
+deactivate Database
+
+alt #ccccff If Order.Status was "FULLY_MATCHED"  
+Orders_API->Kafka: Requeue the order to be matched again
+end
+
+Orders_API-#green>Matcher_Service: HTTP 200, Updated Order
+deactivate Orders_API

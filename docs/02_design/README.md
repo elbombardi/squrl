@@ -1,36 +1,11 @@
-## Tools 
+# Design and Architecture
 
-### Architecture diagrams editor
-Open this file, [ArchitectureDiagrams.xml](docs/design/diagrams/ArchitectureDiagrams.xml), using https://www.diagrameditor.com/
+## Architecture 
 
-### Database diagrams editor
-Open this file, [DB_Schema.txt](docs/design/diagrams/DB_Schema.txt), using https://dbdiagram.io/ 
+## API Design
 
-### Sequence diagrams editor
-Open this file, [SequenceDiagrams.txt](docs/design/diagrams/SequenceDiagrams.txt), using https://sequencediagram.org/
+## Redirection Server
 
-## Swagger
-Swagger (GoSwagger) is used to generate the API from a specification file `swagger.yml` : Swagger specification for the URL Shortner API (this represents the core of our microservice),
+## Database Design
 
-### Installation
-
-To install swagger:
-```
-make swagger_install
-```
-
-### Usage
-To generate Order API service, Validation API client, and the documentation, run the following command:
-```
-make swagger_generate
-```
-## Database migration
-This tool is used to upgrade and downgrade database schema in development environment.
-[``migrate`` installation instructures](https://github.com/golang-migrate/migrate/blob/master/cmd/migrate/README.md)
-
-## Sqlc
-This tool is used to automatically generate data access layer code from SQL queries and database schema : 
-
-```
-go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
-```
+## Code Structure
