@@ -23,6 +23,8 @@ Here's a brief description of the API endpoints:
 1. Create Customer:
    - Endpoint: `/api/admin/customer/`
    - HTTP Method: POST
+   - Header Parameters:
+     - `X-API-KEY`: The admin API key.
    - Request JSON Structure:
      ```json
      {
@@ -48,11 +50,13 @@ Here's a brief description of the API endpoints:
 2. Update Customer:
    - Endpoint: `/api/admin/customer/`
    - HTTP Method: PUT
+    - Header Parameters:
+      - `X-API-KEY`: The admin API key.
    - Request JSON Structure:
      ```json
      {
        "username": "string",
-       "status": "string" //Required, possible values: "active", "inactive"
+       "status": "string" 
      }
      ```
      - 'username' is required.
@@ -73,6 +77,8 @@ Here's a brief description of the API endpoints:
 3. Create ShortURL:
    - Endpoint: `/api/customer/short-url/`
    - HTTP Method: POST
+   - Header Parameters:
+     - `X-API-KEY`: The customer API key.
    - Request JSON Structure:
      ```json
      {
@@ -96,6 +102,8 @@ Here's a brief description of the API endpoints:
 4. Update ShortURL:
    - Endpoint: `/api/customer/short-url/update`
    - HTTP Method: PUT
+    - Header Parameters:
+      - `X-API-KEY`: The customer API key.
    - Request JSON Structure:
      ```json
      {
