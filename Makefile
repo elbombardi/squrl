@@ -5,9 +5,10 @@ swagger_validate:
 	swagger validate swagger/orders.yml
 
 swagger_generate: 
-	make swagger_generate_orders_server
+	make swagger_generate_api_server
+	make swagger_generate_documentation
 
-swagger_generate_orders_server:
+swagger_generate_api_server:
 	swagger generate server --exclude-main -s api --name shorturl --target . -f swagger/api.yml
 	
 swagger_generate_documentation: 
