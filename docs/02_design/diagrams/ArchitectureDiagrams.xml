@@ -1,50 +1,56 @@
-<mxfile host="app.diagrams.net" modified="2023-06-24T09:32:50.541Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="fP_NR_R8TqhvqZ2-d5yy" version="21.3.2" type="device">
+<mxfile host="app.diagrams.net" modified="2023-06-24T13:34:21.697Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="KYC4dfDHEGCPdTmJlaoK" version="21.3.2" type="device">
   <diagram id="VNSbr2gNwWr-o8Mk11J1" name="Page-1">
     <mxGraphModel dx="1050" dy="580" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="q-OhYP1uOF4gDPvKc08G-1" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="220" y="160" width="460" height="300" as="geometry" />
+          <mxGeometry x="220" y="160" width="470" height="300" as="geometry" />
         </mxCell>
         <mxCell id="MTcJnHc71G5RBtE0BJgJ-23" value="Modifies Customer &lt;br&gt;&amp;amp; Short URL data" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.14;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;edgeStyle=orthogonalEdgeStyle;curved=1;" parent="1" source="SudhCIIvP9Om_FVVBhZo-3" target="MTcJnHc71G5RBtE0BJgJ-4" edge="1">
-          <mxGeometry x="0.1113" y="14" relative="1" as="geometry">
+          <mxGeometry x="0.0282" y="-8" relative="1" as="geometry">
             <mxPoint x="407" y="258.3662674650699" as="sourcePoint" />
             <mxPoint x="624" y="257.5" as="targetPoint" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="MTcJnHc71G5RBtE0BJgJ-4" value="Postgres Database" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.sql_database;" parent="1" vertex="1">
-          <mxGeometry x="600" y="285" width="37.5" height="50" as="geometry" />
+          <mxGeometry x="610" y="285" width="37.5" height="50" as="geometry" />
         </mxCell>
         <mxCell id="MTcJnHc71G5RBtE0BJgJ-54" value="Short URL App: Overall Architecture" style="text;html=1;resizable=0;points=[];autosize=1;align=left;verticalAlign=top;spacingTop=-4;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="320" y="480" width="230" height="20" as="geometry" />
         </mxCell>
         <mxCell id="SudhCIIvP9Om_FVVBhZo-3" value="API Server" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.traditional_server;fillColor=#00BEF2;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="370" y="210" width="46.5" height="63" as="geometry" />
+          <mxGeometry x="367" y="210" width="46.5" height="63" as="geometry" />
         </mxCell>
-        <mxCell id="SudhCIIvP9Om_FVVBhZo-6" value="Reads Data &lt;br&gt;&amp;amp; Insert tracking information" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.86;entryDx=0;entryDy=0;entryPerimeter=0;edgeStyle=orthogonalEdgeStyle;curved=1;" edge="1" parent="1" source="SudhCIIvP9Om_FVVBhZo-5" target="MTcJnHc71G5RBtE0BJgJ-4">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="SudhCIIvP9Om_FVVBhZo-6" value="Reads Data &lt;br&gt;&amp;amp; Inserts tracking information" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.86;entryDx=0;entryDy=0;entryPerimeter=0;edgeStyle=orthogonalEdgeStyle;curved=1;" edge="1" parent="1" source="SudhCIIvP9Om_FVVBhZo-5" target="MTcJnHc71G5RBtE0BJgJ-4">
+          <mxGeometry x="-0.1267" y="7" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="SudhCIIvP9Om_FVVBhZo-5" value="Redirection Server" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.traditional_server;fillColor=#00BEF2;gradientColor=none;" vertex="1" parent="1">
           <mxGeometry x="367" y="350" width="46.5" height="63" as="geometry" />
         </mxCell>
-        <mxCell id="SudhCIIvP9Om_FVVBhZo-12" value="Manages Customers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.02;entryY=0.02;entryDx=0;entryDy=0;entryPerimeter=0;curved=1;" edge="1" parent="1" source="SudhCIIvP9Om_FVVBhZo-7" target="SudhCIIvP9Om_FVVBhZo-3">
-          <mxGeometry x="0.0025" relative="1" as="geometry">
-            <mxPoint as="offset" />
+        <mxCell id="SudhCIIvP9Om_FVVBhZo-12" value="Manages Customers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.017;entryY=0.238;entryDx=0;entryDy=0;entryPerimeter=0;curved=1;" edge="1" parent="1" source="SudhCIIvP9Om_FVVBhZo-7" target="SudhCIIvP9Om_FVVBhZo-3">
+          <mxGeometry x="-0.0649" y="-13" relative="1" as="geometry">
+            <mxPoint y="1" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="SudhCIIvP9Om_FVVBhZo-7" value="Admin" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.user;" vertex="1" parent="1">
           <mxGeometry x="90" y="160" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="SudhCIIvP9Om_FVVBhZo-11" value="Manages His Short URLs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.02;entryY=0.98;entryDx=0;entryDy=0;entryPerimeter=0;curved=1;" edge="1" parent="1" source="SudhCIIvP9Om_FVVBhZo-8" target="SudhCIIvP9Om_FVVBhZo-3">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="SudhCIIvP9Om_FVVBhZo-11" value="Manages His Short URLs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;curved=1;" edge="1" parent="1" source="SudhCIIvP9Om_FVVBhZo-8" target="SudhCIIvP9Om_FVVBhZo-3">
+          <mxGeometry x="-0.0903" y="14" relative="1" as="geometry">
+            <mxPoint x="1" y="1" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="SudhCIIvP9Om_FVVBhZo-8" value="Customer" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.user;" vertex="1" parent="1">
           <mxGeometry x="90" y="295" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="SudhCIIvP9Om_FVVBhZo-10" value="Clicks on the short URL" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;" edge="1" parent="1" source="SudhCIIvP9Om_FVVBhZo-9" target="SudhCIIvP9Om_FVVBhZo-5">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry x="-0.0358" y="4" relative="1" as="geometry">
+            <mxPoint x="1" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="SudhCIIvP9Om_FVVBhZo-9" value="Public User" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.user;" vertex="1" parent="1">
           <mxGeometry x="90" y="413" width="30" height="30" as="geometry" />
