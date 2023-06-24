@@ -19,9 +19,9 @@
 - The API server is stateless, it doesn't store any data, it only reads and writes data to the database.
 - The API server is secured using API key. Each customer has an API key stored in the database, and the admin has a specific API key stored as an environment variable.
 
+### API Endpoints
 Here's a brief description of the API endpoints:
 1. Create Customer:
-  1.2. Definition:
    - Endpoint: `/api/customer/`
    - HTTP Method: POST
    - Header Parameters:
@@ -47,18 +47,7 @@ Here's a brief description of the API endpoints:
        "error": "string",
      }
      ```
-  1.2. cURL Example:
-  ```bash
-  curl -X POST \
-  -H "Content-Type: application/json" \
-  -H "X-API-KEY: {admin_api_key}" \
-  -d '{
-    "username": "johnsmith",
-    "email": "johnsmith@example.com"
-  }' \
-  https://your-domain.com/api/admin/customer/
-  ```
-  
+
 2. Update Customer:
    - Endpoint: `/api/customer/`
    - HTTP Method: PUT
@@ -139,7 +128,56 @@ Here's a brief description of the API endpoints:
         "error": "string",
       }
       ```
+### Example requests in curl 
+  1. Create Customer:
+  ```bash
+  curl -X POST \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: {admin_api_key}" \
+  -d '{
+    "username": "johnsmith",
+    "email": "johnsmith@example.com"
+  }' \
+  https://your-domain.com/api/admin/customer/
 
+  ```
+  
+  2. Update Customer:
+  ```bash
+  curl -X PUT \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: {admin_api_key}" \
+  -d '{
+    "username": "johnsmith",
+    "status": "inactive"
+  }' \
+  https://your-domain.com/api/admin/customer/
+  ```
+  
+  3. Create ShortURL:
+  ```bash
+  url -X POST \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: {admin_api_key}" \
+  -d '{
+    "username": "johnsmith",
+    "email": "johnsmith@example.com"
+  }' \
+  https://your-domain.com/api/admin/customer/
+  ```
+
+  4. Update ShortURL:
+  ```bash
+  url -X POST \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: {admin_api_key}" \
+  -d '{
+    "username": "johnsmith",
+    "email": "johnsmith@example.com"
+  }' \
+  https://your-domain.com/api/admin/customer/
+  ```
+  
 ## Redirection Server
 
 ## Database Design
