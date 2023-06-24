@@ -1,7 +1,7 @@
 # Short URL Web App:
 
-- The Short URL Web App will be written in GO lang to support concurrency.
-It will utilize the Postgres database.
+- The Short URL Web App will be written in Golang to support concurrency.
+- It will utilize the Postgres database.
 - There will be no backend management functionalities.
 - All ShortURLs will be created exclusively through APIs.
 
@@ -96,3 +96,6 @@ Sample ShortURL:
     - Between 10,000 to 20,000 redirections.
 3. How do you want to deploy the service? On the cloud? Heroku maybe?
     - The service will be deployed on a local cloud.
+
+## Original Requirement Doc :
+- [Short URL Web App.pdf](./docs/01_requirements/Short URL Web App.pdf)
