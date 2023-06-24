@@ -55,6 +55,7 @@ Here's a brief description of the API endpoints:
      ```json
      {
        "api_key": "string",
+       "prefix": "string"
      }
      ```
    - Response JSON Structure (on failure):
@@ -106,7 +107,7 @@ Here's a brief description of the API endpoints:
    - Response JSON Structure (on success):
      ```json
      {
-       "short_url": "string"
+       "short_url_key": "string"
      }
      ```
     - Response JSON Structure (on failure):
@@ -124,12 +125,12 @@ Here's a brief description of the API endpoints:
    - Request JSON Structure:
      ```json
      {
-       "short_url": "string", 
+       "short_url_key": "string", 
        "new_long_url": "string", 
        "tracking_status": "string",
      }
      ```
-     - 'short_url' is required.
+     - 'short_url_key' is required.
      - 'new_long_url' is optional, if it's not provided, the long url will not be updated.
      - 'tracking_status' is optional, if it's not provided, the tracking status will not be updated. Possible values: "active", "inactive".
    - Response JSON Structure (on success):
@@ -187,7 +188,7 @@ Here's a brief description of the API endpoints:
   -H "Content-Type: application/json" \
   -H "X-API-KEY: {customer_api_key}" \
   -d '{
-    "short_url": "https://your-domain.com/abcd123",
+    "short_url_key": "https://your-domain.com/abcd123",
     "new_long_url": "https://www.example.com/new",
     "tracking_status": "inactive"
   }' \

@@ -132,11 +132,14 @@ func init() {
             "required": true,
             "schema": {
               "type": "object",
+              "required": [
+                "short_url_key"
+              ],
               "properties": {
                 "new_long_url": {
                   "type": "string"
                 },
-                "short_url": {
+                "short_url_key": {
                   "type": "string"
                 },
                 "tracking_status": {
@@ -315,11 +318,14 @@ func init() {
             "required": true,
             "schema": {
               "type": "object",
+              "required": [
+                "short_url_key"
+              ],
               "properties": {
                 "new_long_url": {
                   "type": "string"
                 },
-                "short_url": {
+                "short_url_key": {
                   "type": "string"
                 },
                 "tracking_status": {

@@ -106,8 +106,9 @@ type PutShortURLBody struct {
 	// new long url
 	NewLongURL string `json:"new_long_url,omitempty"`
 
-	// short url
-	ShortURL string `json:"short_url,omitempty"`
+	// short url key
+	// Required: true
+	ShortURLKey *string `json:"short_url_key"`
 
 	// tracking status
 	// Enum: [active inactive]
@@ -118,6 +119,10 @@ type PutShortURLBody struct {
 func (o *PutShortURLBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := o.validateShortURLKey(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.validateTrackingStatus(formats); err != nil {
 		res = append(res, err)
 	}
@@ -125,6 +130,15 @@ func (o *PutShortURLBody) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (o *PutShortURLBody) validateShortURLKey(formats strfmt.Registry) error {
+
+	if err := validate.Required("body"+"."+"short_url_key", "body", o.ShortURLKey); err != nil {
+		return err
+	}
+
 	return nil
 }
 

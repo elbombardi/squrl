@@ -261,7 +261,7 @@ Status: Not Found
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
 | new_long_url | string| `string` |  | |  |  |
-| short_url | string| `string` |  | |  |  |
+| short_url_key | string| `string` | ✓ | |  |  |
 | tracking_status | string| `string` |  | |  |  |
 
 

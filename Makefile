@@ -12,7 +12,7 @@ swagger_generate_api_server:
 	swagger generate server --exclude-main -s api --name shorturl --target . -f swagger/api.yml
 	
 swagger_generate_documentation: 
-	swagger generate markdown --output ./docs/02_usage/api.md -f swagger/api.yml
+	swagger generate markdown --output ./docs/03_installation_usage/api.md -f swagger/api.yml
 
 sqlc:
 	sqlc generate

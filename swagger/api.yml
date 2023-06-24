@@ -133,7 +133,7 @@ paths:
           schema:
             type: object
             properties:
-              short_url:
+              short_url_key:
                 type: string
         400:
           description: Bad Request
@@ -165,7 +165,7 @@ paths:
           schema:
             type: object
             properties:
-              short_url:
+              short_url_key:
                 type: string
               new_long_url:
                 type: string
@@ -174,6 +174,9 @@ paths:
                 enum:
                   - active
                   - inactive
+            required:
+              - short_url_key
+
       responses:
         200:
           description: Success
