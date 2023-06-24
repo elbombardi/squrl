@@ -77,7 +77,7 @@ Here's a brief description of the API endpoints:
    - Request JSON Structure:
      ```json
      {
-       "short_url": "string",
+       "short_url": "string", //test
        "new_long_url": "string",
        "tracking_status": "boolean"
      }
