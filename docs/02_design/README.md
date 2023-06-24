@@ -100,7 +100,7 @@ Here's a brief description of the API endpoints:
       ```
 
 4. Update ShortURL:
-   - Endpoint: `/api/customer/short-url/update`
+   - Endpoint: `/api/customer/short-url/`
    - HTTP Method: PUT
     - Header Parameters:
       - `X-API-KEY`: The customer API key.
