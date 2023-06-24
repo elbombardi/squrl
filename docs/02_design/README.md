@@ -22,7 +22,7 @@
 ### Algorthims 
 
 #### Random alphanumeric string generator
-- The random n alphanumeric string generator is a function that generates a random alphanumeric string of n characters.
+- The random alphanumerics (a-z, A-Z and 0-9) string generator is a function that generates a random alphanumeric string of n characters.
 - This function will be used to generate the customer prefix (3 characters), the short URL key (6 characters), and the API key (32 characters).
 - To guarantee unicity, the generated key will be checked against the database, if it already exists, a new key will be generated and checked again, until a unique key is found.
 
@@ -196,15 +196,22 @@ Here's a brief description of the API endpoints:
   }' \
   https://your-domain.com/api/short-url/
   ```
-  
+
   Please note that you need to replace `{admin_api_key}` and `{customer_api_key}` with the actual API keys for authentication. Also, replace https://your-domain.com with the appropriate URL for your API endpoint.
 
 ## Redirection Server
 - The redirection server is the server that handle all the redirection requests from the public.
 - The redirection server is an http server, it's built using Golang & GoFiber (a fast HTTP framework).
 - The redirection server is stateless, it doesn't store any data, it only reads data from the database and stores clicks information.
-- It exposes a unique endpoint, which is responsible for handling all the redirection.
-- 
+- It exposes a unique endpoint `https://<domain.name>/{customer_prefix}/{short_url_key}`
+- The end point has 2 functions: 
+    - Redirect the user to the destination URL.
+    - Store the click information in the database.
+- The storage of the click information is done asynchronously, so that the redirection is not delayed by the database operations, by using a channel and a goroutine.
+- The number of workers (goroutines) that execute the storage job can be configured using an environment variable.
+- The storage operation consists of two write operations:
+    - Insert a new line in the `Click` table.
+    - Update 3 agregates in `Short URL` table : increment the `Click Count` column, set `First Click Date Time` column (optionally), update `Last Click Date and Time` column.
 
 ## Database Design
 
