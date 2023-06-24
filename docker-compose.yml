@@ -1,0 +1,210 @@
+version: "3.3"
+
+services:
+  db:
+    image: postgres
+    container_name: platform_db
+    logging:
+        driver: none
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    logging:
+      driver: none
+    container_name: platform_zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka:7.0.1
+    logging:
+      driver: none
+    container_name: platform_broker
+    ports:
+    # To learn about configuring Kafka for access across networks see
+    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1    
+
+  # Application configuration for development
+  # Update new services here
+  # app:
+  kafka_init:
+    image: confluentinc/cp-kafka:7.0.1
+    depends_on:
+      - broker
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # Creates a kafka topic
+      kafka-topics --bootstrap-server broker:29092 --list
+      echo -e 'Creating kafka topic'
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic orders-submit-1-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic orders-submit-2-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic orders-submit-3-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic orders-submit-4-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic orders-submit-5-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic orders-submit-6-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic orders-submit-7-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic orders-submit-8-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic orders-cancellation-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic matcher-new-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic matcher-error-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic matcher-in-progress-2-topic --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server broker:29092 --create --if-not-exists --topic matcher-in-progress-3-topic --replication-factor 1 --partitions 1
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server broker:29092 --list
+      "
+  kafka_ui:
+    image: provectuslabs/kafka-ui
+    logging:
+        driver: none
+    ports:
+      - "8082:8080"
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=broker:29092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+      - KAFKA_CLUSTERS_0_READONLY=true
+
+  orders_db_init:
+    build:
+      context: .
+      dockerfile: orders_service/db/Dockerfile      
+    entrypoint: [ '/bin/sh', '-c' ]
+    environment:
+      DB_DRIVER: postgres
+      DB_SOURCE: postgresql://postgres:postgres@db:5432/postgres?sslmode=disable
+    command: |
+      "
+      # Wait for Postgres server : 
+      sh /app/wait-for.sh db:5432 -- /app/migrate --path /app/migration/ --database postgresql://postgres:postgres@db:5432/postgres?sslmode=disable up
+      sh /app/wait-for.sh db:5432 -- /app/demo-data
+      "
+  matcher_db_init:
+    build:
+      context: .
+      dockerfile: matcher_service/db/Dockerfile      
+    entrypoint: [ '/bin/sh', '-c' ]
+    environment:
+      DB_DRIVER: postgres
+      DB_SOURCE: postgresql://postgres:postgres@db:5432/postgres?sslmode=disable
+    command: |
+      "
+      # Wait for Postgres server : 
+      sh /app/wait-for.sh db:5432 -- /app/migrate --path /app/migration/ --database postgresql://postgres:postgres@db:5432/postgres?sslmode=disable up
+      "
+
+  mock_bank_profile_service:
+    container_name: platform_mock_bank_profile_service
+    build:
+      context: .
+      dockerfile: external/bank_profile_service/Dockerfile
+    environment:
+      HOST: 0.0.0.0
+    expose:
+      - "8090"
+    ports:
+      - "8090:8090"
+    entrypoint: ["/app/bank-profile-server", "--port", "8090"]
+    
+  mock_bank_account_service:
+    container_name: platform_mock_bank_account_service
+    build:
+      context: .
+      dockerfile: external/bank_account_service/Dockerfile
+    environment:
+      HOST: 0.0.0.0
+    expose:
+      - "8091"
+    ports:
+      - "8091:8091"
+    entrypoint: ["/app/bank-account-server", "--port", "8091"]
+
+  users_service:
+    container_name: platform_users_server
+    build:
+      context: .
+      dockerfile: users_service/Dockerfile
+    environment:
+      HOST: 0.0.0.0
+    expose:
+      - "8083"
+    ports:
+      - "8083:8083"
+    entrypoint: ["/app/users-server", "--port", "8083"]
+
+  validation_service:
+    container_name: platform_validation_server
+    build:
+      context: .
+      dockerfile: validation_service/Dockerfile
+    environment:
+      USER_PROFILE_SERVICE_URL: http://users_service:8083
+      BANK_PROFILE_SERVICE_URL: http://mock_bank_profile_service:8090
+      BANK_ACCOUNT_SERVICE_URL: http://mock_bank_account_service:8091
+      HOST: 0.0.0.0
+      ENVIRONMENT: dev
+    expose:
+      - "8081"
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mock_bank_profile_service
+      - mock_bank_account_service
+      - users_service
+    entrypoint: ["/app/validation-server", "--port", "8081"]
+
+  orders_service:
+    container_name: platform_orders_server
+    build:
+      context: .
+      dockerfile: orders_service/Dockerfile
+    environment:
+      KAFKA_ADDRESS: broker:29092
+      ORDERS_SUBMIT_TOPIC_TEMPLATE: orders-submit-{transactionType}-topic
+      ORDERS_CANCELLATION_TOPIC: orders-cancellation-topic
+      DB_DRIVER: postgres
+      DB_SOURCE: postgresql://postgres:postgres@db:5432/postgres?sslmode=disable
+      DB_MAX_IDLE_CONNS: 5
+      DB_MAX_OPEN_CONNS: 10
+      DB_CONN_MAX_IDLE_TIME: 1
+      DB_CONN_MAX_LIFE_TIME: 30
+      VALIDATION_SERVICE_URL: http://validation_service:8081
+      HOST: 0.0.0.0
+      ENVIRONMENT: dev
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - orders_db_init
+      - kafka_init
+      - validation_service 
+      - broker
+      - db
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # Launching Orders server :
+      # echo -e 'Waiting for mock validation service to start...'
+      # sh /app/wait-for.sh validator:8081 -- echo Validator reached! 
+      echo -e 'Waiting for Postgres to start...'
+      sh /app/wait-for.sh db:5432 -- /app/orders-server --port 8080 
+      "
