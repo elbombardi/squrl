@@ -4,12 +4,12 @@
 - There are 2 main components in this system
     - API Server
     - Redirection Server
-- API Server is the main server that handle all the API requests from the client
-- Redirection Server is the server that handle all the redirection requests from the client
-- The separation between the two components has two benifits : 
-    - The servers can be scaled independently from each other.
-    - Security: The API server is not exposed public users, it's only used by authenticated users. The redirection server is exposed to public users, it doesn't require authentication, but it doesn't modify customer and short url data, it only reads data, and inserts tracking data.
-- This architecture can letter be deployed as microservices, where each component is a microservice.
+- API Server is the main server that handle all the API requests from the admin or customers
+- Redirection Server is the server that handle all the redirection requests from the public
+- The separation between the two components has two benefits : 
+    - The servers can be scaled independently of each other.
+    - Security: The API server is not exposed to public users, it's only used by authenticated users. The redirection server is exposed to public users, it doesn't require authentication, but it doesn't modify customer and short URL data, it only reads data, and inserts tracking data.
+- This architecture can later be deployed as microservices, where each component is a microservice.
 
 <p align="center"><img src="images/ArchitectureDiagrams.drawio.png"/></p>
 
@@ -17,11 +17,11 @@
 - The API server is the main server that handle all the API requests from the admin and customers.
 - The API server is a REST API server, it's built using Golang & Swagger.
 - The API server is stateless, it doesn't store any data, it only reads and writes data to the database.
-- The API server is secured using API keys, each customer has an API key stored in the database, and the admin has a specific API key stored as an environement variable.
+- The API server is secured using API keys, each customer has an API key stored in the database, and the admin has a specific API key stored as an environment variable.
 
 Here's a brief description of the API endpoints:
 1. Create Customer:
-   - Endpoint: `/api/admin/customer/`
+   - Endpoint: `/api/customer/`
    - HTTP Method: POST
    - Header Parameters:
      - `X-API-KEY`: The admin API key.
@@ -48,9 +48,9 @@ Here's a brief description of the API endpoints:
      ```
 
 2. Update Customer:
-   - Endpoint: `/api/admin/customer/`
+   - Endpoint: `/api/customer/`
    - HTTP Method: PUT
-    - Header Parameters:
+   - Header Parameters:
       - `X-API-KEY`: The admin API key.
    - Request JSON Structure:
      ```json
@@ -75,7 +75,7 @@ Here's a brief description of the API endpoints:
      ```
 
 3. Create ShortURL:
-   - Endpoint: `/api/customer/short-url/`
+   - Endpoint: `/api/short-url/`
    - HTTP Method: POST
    - Header Parameters:
      - `X-API-KEY`: The customer API key.
@@ -100,9 +100,9 @@ Here's a brief description of the API endpoints:
       ```
 
 4. Update ShortURL:
-   - Endpoint: `/api/customer/short-url/`
+   - Endpoint: `/api/short-url/`
    - HTTP Method: PUT
-    - Header Parameters:
+   - Header Parameters:
       - `X-API-KEY`: The customer API key.
    - Request JSON Structure:
      ```json
