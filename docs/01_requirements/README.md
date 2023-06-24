@@ -8,7 +8,7 @@ It will utilize the Postgres database.
 ## API Endpoints:
 
 ### Group 1: Customer APIs
-This group is accesible only for Admin user.
+This group is accessible only for Admin user.
 
 #### 1. Create Customer:
 Purpose: Used to create a customer account.
@@ -18,7 +18,6 @@ Request data:
 Response data:
 - Status: success or fail
 - On success, return a system-generated password.
-
 
 #### 2. Update Customer:
 Purpose: Used to disable/enable a customer's use of the API.
@@ -70,6 +69,18 @@ The customer data table will store the following information:
 - Created At 
 - Updated At (last update time)
 
+### Short Urls : 
+The short urls (links) table will store the following information:
+- Short URL Key (unique key for shortlink, 5-6 characters, case-sensitive)
+- Customer ID
+- Long URL
+- Status (enabled or disabled)
+- Click Count
+- First Click Date and Time (if tracking is enabled)
+- Last Click Date and Time (if tracking is enabled)
+- Created At
+- Updated At (last update time)
+
 ### Click tracking
 For click tracking, the following information will be stored in the database:
 - Click ID
@@ -78,18 +89,7 @@ For click tracking, the following information will be stored in the database:
 - User Agent
 - IP Address
 
-### Short Urls : 
-The short urls (links) table will store the following information:
-- Link ID
-- Customer ID
-- Short URL Key (unique key for shortlink, 5-6 characters, case-sensitive)
-- Long URL
-- Status (enabled or disabled)
-- Click Count
-- First Click Date and Time (if tracking is enabled)
-- Last Click Date and Time (if tracking is enabled)
-- Created At
-- Updated At (last update time)
+
 
 ## Additional Questions:
 1. How many customers do you expect?
