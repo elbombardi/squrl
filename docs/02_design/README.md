@@ -26,14 +26,22 @@ Here's a brief description of the API endpoints:
    - Request JSON Structure:
      ```json
      {
-       "username": "string", //Required
-       "email": "string" //Required
+       "username": "string", 
+       "email": "string" 
      }
      ```
+      - 'username' and 'email' are required and must be unique.
+
    - Response JSON Structure (on success):
      ```json
      {
        "api_key": "string",
+     }
+     ```
+   - Response JSON Structure (on failure):
+     ```json
+     {
+       "error": "string",
      }
      ```
 
