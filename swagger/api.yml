@@ -1,0 +1,205 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Short URL API
+basePath: /api
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /customer:
+    post:
+      summary: Create Customer
+      parameters:
+        - name: X-API-KEY
+          in: header
+          type: string
+          required: true
+          description: The admin API key.
+        - name: customer
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              email:
+                type: string
+            required:
+              - username
+              - email
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              api_key:
+                type: string
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+  /customer:
+    put:
+      summary: Update Customer
+      parameters:
+        - name: X-API-KEY
+          in: header
+          type: string
+          required: true
+          description: The admin API key.
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              status:
+                type: string
+                enum:
+                  - active
+                  - inactive
+            required:
+              - username
+              - status
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+  /short-url:
+    post:
+      summary: Create ShortURL
+      parameters:
+        - name: X-API-KEY
+          in: header
+          type: string
+          required: true
+          description: The customer API key.
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              long_url:
+                type: string
+            required:
+              - long_url
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              short_url:
+                type: string
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+  /short-url:
+    put:
+      summary: Update ShortURL
+      parameters:
+        - name: X-API-KEY
+          in: header
+          type: string
+          required: true
+          description: The customer API key.
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              short_url:
+                type: string
+              new_long_url:
+                type: string
+              tracking_status:
+                type: string
+                enum:
+                  - active
+                  - inactive
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string

@@ -8,9 +8,8 @@ swagger_generate:
 	make swagger_generate_orders_server
 
 swagger_generate_orders_server:
-	swagger generate server --exclude-main -s api --name orders --target orders_service -f swagger/orders.yml
-	cp orders_service/models/* matcher_service/providers/models/.
-
+	swagger generate server --exclude-main -s api --name shorturl --target . -f swagger/api.yml
+	
 swagger_generate_documentation: 
 	swagger generate markdown --output ./docs/02_usage/api.md -f swagger/api.yml
 

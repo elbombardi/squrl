@@ -17,7 +17,7 @@
 - The API server is the main server that handle all the API requests from the admin and customers.
 - The API server is a REST API server, it's built using Golang & Swagger.
 - The API server is stateless, it doesn't store any data, it only reads and writes data to the database.
-- The API server is secured using API keys, each customer has an API key stored in the database, and the admin has a specific API key stored as an environment variable.
+- The API server is secured using API key. Each customer has an API key stored in the database, and the admin has a specific API key stored as an environment variable.
 
 Here's a brief description of the API endpoints:
 1. Create Customer:
