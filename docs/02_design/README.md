@@ -21,6 +21,7 @@
 
 Here's a brief description of the API endpoints:
 1. Create Customer:
+  1.2. Definition:
    - Endpoint: `/api/customer/`
    - HTTP Method: POST
    - Header Parameters:
@@ -46,7 +47,18 @@ Here's a brief description of the API endpoints:
        "error": "string",
      }
      ```
-
+  1.2. cURL Example:
+  ```bash
+  curl -X POST \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: {admin_api_key}" \
+  -d '{
+    "username": "johnsmith",
+    "email": "johnsmith@example.com"
+  }' \
+  https://your-domain.com/api/admin/customer/
+  ```
+  
 2. Update Customer:
    - Endpoint: `/api/customer/`
    - HTTP Method: PUT
