@@ -26,14 +26,13 @@ Here's a brief description of the API endpoints:
    - Request JSON Structure:
      ```json
      {
-       "username": "string",
-       "email": "string"
+       "username": "string", //Required
+       "email": "string" //Required
      }
      ```
    - Response JSON Structure (on success):
      ```json
      {
-       "status": "string",
        "api_key": "string",
      }
      ```
@@ -44,8 +43,8 @@ Here's a brief description of the API endpoints:
    - Request JSON Structure:
      ```json
      {
-       "username": "string",
-       "status": "string"
+       "username": "string", //Required
+       "status": "string" //Required, possible values: "active", "inactive"
      }
      ```
    - Response JSON Structure (on success):
@@ -56,12 +55,12 @@ Here's a brief description of the API endpoints:
      ```
 
 3. Create ShortURL:
-   - Endpoint: `/api/customer/short-url/create`
+   - Endpoint: `/api/customer/short-url/`
    - HTTP Method: POST
    - Request JSON Structure:
      ```json
      {
-       "long_url": "string"
+       "long_url": "string" //Required
      }
      ```
    - Response JSON Structure (on success):
@@ -77,9 +76,9 @@ Here's a brief description of the API endpoints:
    - Request JSON Structure:
      ```json
      {
-       "short_url": "string", //test
-       "new_long_url": "string",
-       "tracking_status": "boolean"
+       "short_url": "string", //Required
+       "new_long_url": "string", //Optional
+       "tracking_status": "boolean", //Optional
      }
      ```
    - Response JSON Structure (on success):
