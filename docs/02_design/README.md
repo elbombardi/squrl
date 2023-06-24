@@ -51,14 +51,22 @@ Here's a brief description of the API endpoints:
    - Request JSON Structure:
      ```json
      {
-       "username": "string", //Required
+       "username": "string",
        "status": "string" //Required, possible values: "active", "inactive"
      }
      ```
+     - 'username' is required.
+     - 'status' is required and must be one of the possible values : "active" or "inactive".
    - Response JSON Structure (on success):
      ```json
      {
        "status": "string"
+     }
+     ```
+   - Response JSON Structure (on failure):
+     ```json
+     {
+       "error": "string",
      }
      ```
 
@@ -68,15 +76,22 @@ Here's a brief description of the API endpoints:
    - Request JSON Structure:
      ```json
      {
-       "long_url": "string" //Required
+       "long_url": "string" 
      }
      ```
+     - 'long_url' is required and must be a valid URL.
    - Response JSON Structure (on success):
      ```json
      {
        "short_url": "string"
      }
      ```
+    - Response JSON Structure (on failure):
+      ```json
+      {
+        "error": "string",
+      }
+      ```
 
 4. Update ShortURL:
    - Endpoint: `/api/customer/short-url/update`
@@ -84,17 +99,26 @@ Here's a brief description of the API endpoints:
    - Request JSON Structure:
      ```json
      {
-       "short_url": "string", //Required
-       "new_long_url": "string", //Optional
-       "tracking_status": "boolean", //Optional
+       "short_url": "string", 
+       "new_long_url": "string", 
+       "tracking_status": "string",
      }
      ```
+     - 'short_url' is required.
+     - 'new_long_url' is optional, if it's not provided, the long url will not be updated.
+     - 'tracking_status' is optional, if it's not provided, the tracking status will not be updated. Possible values: "active", "inactive".
    - Response JSON Structure (on success):
      ```json
      {
        "status": "string"
      }
      ```
+    - Response JSON Structure (on failure):
+      ```json
+      {
+        "error": "string",
+      }
+      ```
 
 ## Redirection Server
 
