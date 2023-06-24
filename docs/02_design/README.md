@@ -157,7 +157,7 @@ Here's a brief description of the API endpoints:
     "username": "johnsmith",
     "email": "johnsmith@example.com"
   }' \
-  https://your-domain.com/api/admin/customer/
+  https://your-domain.com/api/customer/
 
   ```
   
@@ -170,32 +170,33 @@ Here's a brief description of the API endpoints:
     "username": "johnsmith",
     "status": "inactive"
   }' \
-  https://your-domain.com/api/admin/customer/
+  https://your-domain.com/api/customer/
   ```
   
   3. Create ShortURL:
   ```bash
-  url -X POST \
+  curl -X POST \
   -H "Content-Type: application/json" \
-  -H "X-API-KEY: {admin_api_key}" \
+  -H "X-API-KEY: {customer_api_key}" \
   -d '{
-    "username": "johnsmith",
-    "email": "johnsmith@example.com"
+    "long_url": "https://www.example.com"
   }' \
-  https://your-domain.com/api/admin/customer/
+  https://your-domain.com/api/short-url/
   ```
 
   4. Update ShortURL:
   ```bash
-  url -X POST \
+  curl -X PUT \
   -H "Content-Type: application/json" \
-  -H "X-API-KEY: {admin_api_key}" \
+  -H "X-API-KEY: {customer_api_key}" \
   -d '{
-    "username": "johnsmith",
-    "email": "johnsmith@example.com"
+    "short_url": "https://your-domain.com/abcd123",
+    "new_long_url": "https://www.example.com/new",
+    "tracking_status": "inactive"
   }' \
-  https://your-domain.com/api/admin/customer/
+  https://your-domain.com/api/short-url/
   ```
+  
   Please note that you need to replace `{admin_api_key}` and `{customer_api_key}` with the actual API keys for authentication. Also, replace https://your-domain.com with the appropriate URL for your API endpoint.
 
 ## Redirection Server
