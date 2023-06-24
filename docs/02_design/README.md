@@ -210,6 +210,8 @@ Here's a brief description of the API endpoints:
     - Insert a new line in the `Click` table.
     - Update 3 agregates in `Short URL` table : increment the `Click Count` column, set `First Click Date Time` column (optionally), update `Last Click Date and Time` column.
 
+- The following sequence diagram shows the flow of the redirection request:
+<p align="center"><img src="images/Sequence_Redirection_Flow.png"/></p>
 ## Database Design
 - The database is a relational database (PostgreSql).
 - The database has 3 tables:
