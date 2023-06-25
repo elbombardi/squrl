@@ -1,0 +1,19 @@
+title Create a new Short URL
+
+Customer->API: POST /api/short-url
+
+API->API: Authenticate Customer
+alt #ffcccc Error: Authentication failed
+API-->Customer: HTTP 401 Unauthorized
+end
+
+API->API: Validate Request Data
+alt #ffcccc Error: Invalid request data
+API-->Customer: HTTP 400 Bad Request
+end
+
+API->API: Generate Short URL Key
+
+API->Database: Insert New Short URL
+API<--Database: Short URL created successfully
+API-->Customer: HTTP 200 Created

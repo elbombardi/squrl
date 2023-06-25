@@ -1,0 +1,23 @@
+title Update Short URL
+
+Customer->API: PUT /api/short-url
+
+API->API: Authenticate Customer
+alt #ffcccc Error: Authentication failed
+API-->Customer: HTTP 401 Unauthorized
+end
+
+API->API: Validate Request Data
+alt #ffcccc Error: Invalid request data
+API-->Customer: HTTP 400 Bad Request
+end
+
+API->Database: Load Short URL (customer id + short url key)
+alt #ffcccc Error: Invalid request data
+API<--Database: No short URL found
+API-->Customer: HTTP 404 Not found
+end
+
+API->Database: Update Short URL
+API<--Database: Short URL updated successfully
+API-->Customer: HTTP 200
