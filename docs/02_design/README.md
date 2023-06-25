@@ -35,13 +35,12 @@ func generateRandomString(n int) string {
 }
 ```
 
-### API Endpoints
-Here's a brief description of the API endpoints:
-1. Create Customer:
-* Sequence diagram:
+
+### 1. Create Customer:
+#### 1.1. Sequence diagram:
 <p align="center"><img src="images/Sequence_Create_Customer.png"/></p>
 
-* Endpoint details:
+#### 1.2. Endpoint details :
    - Endpoint: `/api/customer/`
    - HTTP Method: POST
    - Header Parameters:
@@ -68,8 +67,24 @@ Here's a brief description of the API endpoints:
        "error": "string",
      }
      ```
+#### 1.3. Example request in curl :
+  ```bash
+  curl -X POST \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: {admin_api_key}" \
+  -d '{
+    "username": "johnsmith",
+    "email": "johnsmith@example.com"
+  }' \
+  https://your-domain.com/api/customer/
 
-2. Update Customer:
+  ```
+
+### 2. Update Customer:
+#### 2.1. Sequence diagram:
+<p align="center"><img src="images/Sequence_Update_Customer.png"/></p>
+
+#### 2.2. Endpoint details :
    - Endpoint: `/api/customer/`
    - HTTP Method: PUT
    - Header Parameters:
@@ -95,8 +110,22 @@ Here's a brief description of the API endpoints:
        "error": "string",
      }
      ```
+#### 2.3. Example request in curl: 
+```bash
+  curl -X PUT \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: {admin_api_key}" \
+  -d '{
+    "username": "johnsmith",
+    "status": "inactive"
+  }' \
+  https://your-domain.com/api/customer/
+  ```
+### 3. Create ShortURL:
+#### 3.1. Sequence diagram:
+<p align="center"><img src="images/Sequence_Update_Customer.png"/></p>
 
-3. Create ShortURL:
+#### 3.2. Endpoint details :
    - Endpoint: `/api/short-url/`
    - HTTP Method: POST
    - Header Parameters:
@@ -120,8 +149,22 @@ Here's a brief description of the API endpoints:
         "error": "string",
       }
       ```
+#### 3.3. Example request in curl: 
+ ```bash
+  curl -X POST \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: {customer_api_key}" \
+  -d '{
+    "long_url": "https://www.example.com"
+  }' \
+  https://your-domain.com/api/short-url/
+  ```
 
-4. Update ShortURL:
+### 4. Update ShortURL:
+#### 4.1. Sequence diagram:
+<p align="center"><img src="images/Sequence_Update_Customer.png"/></p>
+
+#### 4.2. Endpoint details :
    - Endpoint: `/api/short-url/`
    - HTTP Method: PUT
    - Header Parameters:
@@ -149,45 +192,8 @@ Here's a brief description of the API endpoints:
         "error": "string",
       }
       ```
-### Example requests in curl 
-  1. Create Customer:
-  ```bash
-  curl -X POST \
-  -H "Content-Type: application/json" \
-  -H "X-API-KEY: {admin_api_key}" \
-  -d '{
-    "username": "johnsmith",
-    "email": "johnsmith@example.com"
-  }' \
-  https://your-domain.com/api/customer/
-
-  ```
-  
-  2. Update Customer:
-  ```bash
-  curl -X PUT \
-  -H "Content-Type: application/json" \
-  -H "X-API-KEY: {admin_api_key}" \
-  -d '{
-    "username": "johnsmith",
-    "status": "inactive"
-  }' \
-  https://your-domain.com/api/customer/
-  ```
-  
-  3. Create ShortURL:
-  ```bash
-  curl -X POST \
-  -H "Content-Type: application/json" \
-  -H "X-API-KEY: {customer_api_key}" \
-  -d '{
-    "long_url": "https://www.example.com"
-  }' \
-  https://your-domain.com/api/short-url/
-  ```
-
-  4. Update ShortURL:
-  ```bash
+#### 4.3. Example request in curl: 
+```bash
   curl -X PUT \
   -H "Content-Type: application/json" \
   -H "X-API-KEY: {customer_api_key}" \
@@ -198,7 +204,6 @@ Here's a brief description of the API endpoints:
   }' \
   https://your-domain.com/api/short-url/
   ```
-
   Please note that you need to replace `{admin_api_key}` and `{customer_api_key}` with the actual API keys for authentication. Also, replace https://your-domain.com with the appropriate URL for your API endpoint.
 
 ## Redirection Server
