@@ -1,6 +1,6 @@
 title Create a new customer
 
-Admin->API: POST /api/customers
+Admin->API: POST /api/customer
 alt #ffcccc Error: Authentication failed
 API-->Admin: HTTP 401
 end 

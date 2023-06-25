@@ -1,0 +1,18 @@
+title Update a new customer
+
+Admin->API: PUT /api/customer
+alt #ffcccc Error: Authentication failed
+API-->Admin: HTTP 401
+end 
+
+API->Database: Does customer exist (by username)?
+alt #ffcccc Error: Customer not found
+API<--Database: Customer does not exist
+API-->Admin: HTTP 404 Not Found
+end 
+API<--Database: Customer
+
+API->API: Update customer status (enabled or disabled)
+Database-->API: Customer updated
+API-->Admin: HTTP 200 Created
+
