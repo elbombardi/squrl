@@ -38,6 +38,10 @@ func generateRandomString(n int) string {
 ### API Endpoints
 Here's a brief description of the API endpoints:
 1. Create Customer:
+* Sequence diagram:
+<p align="center"><img src="images/Sequence_Create_Customer.png"/></p>
+
+* Endpoint details:
    - Endpoint: `/api/customer/`
    - HTTP Method: POST
    - Header Parameters:
@@ -222,7 +226,23 @@ Here's a brief description of the API endpoints:
 
 <p align="center"><img src="images/squrl_db.png"/></p>
 
+### Indexes List
+Here's the list of non-primary key indexes that will enhance the performance of the data access layer:
+- `customer` table:
+    - `prefix` column
+    - `username` column
+    - `api_key` column
+
+- `short_url` table:
+    - `customer_id` column
+    - `short_url_key` and `customer_id` columns (unique index)
+
+- `click` table:
+    - `short_url_id` column
+
 ### Creation scripts
+Here's the PostgreSql script to create the database and tables:
+
 ```sql
 CREATE TABLE "customer" (
   "id" int PRIMARY KEY,
@@ -305,4 +325,139 @@ ALTER TABLE "customer" ADD FOREIGN KEY ("id") REFERENCES "short_url" ("customer_
 ALTER TABLE "short_url" ADD FOREIGN KEY ("id") REFERENCES "click" ("short_url_id");
 ```
 
-## Code Structure
+## Database Access Layer Queries
+- Here's the list of queries that constitute the data access layer.
+- The queries are written in SQLC, which is a tool that generates type-safe Go code from SQL.
+
+### Query 1: Check if username exists:
+```sql
+-- name: CheckUsernameExists
+SELECT EXISTS(SELECT 1 FROM customer WHERE username = $1);
+```
+
+### Query 2: Check if email exists:
+```sql
+-- name: CheckEmailExists
+SELECT EXISTS(SELECT 1 FROM customer WHERE email = $1);
+```
+
+### Query 3: Check if api_key exists:
+```sql
+-- name: CheckApiKeyExists
+SELECT EXISTS(SELECT 1 FROM customer WHERE api_key = $1);
+```
+
+### Query 4: Insert a new customer:
+```sql
+-- name: InsertNewCustomer
+INSERT INTO customer (id, prefix, username, email, api_key, status, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
+```
+
+### Query 5: Update customer status by username:
+```sql
+-- name: UpdateCustomerStatusByUsername
+UPDATE customer SET status = $1 WHERE username = $2
+RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
+```
+
+### Query 6: Update customer status by prefix:
+```sql
+-- name: UpdateCustomerStatusByPrefix
+UPDATE customer SET status = $1 WHERE prefix = $2
+RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
+```
+
+### Query 7: Update customer status by api_key:
+```sql
+-- name: UpdateCustomerStatusByApiKey
+UPDATE customer SET status = $1 WHERE api_key = $2
+RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
+```
+
+### Query 8: Get customer by username:
+```sql
+-- name: GetCustomerByUsername
+SELECT id, prefix, username, email, api_key, status, created_at, updated_at
+FROM customer WHERE username = $1;
+```
+
+### Query 9: Get customer by prefix:
+```sql
+-- name: GetCustomerByPrefix
+SELECT id, prefix, username, email, api_key, status, created_at, updated_at
+FROM customer WHERE prefix = $1;
+```
+
+### Query 10: Get customer by api_key:
+```sql
+-- name: GetCustomerByApiKey
+SELECT id, prefix, username, email, api_key, status, created_at, updated_at
+FROM customer WHERE api_key = $1;
+```
+
+
+### Query 11:  Check if short_url_key exists for a specific customer_id:
+```sql
+-- name: CheckShortUrlKeyExists
+SELECT EXISTS(SELECT 1 FROM short_url WHERE short_url_key = $1 AND customer_id = $2);
+```
+
+### Query 12: Insert a new short URL:
+```sql
+-- name: InsertNewShortURL
+INSERT INTO short_url (id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
+```
+
+### Query 13: Update short URL status:
+```sql
+-- name: UpdateShortURLStatus
+UPDATE short_url SET status = $1 WHERE short_url_key = $2 AND customer_id = $3
+RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
+```
+
+### Query 14: Update short URL long URL:
+```sql
+-- name: UpdateShortURLLongURL
+UPDATE short_url SET long_url = $1 WHERE short_url_key = $2 AND customer_id = $3
+RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
+```
+
+### Query 15:  Increment short URL click count:
+```sql
+-- name: IncrementShortURLClickCount
+UPDATE short_url SET click_count = click_count + 1 WHERE short_url_key = $1 AND customer_id = $2
+RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
+```
+
+### Query 16: Set short URL first click date:
+```sql
+-- name: SetShortURLFirstClickDate
+UPDATE short_url SET first_click_date_time = $1 WHERE short_url_key = $2 AND customer_id = $3
+RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
+```
+
+### Query 17: Set short URL last click date:
+```sql
+-- name: SetShortURLLastClickDate
+UPDATE short_url SET last_click_date_time = $1 WHERE short_url_key = $2 AND customer_id = $3
+RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
+```
+
+### Query 18: Get short URL by customer_id and short_url_key:
+```sql
+-- name: GetShortURLByCustomerIDAndShortURLKey
+SELECT id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
+FROM short_url WHERE customer_id = $1 AND short_url_key = $2;
+```
+
+### Query 19:  Insert a new click:
+```sql
+-- name: InsertNewClick
+INSERT INTO click (id, short_url_id, click_date_time, user_agent, ip_address)
+VALUES ($1, $2, $3, $4, $5);
+```
+
