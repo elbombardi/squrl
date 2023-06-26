@@ -43,7 +43,7 @@ There should be the following files:
 ```
 	go run ./cmd/api-server/ --port 8081 --host localhost 
 ```
-Then Short API server is now accessible on : [http://localhost:8081/docs](http://localhost:8081/docs)
+Then Short API server is now accessible on : [http://localhost:8081/api/docs](http://localhost:8081/api/docs)
 
 #### 7. In terminal 3 : Start the Redirection server on port 8085 : 
 ```
