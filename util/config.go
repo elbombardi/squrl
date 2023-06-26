@@ -30,7 +30,9 @@ const (
 	REDIRECTION_PERSISTENCE_POOL_SIZE         = "REDIRECTION_PERSISTENCE_POOL_SIZE"
 	REDIRECTION_PERSISTENCE_POOL_SIZE_DEFAULT = 10
 	REDIRECTION_404_PAGE                      = "REDIRECTION_404_PAGE"
+	REDIRECTION_404_PAGE_DEFAULT              = "redirection_404.html"
 	REDIRECTION_500_PAGE                      = "REDIRECTION_500_PAGE"
+	REDIRECTION_500_PAGE_DEFAULT              = "redirection_500.html"
 )
 
 var envMap map[string]string
@@ -158,6 +160,22 @@ func ConfigRedirectionPersistencePoolSize() int {
 		return REDIRECTION_PERSISTENCE_POOL_SIZE_DEFAULT
 	}
 	return *value
+}
+
+func ConfigRedirection404Page() string {
+	page := get(REDIRECTION_404_PAGE)
+	if page == nil {
+		return REDIRECTION_404_PAGE_DEFAULT
+	}
+	return *page
+}
+
+func ConfigRedirection500Page() string {
+	page := get(REDIRECTION_500_PAGE)
+	if page == nil {
+		return REDIRECTION_500_PAGE_DEFAULT
+	}
+	return *page
 }
 
 func get(key string) *string {

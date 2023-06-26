@@ -40,8 +40,8 @@ func initializeApp() (*routes.Routes, error) {
 	return &routes.Routes{
 		CustomersRepository: store,
 		ShortURLsRepository: store,
-		PersistClick: func(shortUrl *db.ShortUrl) {
-			pool.AddJob(shortUrl)
+		PersistClick: func(shortUrl *db.ShortUrl, ipAddress string, userAgent string) {
+			pool.AddJob(shortUrl, ipAddress, userAgent)
 		},
 	}, nil
 }

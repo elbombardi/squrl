@@ -7,5 +7,5 @@ import (
 type Routes struct {
 	CustomersRepository db.CustomersRepository
 	ShortURLsRepository db.ShortURLsRepository
-	PersistClick        func(shortUrl *db.ShortUrl)
+	PersistClick        func(shortUrl *db.ShortUrl, ipAddress string, userAgent string)
 }

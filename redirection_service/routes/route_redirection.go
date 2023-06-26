@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	db "github.com/elbombardi/squrl/db/sqlc"
+	"github.com/elbombardi/squrl/util"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -18,40 +19,35 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 	customer, err := r.getCustomerInfo(customerPrefix)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			//TODO Send 404 not found error page
-			return c.SendStatus(http.StatusNotFound)
+			return page404(c)
 		}
-		//TODO Send internal error page
 		log.Println("Error retrieving Customer information: ", err)
-		return c.SendStatus(http.StatusInternalServerError)
+		return page500(c)
 	}
 	// If the customer is not active, send 404 not found error page
 	if customer.Status != "e" {
-		//TODO Send 404 not found error page
-		return c.SendStatus(http.StatusNotFound)
+		return page404(c)
 	}
 
 	// Retrieve Short URL information from the database
 	shortURL, err := r.getShortURLInfo(customer.ID, shortURLKey)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			//TODO Send 404 not found error page
-			return c.SendStatus(http.StatusNotFound)
+			return page404(c)
 		}
 		//TODO Send internal error page
 		log.Println("Error retrieving short URL information: ", err)
-		return c.SendStatus(http.StatusInternalServerError)
+		return page500(c)
 	}
 
 	//If the short URL is not active, send 404 not found error page
 	if shortURL.Status.String != "e" {
-		//TODO Send 404 not found error page
-		return c.SendStatus(http.StatusNotFound)
+		return page404(c)
 	}
 
 	// Asynchronously persist click information
 	if shortURL.TrackingStatus.String == "e" {
-		r.PersistClick(&shortURL)
+		r.PersistClick(&shortURL, c.IP(), c.Get("User-Agent"))
 	}
 
 	// Redirect to the long URL
@@ -71,4 +67,12 @@ func (r *Routes) getShortURLInfo(customerId int32, key string) (db.ShortUrl, err
 				Valid:  true,
 			},
 		})
+}
+
+func page404(c *fiber.Ctx) error {
+	return c.SendFile(util.ConfigRedirection404Page())
+}
+
+func page500(c *fiber.Ctx) error {
+	return c.SendFile(util.ConfigRedirection500Page())
 }

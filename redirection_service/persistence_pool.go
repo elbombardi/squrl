@@ -20,12 +20,16 @@ type PersistencePool struct {
 }
 
 type PersistenceJob struct {
-	ShortUrl *db.ShortUrl
+	ShortUrl  *db.ShortUrl
+	IpAddress string
+	UserAgent string
 }
 
-func (p *PersistencePool) AddJob(shortUrl *db.ShortUrl) {
+func (p *PersistencePool) AddJob(shortUrl *db.ShortUrl, ipAddress string, userAgent string) {
 	p.jobChannel <- &PersistenceJob{
-		ShortUrl: shortUrl,
+		ShortUrl:  shortUrl,
+		IpAddress: ipAddress,
+		UserAgent: userAgent,
 	}
 }
 
@@ -62,7 +66,7 @@ func (p *PersistencePool) Stop() {
 
 func (p *PersistencePool) worker() {
 	for job := range p.jobChannel {
-		p.persistClickInfo(job.ShortUrl)
+		p.persistClickInfo(job.ShortUrl, job.IpAddress, job.UserAgent)
 		if p.Stopped {
 			break
 		}
@@ -70,23 +74,42 @@ func (p *PersistencePool) worker() {
 	p.waitGroup.Done()
 }
 
-func (p *PersistencePool) persistClickInfo(shortUrl *db.ShortUrl) {
-	p.ShortURLsRepository.IncrementShortURLClickCount(context.Background(), shortUrl.ID)
-	p.ShortURLsRepository.SetShortURLLastClickDate(context.Background(), db.SetShortURLLastClickDateParams{
-		ID: shortUrl.ID,
-		LastClickDateTime: sql.NullTime{
-			Time:  time.Now(),
-			Valid: true,
-		},
-	})
-	if !shortUrl.FirstClickDateTime.Valid {
-		p.ShortURLsRepository.SetShortURLFirstClickDate(context.Background(), db.SetShortURLFirstClickDateParams{
+func (p *PersistencePool) persistClickInfo(shortUrl *db.ShortUrl, ipAddress string, userAgent string) {
+	err := p.ShortURLsRepository.IncrementShortURLClickCount(context.Background(), shortUrl.ID)
+	if err != nil {
+		log.Println("Error incrementing click count: ", err)
+	}
+	err = p.ShortURLsRepository.SetShortURLLastClickDate(context.Background(),
+		db.SetShortURLLastClickDateParams{
 			ID: shortUrl.ID,
-			FirstClickDateTime: sql.NullTime{
+			LastClickDateTime: sql.NullTime{
 				Time:  time.Now(),
 				Valid: true,
 			},
 		})
+	if err != nil {
+		log.Println("Error setting last click date: ", err)
+	}
+	if !shortUrl.FirstClickDateTime.Valid {
+		err = p.ShortURLsRepository.SetShortURLFirstClickDate(context.Background(),
+			db.SetShortURLFirstClickDateParams{
+				ID: shortUrl.ID,
+				FirstClickDateTime: sql.NullTime{
+					Time:  time.Now(),
+					Valid: true,
+				},
+			})
+		if err != nil {
+			log.Println("Error setting first click date: ", err)
+		}
+	}
+	err = p.ClicksRepository.InsertNewClick(context.Background(), db.InsertNewClickParams{
+		ShortUrlID: shortUrl.ID,
+		UserAgent:  sql.NullString{String: userAgent, Valid: true},
+		IpAddress:  sql.NullString{String: ipAddress, Valid: true},
+	})
+	if err != nil {
+		log.Println("Error inserting new click: ", err)
 	}
 }
 
