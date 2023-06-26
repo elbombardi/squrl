@@ -144,7 +144,7 @@ func generateRandomString(n int) string {
        "short_url": "string"
      }
      ```
-    - Response JSON Structure (on failure):
+   - Response JSON Structure (on failure):
       ```json
       {
         "error": "string",
