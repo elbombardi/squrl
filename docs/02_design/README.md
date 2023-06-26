@@ -184,7 +184,7 @@ func generateRandomString(n int) string {
      - 'new_long_url' is optional, if it's not provided, the long url will not be updated.
      - 'status' is optional, if it's not provude=ed, the status will not be updated. Possible values: "active", "inactive".
      - 'tracking_status' is optional, if it's not provided, the tracking status will not be updated. Possible values: "active", "inactive".
-    - Response JSON Structure (on success):
+   - Response JSON Structure (on success):
      ```json
      {
        "long_url": "string",
