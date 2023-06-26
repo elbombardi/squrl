@@ -225,6 +225,9 @@ func generateRandomString(n int) string {
 - The storage operation consists of two write operations:
     - Insert a new line in the `Clicks` table.
     - Update 3 agregates in `Short URLs` table : increment the `Click Count` column, set `First Click Date Time` column (optionally), update `Last Click Date and Time` column.
+- Error pages are to be configured in environment variables, so that the redirection server can return the appropriate error page in case of error, there are 2 error pages :
+    - 404 Not Found (To be stored in the environment variable: `REDIRECTION_SERVER_404_PAGE`)
+    - 500 Internal Server Error (To be stored in the environment variable: `REDIRECTION_SERVER_500_PAGE`)
 
 - The following sequence diagram shows the flow of the redirection request:
 <p align="center"><img src="images/Sequence_Redirection_Flow.png"/></p>
