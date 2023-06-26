@@ -234,16 +234,16 @@ func generateRandomString(n int) string {
 
 ### Indexes List
 Here's the list of non-primary key indexes that will enhance the performance of the data access layer:
-- `customer` table:
+- `customers` table:
     - `prefix` column
     - `username` column
     - `api_key` column
 
-- `short_url` table:
+- `short_urls` table:
     - `customer_id` column
     - `short_url_key` and `customer_id` columns (unique index)
 
-- `click` table:
+- `clicks` table:
     - `short_url_id` column
 
 ### Creation scripts
