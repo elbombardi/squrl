@@ -21,6 +21,9 @@ To run this project, you need to have the following tools installed on your mach
     git clone https://github.com/elbombardi/squrl.git
 ```
 #### 1. Go to the root of the project.
+```
+    cd squrl
+```
 There should be the following files: 
 - `env` => configuration, used in development mode
 - `redirection_400.html` => html page to be shown by the redirection server if customer or short url are not found or if they are disabled
