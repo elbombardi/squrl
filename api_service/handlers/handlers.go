@@ -17,3 +17,17 @@ func (handlers *Handlers) InstallHandlers(api *operations.ShortURLAPI) {
 	api.PutCustomerHandler = operations.PutCustomerHandlerFunc(handlers.UpdateCustomerHandler)
 	api.PutShortURLHandler = operations.PutShortURLHandlerFunc(handlers.UpdateShortURLHandler)
 }
+
+func encodeStatus(status string) string {
+	if status == "active" {
+		return "e"
+	}
+	return "d"
+}
+
+func decodeStatus(status string) string {
+	if status == "e" {
+		return "active"
+	}
+	return "inactive"
+}

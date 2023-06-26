@@ -56,17 +56,12 @@ func (q *Queries) GetShortURLByCustomerIDAndShortURLKey(ctx context.Context, arg
 }
 
 const incrementShortURLClickCount = `-- name: IncrementShortURLClickCount :exec
-UPDATE short_urls SET click_count = click_count + 1, updated_at=now() WHERE short_url_key = $1 AND customer_id = $2
+UPDATE short_urls SET click_count = click_count + 1, updated_at=now() WHERE id = $1
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 
-type IncrementShortURLClickCountParams struct {
-	ShortUrlKey sql.NullString
-	CustomerID  int32
-}
-
-func (q *Queries) IncrementShortURLClickCount(ctx context.Context, arg IncrementShortURLClickCountParams) error {
-	_, err := q.db.ExecContext(ctx, incrementShortURLClickCount, arg.ShortUrlKey, arg.CustomerID)
+func (q *Queries) IncrementShortURLClickCount(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, incrementShortURLClickCount, id)
 	return err
 }
 
@@ -88,81 +83,76 @@ func (q *Queries) InsertNewShortURL(ctx context.Context, arg InsertNewShortURLPa
 }
 
 const setShortURLFirstClickDate = `-- name: SetShortURLFirstClickDate :exec
-UPDATE short_urls SET first_click_date_time = $1, updated_at=now() WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET first_click_date_time = $1, updated_at=now() WHERE id = $2
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 
 type SetShortURLFirstClickDateParams struct {
 	FirstClickDateTime sql.NullTime
-	ShortUrlKey        sql.NullString
-	CustomerID         int32
+	ID                 int32
 }
 
 func (q *Queries) SetShortURLFirstClickDate(ctx context.Context, arg SetShortURLFirstClickDateParams) error {
-	_, err := q.db.ExecContext(ctx, setShortURLFirstClickDate, arg.FirstClickDateTime, arg.ShortUrlKey, arg.CustomerID)
+	_, err := q.db.ExecContext(ctx, setShortURLFirstClickDate, arg.FirstClickDateTime, arg.ID)
 	return err
 }
 
 const setShortURLLastClickDate = `-- name: SetShortURLLastClickDate :exec
-UPDATE short_urls SET last_click_date_time = $1, updated_at=now() WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET last_click_date_time = $1, updated_at=now() WHERE id = $2 
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 
 type SetShortURLLastClickDateParams struct {
 	LastClickDateTime sql.NullTime
-	ShortUrlKey       sql.NullString
-	CustomerID        int32
+	ID                int32
 }
 
 func (q *Queries) SetShortURLLastClickDate(ctx context.Context, arg SetShortURLLastClickDateParams) error {
-	_, err := q.db.ExecContext(ctx, setShortURLLastClickDate, arg.LastClickDateTime, arg.ShortUrlKey, arg.CustomerID)
+	_, err := q.db.ExecContext(ctx, setShortURLLastClickDate, arg.LastClickDateTime, arg.ID)
 	return err
 }
 
 const updateShortURLLongURL = `-- name: UpdateShortURLLongURL :exec
-UPDATE short_urls SET long_url = $1, updated_at=now() WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET long_url = $1, updated_at=now() WHERE id = $2
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 
 type UpdateShortURLLongURLParams struct {
-	LongUrl     string
-	ShortUrlKey sql.NullString
-	CustomerID  int32
+	LongUrl string
+	ID      int32
 }
 
 func (q *Queries) UpdateShortURLLongURL(ctx context.Context, arg UpdateShortURLLongURLParams) error {
-	_, err := q.db.ExecContext(ctx, updateShortURLLongURL, arg.LongUrl, arg.ShortUrlKey, arg.CustomerID)
+	_, err := q.db.ExecContext(ctx, updateShortURLLongURL, arg.LongUrl, arg.ID)
 	return err
 }
 
 const updateShortURLStatus = `-- name: UpdateShortURLStatus :exec
-UPDATE short_urls SET status = $1, updated_at=now() WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET status = $1, updated_at=now() WHERE id = $2 
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 
 type UpdateShortURLStatusParams struct {
-	Status      sql.NullString
-	ShortUrlKey sql.NullString
-	CustomerID  int32
+	Status sql.NullString
+	ID     int32
 }
 
 func (q *Queries) UpdateShortURLStatus(ctx context.Context, arg UpdateShortURLStatusParams) error {
-	_, err := q.db.ExecContext(ctx, updateShortURLStatus, arg.Status, arg.ShortUrlKey, arg.CustomerID)
+	_, err := q.db.ExecContext(ctx, updateShortURLStatus, arg.Status, arg.ID)
 	return err
 }
 
 const updateShortURLTrackingStatus = `-- name: UpdateShortURLTrackingStatus :exec
-UPDATE short_urls SET tracking_status = $1, updated_at=now() WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET tracking_status = $1, updated_at=now() WHERE id = $2 
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 
 type UpdateShortURLTrackingStatusParams struct {
 	TrackingStatus sql.NullString
-	ShortUrlKey    sql.NullString
-	CustomerID     int32
+	ID             int32
 }
 
 func (q *Queries) UpdateShortURLTrackingStatus(ctx context.Context, arg UpdateShortURLTrackingStatusParams) error {
-	_, err := q.db.ExecContext(ctx, updateShortURLTrackingStatus, arg.TrackingStatus, arg.ShortUrlKey, arg.CustomerID)
+	_, err := q.db.ExecContext(ctx, updateShortURLTrackingStatus, arg.TrackingStatus, arg.ID)
 	return err
 }

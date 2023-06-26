@@ -22,7 +22,7 @@ type CustomersRepository interface {
 type ShortURLsRepository interface {
 	CheckShortUrlKeyExists(ctx context.Context, arg CheckShortUrlKeyExistsParams) (bool, error)
 	GetShortURLByCustomerIDAndShortURLKey(ctx context.Context, arg GetShortURLByCustomerIDAndShortURLKeyParams) (ShortUrl, error)
-	IncrementShortURLClickCount(ctx context.Context, arg IncrementShortURLClickCountParams) error
+	IncrementShortURLClickCount(ctx context.Context, id int32) error
 	InsertNewShortURL(ctx context.Context, arg InsertNewShortURLParams) error
 	SetShortURLFirstClickDate(ctx context.Context, arg SetShortURLFirstClickDateParams) error
 	SetShortURLLastClickDate(ctx context.Context, arg SetShortURLLastClickDateParams) error

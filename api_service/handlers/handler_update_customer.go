@@ -68,10 +68,3 @@ func internalErrorInUpdateCustomer(err error) middleware.Responder {
 	return operations.NewPutCustomerInternalServerError().WithPayload(&operations.PutCustomerInternalServerErrorBody{
 		Error: err.Error()})
 }
-
-func encodeStatus(status string) string {
-	if status == "active" {
-		return "e"
-	}
-	return "d"
-}

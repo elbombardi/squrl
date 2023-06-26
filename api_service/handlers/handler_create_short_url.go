@@ -25,7 +25,7 @@ func (h *Handlers) CreateShortURLHandler(params operations.PostShortURLParams) m
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return operations.NewPostShortURLUnauthorized().WithPayload(&operations.PostShortURLUnauthorizedBody{
-				Error: "Invalid API Key: " + params.XAPIKEY})
+				Error: "Invalid API Key"})
 		}
 		return internalErrorInCreateShortURL(err)
 	}
