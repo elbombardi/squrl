@@ -8,3 +8,8 @@ import (
 func (*Handlers) UpdateShortURLHandler(params operations.PutShortURLParams) middleware.Responder {
 	return middleware.NotImplemented("operation operations.PutShortURL has not yet been implemented")
 }
+
+func internalErrorInUpdateShortURL(err error) middleware.Responder {
+	return operations.NewPutShortURLInternalServerError().WithPayload(&operations.PutShortURLInternalServerErrorBody{
+		Error: err.Error()})
+}

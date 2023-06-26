@@ -22,6 +22,8 @@ const (
 
 	ADMIN_APi_KEY = "ADMIN_API_KEY"
 
+	REDIRECTION_SERVER_BASE_URL = "REDIRECTION_SERVER_BASE_URL"
+
 	DB_MAX_IDLE_CONNS_DEFAULT     = 5
 	DB_MAX_OPEN_CONNS_DEFAULT     = 10
 	DB_CONN_MAX_IDLE_TIME_DEFAULT = 1 * time.Second
@@ -50,6 +52,7 @@ func LoadConfig() error {
 		DB_DRIVER,
 		DB_SOURCE,
 		ADMIN_APi_KEY,
+		REDIRECTION_SERVER_BASE_URL,
 	}
 	errMsg := ""
 	for _, param := range required {
@@ -137,6 +140,10 @@ func ConfigDBConnMaxLifeTime() (time.Duration, error) {
 
 func ConfigAdminAPIKey() *string {
 	return get(ADMIN_APi_KEY)
+}
+
+func ConfigRedirectionServerBaseURL() *string {
+	return get(REDIRECTION_SERVER_BASE_URL)
 }
 
 func get(key string) *string {

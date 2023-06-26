@@ -10,7 +10,6 @@ require (
 	github.com/go-openapi/strfmt v0.21.7
 	github.com/go-openapi/swag v0.22.4
 	github.com/go-openapi/validate v0.22.1
-	github.com/gofiber/fiber v1.14.6
 	github.com/gofiber/fiber/v2 v2.47.0
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/joho/godotenv v1.3.0

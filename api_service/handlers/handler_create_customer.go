@@ -93,7 +93,7 @@ func (h *Handlers) generatePrefix() (string, error) {
 
 func (h *Handlers) generateAPIKey() (string, error) {
 	apiKey := util.GenerateRandomString(32)
-	//Check if the prefix is unique
+	//Check if the Api key is unique
 	exists, err := h.CustomersRepository.CheckApiKeyExists(context.Background(), apiKey)
 	if err != nil {
 		return "", err
