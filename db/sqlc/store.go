@@ -31,206 +31,19 @@ type ShortURLsRepository interface {
 	UpdateShortURLTrackingStatus(ctx context.Context, arg UpdateShortURLTrackingStatusParams) error
 }
 type ClicksRepository interface {
+	InsertNewClick(ctx context.Context, arg InsertNewClickParams) error
 }
 
 type Store interface {
 	CustomersRepository
 	ShortURLsRepository
 	ClicksRepository
-	// Transactional calls
-	// RegisterMatching(ctx context.Context, params RegisterMatchingParams) error
-	// CancelMatching(ctx context.Context, params CancelMatchingParams) error
 }
 
 type SQLStore struct {
 	*Queries
 	db *sql.DB
 }
-
-// type RegisterMatchingParams struct {
-// 	Order1 OrderInfo
-// 	Order2 OrderInfo
-// 	Amount int32
-// }
-
-// type CancelMatchingParams struct {
-// 	Order1 OrderInfo
-// 	Order2 OrderInfo
-// }
-
-// func (store *SQLStore) RegisterMatching(ctx context.Context, params RegisterMatchingParams) error {
-// 	return store.transactional(ctx, func(queries *Queries) error {
-// 		//Sort by ID to avoid deadlocks
-// 		order1, order2 := params.Order1, params.Order2
-// 		if params.Order1.ID > params.Order2.ID {
-// 			order1, order2 = params.Order2, params.Order1
-// 		}
-
-// 		// Insert new line into order_matching_info
-// 		_, err := queries.InsertOrderMatching(ctx, InsertOrderMatchingParams{
-// 			Order1ID: sql.NullInt32{
-// 				Int32: order1.ID,
-// 				Valid: true,
-// 			},
-// 			Order2ID: sql.NullInt32{
-// 				Int32: order2.ID,
-// 				Valid: true,
-// 			},
-// 			Amount: params.Amount,
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-
-// 		// Updating remaining_amount
-// 		matchedAmount1, err := queries.GetMatchedAmount(ctx, sql.NullInt32{
-// 			Int32: order1.ID,
-// 			Valid: true,
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-// 		matchedAmount2, err := queries.GetMatchedAmount(ctx, sql.NullInt32{
-// 			Int32: order2.ID,
-// 			Valid: true,
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-
-// 		if order1.Amount < int32(matchedAmount1) {
-// 			return &errors.InvalidInput{
-// 				Message: fmt.Sprintf(
-// 					"Matched amount (%v) cannot be bigger than the original order amount (%v). OrderUUID : %v",
-// 					matchedAmount1, order1.Amount, order1.OrderUuid.String()),
-// 			}
-// 		}
-// 		if order2.Amount < int32(matchedAmount2) {
-// 			return &errors.InvalidInput{
-// 				Message: fmt.Sprintf(
-// 					"Matched amount (%v) cannot be bigger than the original order amount (%v). OrderUUID : %v",
-// 					matchedAmount2, order2.Amount, order2.OrderUuid),
-// 			}
-// 		}
-// 		err = queries.UpdateOrderRemainingAmount(ctx, UpdateOrderRemainingAmountParams{
-// 			OrderUuid:       order1.OrderUuid,
-// 			RemainingAmount: order1.Amount - int32(matchedAmount1),
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-// 		err = queries.UpdateOrderRemainingAmount(ctx, UpdateOrderRemainingAmountParams{
-// 			OrderUuid:       order2.OrderUuid,
-// 			RemainingAmount: order2.Amount - int32(matchedAmount2),
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-
-// 		// Updating orders status
-// 		status1 := OrderStatusPARTIALLYMATCHED
-// 		if order1.Amount == int32(matchedAmount1) {
-// 			status1 = OrderStatusFULLYMATCHED
-// 		}
-// 		err = queries.UpdateOrderStatus(ctx, UpdateOrderStatusParams{
-// 			OrderUuid: order1.OrderUuid,
-// 			Status:    status1,
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-
-// 		status2 := OrderStatusPARTIALLYMATCHED
-// 		if order2.Amount == int32(matchedAmount2) {
-// 			status2 = OrderStatusFULLYMATCHED
-// 		}
-// 		err = queries.UpdateOrderStatus(ctx, UpdateOrderStatusParams{
-// 			OrderUuid: order2.OrderUuid,
-// 			Status:    status2,
-// 		})
-// 		return err
-// 	})
-// }
-
-// func (store *SQLStore) CancelMatching(ctx context.Context, params CancelMatchingParams) error {
-// 	return store.transactional(ctx, func(queries *Queries) error {
-// 		//Sort by ID to avoid deadlocks
-// 		order1, order2 := params.Order1, params.Order2
-// 		if params.Order1.ID > params.Order2.ID {
-// 			order1, order2 = params.Order2, params.Order1
-// 		}
-
-// 		// Delete the line from order_matching_info
-// 		err := queries.DeleteOrderMatching(ctx, DeleteOrderMatchingParams{
-// 			Order1ID: sql.NullInt32{
-// 				Int32: order1.ID,
-// 				Valid: true,
-// 			},
-// 			Order2ID: sql.NullInt32{
-// 				Int32: order2.ID,
-// 				Valid: true,
-// 			},
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-
-// 		// Updating order1, and order2 remaining_amount
-// 		matchedAmount1, err := queries.GetMatchedAmount(ctx, sql.NullInt32{
-// 			Int32: order1.ID,
-// 			Valid: true,
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-// 		matchedAmount2, err := queries.GetMatchedAmount(ctx, sql.NullInt32{
-// 			Int32: order2.ID,
-// 			Valid: true,
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-
-// 		err = queries.UpdateOrderRemainingAmount(ctx, UpdateOrderRemainingAmountParams{
-// 			OrderUuid:       order1.OrderUuid,
-// 			RemainingAmount: order1.Amount - int32(matchedAmount1),
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-// 		err = queries.UpdateOrderRemainingAmount(ctx, UpdateOrderRemainingAmountParams{
-// 			OrderUuid:       order2.OrderUuid,
-// 			RemainingAmount: order2.Amount - int32(matchedAmount2),
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-
-// 		// Updating order1, and order2 status
-// 		status1 := OrderStatusPARTIALLYMATCHED
-// 		if matchedAmount1 == 0 {
-// 			status1 = OrderStatusSUBMITTED
-
-// 		}
-// 		err = queries.UpdateOrderStatus(ctx, UpdateOrderStatusParams{
-// 			OrderUuid: order1.OrderUuid,
-// 			Status:    status1,
-// 		})
-// 		if err != nil {
-// 			return err
-// 		}
-// 		status2 := OrderStatusPARTIALLYMATCHED
-// 		if matchedAmount2 == 0 {
-// 			status2 = OrderStatusSUBMITTED
-
-// 		}
-// 		err = queries.UpdateOrderStatus(ctx, UpdateOrderStatusParams{
-// 			OrderUuid: order2.OrderUuid,
-// 			Status:    status2,
-// 		})
-// 		return err
-// 	})
-// }
 
 var dbInstance *sql.DB
 
@@ -268,7 +81,7 @@ func Finalize() error {
 	return dbInstance.Close()
 }
 
-func (store *SQLStore) transactional(ctx context.Context, fn func(queries *Queries) error) error {
+func (store *SQLStore) Transactional(ctx context.Context, fn func(queries *Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err

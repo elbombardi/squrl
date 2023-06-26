@@ -3,7 +3,7 @@
 // Package api Short URL API
 //
 //  Schemes:
-//    https
+//    http
 //  Host: localhost
 //  BasePath: /api
 //  Version: 1.0.0

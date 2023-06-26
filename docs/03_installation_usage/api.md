@@ -13,7 +13,7 @@
 ## Content negotiation
 
 ### URI Schemes
-  * https
+  * http
 
 ### Consumes
   * application/json
@@ -55,6 +55,7 @@ POST /api/customer
 | [200](#post-customer-200) | OK | Success |  | [schema](#post-customer-200-schema) |
 | [400](#post-customer-400) | Bad Request | Bad Request |  | [schema](#post-customer-400-schema) |
 | [401](#post-customer-401) | Unauthorized | Unauthorized |  | [schema](#post-customer-401-schema) |
+| [500](#post-customer-500) | Internal Server Error | Internal Server Error |  | [schema](#post-customer-500-schema) |
 
 #### Responses
 
@@ -85,6 +86,15 @@ Status: Unauthorized
   
 
 [PostCustomerUnauthorizedBody](#post-customer-unauthorized-body)
+
+##### <span id="post-customer-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="post-customer-500-schema"></span> Schema
+   
+  
+
+[PostCustomerInternalServerErrorBody](#post-customer-internal-server-error-body)
 
 ###### Inlined models
 
@@ -119,6 +129,21 @@ Status: Unauthorized
 
 
 
+**<span id="post-customer-internal-server-error-body"></span> PostCustomerInternalServerErrorBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| error | string| `string` |  | |  |  |
+
+
+
 **<span id="post-customer-o-k-body"></span> PostCustomerOKBody**
 
 
@@ -131,6 +156,7 @@ Status: Unauthorized
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
 | api_key | string| `string` |  | |  |  |
+| prefix | string| `string` |  | |  |  |
 
 
 
@@ -168,6 +194,7 @@ POST /api/short-url
 | [200](#post-short-url-200) | OK | Success |  | [schema](#post-short-url-200-schema) |
 | [400](#post-short-url-400) | Bad Request | Bad Request |  | [schema](#post-short-url-400-schema) |
 | [401](#post-short-url-401) | Unauthorized | Unauthorized |  | [schema](#post-short-url-401-schema) |
+| [500](#post-short-url-500) | Internal Server Error | Internal Server Error |  | [schema](#post-short-url-500-schema) |
 
 #### Responses
 
@@ -199,6 +226,15 @@ Status: Unauthorized
 
 [PostShortURLUnauthorizedBody](#post-short-url-unauthorized-body)
 
+##### <span id="post-short-url-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="post-short-url-500-schema"></span> Schema
+   
+  
+
+[PostShortURLInternalServerErrorBody](#post-short-url-internal-server-error-body)
+
 ###### Inlined models
 
 **<span id="post-short-url-bad-request-body"></span> PostShortURLBadRequestBody**
@@ -228,6 +264,21 @@ Status: Unauthorized
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
 | long_url | string| `string` | ✓ | |  |  |
+
+
+
+**<span id="post-short-url-internal-server-error-body"></span> PostShortURLInternalServerErrorBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| error | string| `string` |  | |  |  |
 
 
 
@@ -282,6 +333,7 @@ PUT /api/customer
 | [400](#put-customer-400) | Bad Request | Bad Request |  | [schema](#put-customer-400-schema) |
 | [401](#put-customer-401) | Unauthorized | Unauthorized |  | [schema](#put-customer-401-schema) |
 | [404](#put-customer-404) | Not Found | Not Found |  | [schema](#put-customer-404-schema) |
+| [500](#put-customer-500) | Internal Server Error | Internal Server Error |  | [schema](#put-customer-500-schema) |
 
 #### Responses
 
@@ -322,6 +374,15 @@ Status: Not Found
 
 [PutCustomerNotFoundBody](#put-customer-not-found-body)
 
+##### <span id="put-customer-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="put-customer-500-schema"></span> Schema
+   
+  
+
+[PutCustomerInternalServerErrorBody](#put-customer-internal-server-error-body)
+
 ###### Inlined models
 
 **<span id="put-customer-bad-request-body"></span> PutCustomerBadRequestBody**
@@ -352,6 +413,21 @@ Status: Not Found
 |------|------|---------|:--------:| ------- |-------------|---------|
 | status | string| `string` | ✓ | |  |  |
 | username | string| `string` | ✓ | |  |  |
+
+
+
+**<span id="put-customer-internal-server-error-body"></span> PutCustomerInternalServerErrorBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| error | string| `string` |  | |  |  |
 
 
 
@@ -420,6 +496,7 @@ PUT /api/short-url
 | [400](#put-short-url-400) | Bad Request | Bad Request |  | [schema](#put-short-url-400-schema) |
 | [401](#put-short-url-401) | Unauthorized | Unauthorized |  | [schema](#put-short-url-401-schema) |
 | [404](#put-short-url-404) | Not Found | Not Found |  | [schema](#put-short-url-404-schema) |
+| [500](#put-short-url-500) | Internal Server Error | Internal Server Error |  | [schema](#put-short-url-500-schema) |
 
 #### Responses
 
@@ -460,6 +537,15 @@ Status: Not Found
 
 [PutShortURLNotFoundBody](#put-short-url-not-found-body)
 
+##### <span id="put-short-url-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="put-short-url-500-schema"></span> Schema
+   
+  
+
+[PutShortURLInternalServerErrorBody](#put-short-url-internal-server-error-body)
+
 ###### Inlined models
 
 **<span id="put-short-url-bad-request-body"></span> PutShortURLBadRequestBody**
@@ -492,6 +578,21 @@ Status: Not Found
 | short_url_key | string| `string` | ✓ | |  |  |
 | status | string| `string` |  | |  |  |
 | tracking_status | string| `string` |  | |  |  |
+
+
+
+**<span id="put-short-url-internal-server-error-body"></span> PutShortURLInternalServerErrorBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| error | string| `string` |  | |  |  |
 
 
 

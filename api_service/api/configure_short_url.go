@@ -8,18 +8,18 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/runtime/middleware"
 
 	"github.com/elbombardi/squrl/api_service/api/operations"
-	"github.com/elbombardi/squrl/api_service/handlers"
 )
 
-//go:generate swagger generate server --target ../../api_service --name Shorturl --spec ../../swagger/api.yml --server-package api --principal interface{} --exclude-main
+//go:generate swagger generate server --target ../../api_service --name ShortURL --spec ../../swagger/api.yml --server-package api --principal interface{} --exclude-main
 
-func configureFlags(api *operations.ShorturlAPI) {
+func configureFlags(api *operations.ShortURLAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.ShorturlAPI) http.Handler {
+func configureAPI(api *operations.ShortURLAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
@@ -37,10 +37,26 @@ func configureAPI(api *operations.ShorturlAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	api.PostCustomerHandler = operations.PostCustomerHandlerFunc(handlers.CreateCustomerHandler)
-	api.PostShortURLHandler = operations.PostShortURLHandlerFunc(handlers.CreateShortURLHandler)
-	api.PutCustomerHandler = operations.PutCustomerHandlerFunc(handlers.UpdateCustomerHandler)
-	api.PutShortURLHandler = operations.PutShortURLHandlerFunc(handlers.UpdateShortURLHandler)
+	if api.PostCustomerHandler == nil {
+		api.PostCustomerHandler = operations.PostCustomerHandlerFunc(func(params operations.PostCustomerParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.PostCustomer has not yet been implemented")
+		})
+	}
+	if api.PostShortURLHandler == nil {
+		api.PostShortURLHandler = operations.PostShortURLHandlerFunc(func(params operations.PostShortURLParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.PostShortURL has not yet been implemented")
+		})
+	}
+	if api.PutCustomerHandler == nil {
+		api.PutCustomerHandler = operations.PutCustomerHandlerFunc(func(params operations.PutCustomerParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.PutCustomer has not yet been implemented")
+		})
+	}
+	if api.PutShortURLHandler == nil {
+		api.PutShortURLHandler = operations.PutShortURLHandlerFunc(func(params operations.PutShortURLParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.PutShortURL has not yet been implemented")
+		})
+	}
 
 	api.PreServerShutdown = func() {}
 

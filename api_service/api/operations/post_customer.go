@@ -170,6 +170,43 @@ func (o *PostCustomerBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
+// PostCustomerInternalServerErrorBody post customer internal server error body
+//
+// swagger:model PostCustomerInternalServerErrorBody
+type PostCustomerInternalServerErrorBody struct {
+
+	// error
+	Error string `json:"error,omitempty"`
+}
+
+// Validate validates this post customer internal server error body
+func (o *PostCustomerInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this post customer internal server error body based on context it is used
+func (o *PostCustomerInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *PostCustomerInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *PostCustomerInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res PostCustomerInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
 // PostCustomerOKBody post customer o k body
 //
 // swagger:model PostCustomerOKBody
@@ -177,6 +214,9 @@ type PostCustomerOKBody struct {
 
 	// api key
 	APIKey string `json:"api_key,omitempty"`
+
+	// prefix
+	Prefix string `json:"prefix,omitempty"`
 }
 
 // Validate validates this post customer o k body

@@ -20,9 +20,9 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewShorturlAPI creates a new Shorturl instance
-func NewShorturlAPI(spec *loads.Document) *ShorturlAPI {
-	return &ShorturlAPI{
+// NewShortURLAPI creates a new ShortURL instance
+func NewShortURLAPI(spec *loads.Document) *ShortURLAPI {
+	return &ShortURLAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
 		defaultConsumes:     "application/json",
@@ -57,8 +57,8 @@ func NewShorturlAPI(spec *loads.Document) *ShorturlAPI {
 	}
 }
 
-/*ShorturlAPI the shorturl API */
-type ShorturlAPI struct {
+/*ShortURLAPI the short URL API */
+type ShortURLAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -119,52 +119,52 @@ type ShorturlAPI struct {
 }
 
 // UseRedoc for documentation at /docs
-func (o *ShorturlAPI) UseRedoc() {
+func (o *ShortURLAPI) UseRedoc() {
 	o.useSwaggerUI = false
 }
 
 // UseSwaggerUI for documentation at /docs
-func (o *ShorturlAPI) UseSwaggerUI() {
+func (o *ShortURLAPI) UseSwaggerUI() {
 	o.useSwaggerUI = true
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *ShorturlAPI) SetDefaultProduces(mediaType string) {
+func (o *ShortURLAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *ShorturlAPI) SetDefaultConsumes(mediaType string) {
+func (o *ShortURLAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *ShorturlAPI) SetSpec(spec *loads.Document) {
+func (o *ShortURLAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *ShorturlAPI) DefaultProduces() string {
+func (o *ShortURLAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *ShorturlAPI) DefaultConsumes() string {
+func (o *ShortURLAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *ShorturlAPI) Formats() strfmt.Registry {
+func (o *ShortURLAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *ShorturlAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *ShortURLAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the ShorturlAPI
-func (o *ShorturlAPI) Validate() error {
+// Validate validates the registrations in the ShortURLAPI
+func (o *ShortURLAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -196,23 +196,23 @@ func (o *ShorturlAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *ShorturlAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *ShortURLAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *ShorturlAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *ShortURLAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 	return nil
 }
 
 // Authorizer returns the registered authorizer
-func (o *ShorturlAPI) Authorizer() runtime.Authorizer {
+func (o *ShortURLAPI) Authorizer() runtime.Authorizer {
 	return nil
 }
 
 // ConsumersFor gets the consumers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *ShorturlAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *ShortURLAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 	result := make(map[string]runtime.Consumer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -229,7 +229,7 @@ func (o *ShorturlAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consu
 
 // ProducersFor gets the producers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *ShorturlAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *ShortURLAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 	result := make(map[string]runtime.Producer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -245,7 +245,7 @@ func (o *ShorturlAPI) ProducersFor(mediaTypes []string) map[string]runtime.Produ
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *ShorturlAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *ShortURLAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -260,8 +260,8 @@ func (o *ShorturlAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	return h, ok
 }
 
-// Context returns the middleware context for the shorturl API
-func (o *ShorturlAPI) Context() *middleware.Context {
+// Context returns the middleware context for the short URL API
+func (o *ShortURLAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -269,7 +269,7 @@ func (o *ShorturlAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *ShorturlAPI) initHandlerCache() {
+func (o *ShortURLAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
@@ -295,7 +295,7 @@ func (o *ShorturlAPI) initHandlerCache() {
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *ShorturlAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *ShortURLAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -308,24 +308,24 @@ func (o *ShorturlAPI) Serve(builder middleware.Builder) http.Handler {
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *ShorturlAPI) Init() {
+func (o *ShortURLAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *ShorturlAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *ShortURLAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *ShorturlAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *ShortURLAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }
 
 // AddMiddlewareFor adds a http middleware to existing handler
-func (o *ShorturlAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
+func (o *ShortURLAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
 	um := strings.ToUpper(method)
 	if path == "/" {
 		path = ""

@@ -56,7 +56,7 @@ func (q *Queries) GetShortURLByCustomerIDAndShortURLKey(ctx context.Context, arg
 }
 
 const incrementShortURLClickCount = `-- name: IncrementShortURLClickCount :exec
-UPDATE short_urls SET click_count = click_count + 1 WHERE short_url_key = $1 AND customer_id = $2
+UPDATE short_urls SET click_count = click_count + 1, updated_at=now() WHERE short_url_key = $1 AND customer_id = $2
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 
@@ -88,7 +88,7 @@ func (q *Queries) InsertNewShortURL(ctx context.Context, arg InsertNewShortURLPa
 }
 
 const setShortURLFirstClickDate = `-- name: SetShortURLFirstClickDate :exec
-UPDATE short_urls SET first_click_date_time = $1 WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET first_click_date_time = $1, updated_at=now() WHERE short_url_key = $2 AND customer_id = $3
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 
@@ -104,7 +104,7 @@ func (q *Queries) SetShortURLFirstClickDate(ctx context.Context, arg SetShortURL
 }
 
 const setShortURLLastClickDate = `-- name: SetShortURLLastClickDate :exec
-UPDATE short_urls SET last_click_date_time = $1 WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET last_click_date_time = $1, updated_at=now() WHERE short_url_key = $2 AND customer_id = $3
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 
@@ -120,7 +120,7 @@ func (q *Queries) SetShortURLLastClickDate(ctx context.Context, arg SetShortURLL
 }
 
 const updateShortURLLongURL = `-- name: UpdateShortURLLongURL :exec
-UPDATE short_urls SET long_url = $1 WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET long_url = $1, updated_at=now() WHERE short_url_key = $2 AND customer_id = $3
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 
@@ -136,7 +136,7 @@ func (q *Queries) UpdateShortURLLongURL(ctx context.Context, arg UpdateShortURLL
 }
 
 const updateShortURLStatus = `-- name: UpdateShortURLStatus :exec
-UPDATE short_urls SET status = $1 WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET status = $1, updated_at=now() WHERE short_url_key = $2 AND customer_id = $3
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 
@@ -152,7 +152,7 @@ func (q *Queries) UpdateShortURLStatus(ctx context.Context, arg UpdateShortURLSt
 }
 
 const updateShortURLTrackingStatus = `-- name: UpdateShortURLTrackingStatus :exec
-UPDATE short_urls SET tracking_status = $1 WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET tracking_status = $1, updated_at=now() WHERE short_url_key = $2 AND customer_id = $3
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
 `
 

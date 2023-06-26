@@ -142,3 +142,47 @@ func (o *PostShortURLUnauthorized) WriteResponse(rw http.ResponseWriter, produce
 		}
 	}
 }
+
+// PostShortURLInternalServerErrorCode is the HTTP code returned for type PostShortURLInternalServerError
+const PostShortURLInternalServerErrorCode int = 500
+
+/*PostShortURLInternalServerError Internal Server Error
+
+swagger:response postShortUrlInternalServerError
+*/
+type PostShortURLInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *PostShortURLInternalServerErrorBody `json:"body,omitempty"`
+}
+
+// NewPostShortURLInternalServerError creates PostShortURLInternalServerError with default headers values
+func NewPostShortURLInternalServerError() *PostShortURLInternalServerError {
+
+	return &PostShortURLInternalServerError{}
+}
+
+// WithPayload adds the payload to the post short Url internal server error response
+func (o *PostShortURLInternalServerError) WithPayload(payload *PostShortURLInternalServerErrorBody) *PostShortURLInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post short Url internal server error response
+func (o *PostShortURLInternalServerError) SetPayload(payload *PostShortURLInternalServerErrorBody) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostShortURLInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(500)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}

@@ -142,3 +142,47 @@ func (o *PostCustomerUnauthorized) WriteResponse(rw http.ResponseWriter, produce
 		}
 	}
 }
+
+// PostCustomerInternalServerErrorCode is the HTTP code returned for type PostCustomerInternalServerError
+const PostCustomerInternalServerErrorCode int = 500
+
+/*PostCustomerInternalServerError Internal Server Error
+
+swagger:response postCustomerInternalServerError
+*/
+type PostCustomerInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *PostCustomerInternalServerErrorBody `json:"body,omitempty"`
+}
+
+// NewPostCustomerInternalServerError creates PostCustomerInternalServerError with default headers values
+func NewPostCustomerInternalServerError() *PostCustomerInternalServerError {
+
+	return &PostCustomerInternalServerError{}
+}
+
+// WithPayload adds the payload to the post customer internal server error response
+func (o *PostCustomerInternalServerError) WithPayload(payload *PostCustomerInternalServerErrorBody) *PostCustomerInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post customer internal server error response
+func (o *PostCustomerInternalServerError) SetPayload(payload *PostCustomerInternalServerErrorBody) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostCustomerInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(500)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}

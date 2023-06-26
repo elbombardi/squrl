@@ -186,3 +186,47 @@ func (o *PutShortURLNotFound) WriteResponse(rw http.ResponseWriter, producer run
 		}
 	}
 }
+
+// PutShortURLInternalServerErrorCode is the HTTP code returned for type PutShortURLInternalServerError
+const PutShortURLInternalServerErrorCode int = 500
+
+/*PutShortURLInternalServerError Internal Server Error
+
+swagger:response putShortUrlInternalServerError
+*/
+type PutShortURLInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *PutShortURLInternalServerErrorBody `json:"body,omitempty"`
+}
+
+// NewPutShortURLInternalServerError creates PutShortURLInternalServerError with default headers values
+func NewPutShortURLInternalServerError() *PutShortURLInternalServerError {
+
+	return &PutShortURLInternalServerError{}
+}
+
+// WithPayload adds the payload to the put short Url internal server error response
+func (o *PutShortURLInternalServerError) WithPayload(payload *PutShortURLInternalServerErrorBody) *PutShortURLInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the put short Url internal server error response
+func (o *PutShortURLInternalServerError) SetPayload(payload *PutShortURLInternalServerErrorBody) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PutShortURLInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(500)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}

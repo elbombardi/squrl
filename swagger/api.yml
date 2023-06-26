@@ -4,7 +4,7 @@ info:
   title: Short URL API
 basePath: /api
 schemes:
-  - https
+  - http
 produces:
   - application/json
 paths:
@@ -38,6 +38,8 @@ paths:
             properties:
               api_key:
                 type: string
+              prefix:
+                type: string
         400:
           description: Bad Request
           schema:
@@ -47,6 +49,13 @@ paths:
                 type: string
         401:
           description: Unauthorized
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        500:
+          description: Internal Server Error
           schema:
             type: object
             properties:
@@ -105,6 +114,13 @@ paths:
             properties:
               error:
                 type: string
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
 
   /short-url:
     post:
@@ -149,6 +165,13 @@ paths:
             properties:
               error:
                 type: string
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
     put:
       summary: Update ShortURL
       parameters:
@@ -167,7 +190,7 @@ paths:
                 type: string
               new_long_url:
                 type: string
-              status: 
+              status:
                 type: string
                 enum:
                   - active
@@ -208,6 +231,13 @@ paths:
                 type: string
         404:
           description: Not Found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        500:
+          description: Internal Server Error
           schema:
             type: object
             properties:

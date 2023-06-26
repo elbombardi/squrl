@@ -22,7 +22,7 @@ func init() {
     "application/json"
   ],
   "schemes": [
-    "https"
+    "http"
   ],
   "swagger": "2.0",
   "info": {
@@ -111,6 +111,17 @@ func init() {
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -153,6 +164,9 @@ func init() {
               "properties": {
                 "api_key": {
                   "type": "string"
+                },
+                "prefix": {
+                  "type": "string"
                 }
               }
             }
@@ -170,6 +184,17 @@ func init() {
           },
           "401": {
             "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
             "schema": {
               "type": "object",
               "properties": {
@@ -277,6 +302,17 @@ func init() {
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -335,6 +371,17 @@ func init() {
           },
           "401": {
             "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
             "schema": {
               "type": "object",
               "properties": {
@@ -354,7 +401,7 @@ func init() {
     "application/json"
   ],
   "schemes": [
-    "https"
+    "http"
   ],
   "swagger": "2.0",
   "info": {
@@ -443,6 +490,17 @@ func init() {
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -485,6 +543,9 @@ func init() {
               "properties": {
                 "api_key": {
                   "type": "string"
+                },
+                "prefix": {
+                  "type": "string"
                 }
               }
             }
@@ -502,6 +563,17 @@ func init() {
           },
           "401": {
             "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
             "schema": {
               "type": "object",
               "properties": {
@@ -609,6 +681,17 @@ func init() {
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -667,6 +750,17 @@ func init() {
           },
           "401": {
             "description": "Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
             "schema": {
               "type": "object",
               "properties": {

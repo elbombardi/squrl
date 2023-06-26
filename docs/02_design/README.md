@@ -6,6 +6,7 @@
     - Redirection Server
 - API Server is the main server that handle all the API requests from the admin or customers
 - Redirection Server is the server that handle all the redirection requests from the public
+- Both servers run on HTTP. Securing the communication between the servers and the clients is done using HTTPS, and it is delegated to a reverse proxy that handles the SSL/TLS encryption and decryption.
 - The separation between the two components has two benefits : 
     - The servers can be scaled independently of each other.
     - Security: The API server is not exposed to public users, it's only used by authenticated users. The redirection server is exposed to public users, it doesn't require authentication, but it doesn't modify customer and short URL data, it only reads data, and inserts tracking data.

@@ -5,6 +5,6 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-func UpdateShortURLHandler(params operations.PutShortURLParams) middleware.Responder {
+func (*Handlers) UpdateShortURLHandler(params operations.PutShortURLParams) middleware.Responder {
 	return middleware.NotImplemented("operation operations.PutShortURL has not yet been implemented")
 }

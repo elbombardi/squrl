@@ -29,10 +29,10 @@ const (
 var envMap map[string]string
 
 func LoadConfig() error {
-	_, err := os.Stat("orders_service/env")
+	_, err := os.Stat("env")
 	if !errors.Is(err, os.ErrNotExist) {
-		log.Println("Loading configuration from ./orders_service/env")
-		envMap, err = godotenv.Read("orders_service/env")
+		log.Println("Loading configuration from file ./env")
+		envMap, err = godotenv.Read("env")
 		if err != nil {
 			log.Println("Error while loading configuration from ./orders_service/env : ", err)
 			return err

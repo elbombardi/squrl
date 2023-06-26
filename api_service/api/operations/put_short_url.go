@@ -257,6 +257,43 @@ func (o *PutShortURLBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
+// PutShortURLInternalServerErrorBody put short URL internal server error body
+//
+// swagger:model PutShortURLInternalServerErrorBody
+type PutShortURLInternalServerErrorBody struct {
+
+	// error
+	Error string `json:"error,omitempty"`
+}
+
+// Validate validates this put short URL internal server error body
+func (o *PutShortURLInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this put short URL internal server error body based on context it is used
+func (o *PutShortURLInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *PutShortURLInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *PutShortURLInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res PutShortURLInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
 // PutShortURLNotFoundBody put short URL not found body
 //
 // swagger:model PutShortURLNotFoundBody

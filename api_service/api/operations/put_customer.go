@@ -206,6 +206,43 @@ func (o *PutCustomerBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
+// PutCustomerInternalServerErrorBody put customer internal server error body
+//
+// swagger:model PutCustomerInternalServerErrorBody
+type PutCustomerInternalServerErrorBody struct {
+
+	// error
+	Error string `json:"error,omitempty"`
+}
+
+// Validate validates this put customer internal server error body
+func (o *PutCustomerInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this put customer internal server error body based on context it is used
+func (o *PutCustomerInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *PutCustomerInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *PutCustomerInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res PutCustomerInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
 // PutCustomerNotFoundBody put customer not found body
 //
 // swagger:model PutCustomerNotFoundBody
