@@ -25,7 +25,7 @@ run_postgres:
 	docker run -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -p 5433:5432  postgres
 
 run_api_server:
-	go run ./cmd/api-server/ --port 8080 --host localhost 
+	go run ./cmd/api-server/ --port 8081 --host localhost 
 
 run_redirection_server:
 	go run ./cmd/redirection-server/ --port 8085 --host localhost

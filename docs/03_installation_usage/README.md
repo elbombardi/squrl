@@ -4,7 +4,6 @@ This is a quick guide to run the programs locally (a more detailed guide will be
 # Requirements
 To run this project, you need to have the following tools installed on your machine :
 - Golang (1.20)
-- Make
 - Docker
 
 # How to test the platform locally ? 
@@ -16,10 +15,12 @@ There should be the following files:
    redirection_500.html => html page to be show by the redirection server if there is an unexpected internal error
 ```
 
-## 2. Start postgres database using Docker : 
+## 2. Start postgres database using Docker (on a dedicated terminal window): 
 ```
 	docker run -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -p 5433:5432  postgres
 ```
+Keep the terminal open, the database will be stopped and deleted when you close it.
+
 ## 3. Connect to the database with the tool of your choice (dbeaver, pgadmin, etc.).
     - Host : *localhost*  
     - Port : *5433*
@@ -27,7 +28,7 @@ There should be the following files:
     - Username : *postgres*
     - Password : *postgres*
 
-## 4. Run the initialization script that you can find here: 
+## 4. Initialize the database by running the script that you can find here: 
 ```
 <project>/db/migration/000001_init_schema.up.sql
 ```
