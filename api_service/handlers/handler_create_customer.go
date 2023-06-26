@@ -12,7 +12,7 @@ import (
 
 func (h *Handlers) CreateCustomerHandler(params operations.PostCustomerParams) middleware.Responder {
 	//Check if the request is valid
-	err := validateParams(params)
+	err := validateCreateCustomerParams(params)
 	if err != nil {
 		return operations.NewPostCustomerBadRequest().WithPayload(&operations.PostCustomerBadRequestBody{
 			Error: err.Error()})
@@ -27,7 +27,7 @@ func (h *Handlers) CreateCustomerHandler(params operations.PostCustomerParams) m
 	//Check if the username is unique
 	exists, err := h.CustomersRepository.CheckUsernameExists(context.Background(), *params.Customer.Username)
 	if err != nil {
-		return internalError(err)
+		return internalErrorInCreateCustomer(err)
 	}
 	if exists {
 		return operations.NewPostCustomerBadRequest().WithPayload(&operations.PostCustomerBadRequestBody{
@@ -37,13 +37,13 @@ func (h *Handlers) CreateCustomerHandler(params operations.PostCustomerParams) m
 	// Generate a prefix
 	prefix, err := h.generatePrefix()
 	if err != nil {
-		return internalError(err)
+		return internalErrorInCreateCustomer(err)
 	}
 
 	// Generate an API key
 	apiKey, err := h.generateAPIKey()
 	if err != nil {
-		return internalError(err)
+		return internalErrorInCreateCustomer(err)
 	}
 
 	// Insert the new customer
@@ -65,7 +65,7 @@ func (h *Handlers) CreateCustomerHandler(params operations.PostCustomerParams) m
 	})
 }
 
-func validateParams(params operations.PostCustomerParams) error {
+func validateCreateCustomerParams(params operations.PostCustomerParams) error {
 	if params.Customer.Username == nil {
 		return errors.New("missing username")
 	}
@@ -104,7 +104,7 @@ func (h *Handlers) generateAPIKey() (string, error) {
 	return apiKey, nil
 }
 
-func internalError(err error) middleware.Responder {
+func internalErrorInCreateCustomer(err error) middleware.Responder {
 	return operations.NewPostCustomerInternalServerError().WithPayload(&operations.PostCustomerInternalServerErrorBody{
 		Error: err.Error()})
 }
