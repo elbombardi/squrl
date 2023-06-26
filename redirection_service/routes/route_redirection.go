@@ -18,18 +18,15 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 	customer, err := r.getCustomerInfo(customerPrefix)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Println("Customer not found")
-
 			//TODO Send 404 not found error page
 			return c.SendStatus(http.StatusNotFound)
 		}
 		//TODO Send internal error page
+		log.Println("Error retrieving Customer information: ", err)
 		return c.SendStatus(http.StatusInternalServerError)
 	}
 	// If the customer is not active, send 404 not found error page
 	if customer.Status != "e" {
-		log.Println("Customer disabled")
-
 		//TODO Send 404 not found error page
 		return c.SendStatus(http.StatusNotFound)
 	}
@@ -38,30 +35,26 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 	shortURL, err := r.getShortURLInfo(customer.ID, shortURLKey)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Println("Short URL not found")
 			//TODO Send 404 not found error page
 			return c.SendStatus(http.StatusNotFound)
 		}
 		//TODO Send internal error page
+		log.Println("Error retrieving short URL information: ", err)
 		return c.SendStatus(http.StatusInternalServerError)
 	}
 
 	//If the short URL is not active, send 404 not found error page
 	if shortURL.Status.String != "e" {
-		log.Println("Short URL disabled")
-
 		//TODO Send 404 not found error page
 		return c.SendStatus(http.StatusNotFound)
 	}
 
 	// Asynchronously persist click information
 	if shortURL.TrackingStatus.String == "e" {
-		log.Println("Tracking..")
 		r.PersistClick(&shortURL)
 	}
 
 	// Redirect to the long URL
-	log.Println("Redirecting..")
 	return c.Redirect(shortURL.LongUrl, http.StatusFound)
 }
 

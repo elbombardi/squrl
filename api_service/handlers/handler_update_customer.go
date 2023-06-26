@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log"
 
 	"github.com/elbombardi/squrl/api_service/api/operations"
 	db "github.com/elbombardi/squrl/db/sqlc"
@@ -65,6 +66,7 @@ func validateUpdateCustomerParams(params operations.PutCustomerParams) error {
 }
 
 func internalErrorInUpdateCustomer(err error) middleware.Responder {
+	log.Println("Error updating customer: ", err)
 	return operations.NewPutCustomerInternalServerError().WithPayload(&operations.PutCustomerInternalServerErrorBody{
 		Error: err.Error()})
 }

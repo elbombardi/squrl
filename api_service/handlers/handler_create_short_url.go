@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 
 	"github.com/elbombardi/squrl/api_service/api/operations"
 	db "github.com/elbombardi/squrl/db/sqlc"
@@ -89,6 +90,7 @@ func (h *Handlers) generateShortURLKey() (string, error) {
 }
 
 func internalErrorInCreateShortURL(err error) middleware.Responder {
+	log.Println("Error creating short URL: ", err)
 	return operations.NewPostShortURLInternalServerError().WithPayload(&operations.PostShortURLInternalServerErrorBody{
 		Error: err.Error()})
 }

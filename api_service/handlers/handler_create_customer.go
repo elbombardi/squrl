@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"errors"
+	"log"
 
 	"github.com/elbombardi/squrl/api_service/api/operations"
 	db "github.com/elbombardi/squrl/db/sqlc"
@@ -105,6 +106,7 @@ func (h *Handlers) generateAPIKey() (string, error) {
 }
 
 func internalErrorInCreateCustomer(err error) middleware.Responder {
+	log.Println("Error creating customer: ", err)
 	return operations.NewPostCustomerInternalServerError().WithPayload(&operations.PostCustomerInternalServerErrorBody{
 		Error: err.Error()})
 }

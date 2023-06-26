@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log"
 
 	"github.com/elbombardi/squrl/api_service/api/operations"
 	db "github.com/elbombardi/squrl/db/sqlc"
@@ -95,6 +96,7 @@ func (h *Handlers) UpdateShortURLHandler(params operations.PutShortURLParams) mi
 }
 
 func internalErrorInUpdateShortURL(err error) middleware.Responder {
+	log.Println("Error updating short URL: ", err)
 	return operations.NewPutShortURLInternalServerError().WithPayload(&operations.PutShortURLInternalServerErrorBody{
 		Error: err.Error()})
 }
