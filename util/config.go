@@ -24,11 +24,6 @@ const (
 	DB_MAX_OPEN_CONNS_DEFAULT     = 10
 	DB_CONN_MAX_IDLE_TIME_DEFAULT = 1 * time.Second
 	DB_CONN_MAX_LIFE_TIME_DEFAULT = 30 * time.Second
-
-	VALIDATION_SERVICE_URL             = "VALIDATION_SERVICE_URL"
-	KAFKA_ADDRESS                      = "KAFKA_ADDRESS"
-	KAFKA_ORDERS_SUBMIT_TOPIC_TEMPLATE = "ORDERS_SUBMIT_TOPIC_TEMPLATE"
-	KAFKA_ORDERS_CANCELLATION_TOPIC    = "ORDERS_CANCELLATION_TOPIC"
 )
 
 var envMap map[string]string
@@ -52,9 +47,6 @@ func LoadConfig() error {
 	required := []string{
 		DB_DRIVER,
 		DB_SOURCE,
-		VALIDATION_SERVICE_URL,
-		KAFKA_ADDRESS,
-		KAFKA_ORDERS_SUBMIT_TOPIC_TEMPLATE,
 	}
 	errMsg := ""
 	for _, param := range required {
@@ -94,23 +86,6 @@ func ConfigDBDriver() *string {
 
 func ConfigDBSource() *string {
 	return get(DB_SOURCE)
-}
-
-func ConfigValidationServiceURL() *string {
-	return get(VALIDATION_SERVICE_URL)
-}
-
-func ConfigKafkaAddress() *string {
-	return get(KAFKA_ADDRESS)
-}
-
-func ConfigKafkaCancellationTopic() *string {
-	return get(KAFKA_ORDERS_CANCELLATION_TOPIC)
-}
-
-func ConfigKafkaSubmitTopic(transactionType int) string {
-	template := get(KAFKA_ORDERS_SUBMIT_TOPIC_TEMPLATE)
-	return strings.ReplaceAll(*template, "{transactionType}", fmt.Sprint(transactionType))
 }
 
 func ConfigDBMaxIdleConns() (int, error) {

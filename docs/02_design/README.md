@@ -52,7 +52,8 @@ func generateRandomString(n int) string {
        "email": "string" 
      }
      ```
-      - 'username' and 'email' are required and must be unique.
+      - 'username' and 'email' are required.
+      - 'username' must be unique.
 
    - Response JSON Structure (on success):
      ```json
@@ -140,7 +141,7 @@ func generateRandomString(n int) string {
    - Response JSON Structure (on success):
      ```json
      {
-       "short_url_key": "string"
+       "short_url": "string"
      }
      ```
     - Response JSON Structure (on failure):
@@ -225,9 +226,9 @@ func generateRandomString(n int) string {
 ## Database Design
 - The database is a relational database (PostgreSql).
 - The database has 3 tables:
-    - `customer` table
-    - `short_url` table
-    - `click` table
+    - `customers` table
+    - `short_urls` table
+    - `clicks` table
 
 <p align="center"><img src="images/squrl_db.png"/></p>
 
@@ -249,7 +250,7 @@ Here's the list of non-primary key indexes that will enhance the performance of 
 Here's the PostgreSql script to create the database and tables:
 
 ```sql
-CREATE TABLE "customer" (
+CREATE TABLE "customers" (
   "id" int PRIMARY KEY,
   "prefix" varchar(3) UNIQUE NOT NULL,
   "username" varchar UNIQUE NOT NULL,
@@ -260,12 +261,13 @@ CREATE TABLE "customer" (
   "updated_at" timestamp
 );
 
-CREATE TABLE "short_url" (
+CREATE TABLE "short_urls" (
   "id" int PRIMARY KEY,
   "short_url_key" varchar,
   "customer_id" int NOT NULL,
   "long_url" varchar NOT NULL,
   "status" varchar(1) DEFAULT 'e',
+  "tracking_status" varchar(1) DEFAULT 'e',
   "click_count" int DEFAULT 0,
   "first_click_date_time" timestamp,
   "last_click_date_time" timestamp,
@@ -273,7 +275,7 @@ CREATE TABLE "short_url" (
   "updated_at" timestamp
 );
 
-CREATE TABLE "click" (
+CREATE TABLE "clicks" (
   "id" int PRIMARY KEY,
   "short_url_id" int NOT NULL,
   "click_date_time" timestamp DEFAULT (now()),
@@ -281,53 +283,55 @@ CREATE TABLE "click" (
   "ip_address" varchar
 );
 
-CREATE INDEX ON "customer" ("prefix");
+CREATE INDEX ON "customers" ("prefix");
 
-CREATE INDEX ON "customer" ("username");
+CREATE INDEX ON "customers" ("username");
 
-CREATE INDEX ON "customer" ("api_key");
+CREATE INDEX ON "customers" ("api_key");
 
-CREATE INDEX ON "short_url" ("customer_id");
+CREATE INDEX ON "short_urls" ("customer_id");
 
-CREATE UNIQUE INDEX ON "short_url" ("short_url_key", "customer_id");
+CREATE UNIQUE INDEX ON "short_urls" ("short_url_key", "customer_id");
 
-CREATE INDEX ON "click" ("short_url_id");
+CREATE INDEX ON "clicks" ("short_url_id");
 
-COMMENT ON TABLE "customer" IS 'Table holding Customer information';
+COMMENT ON TABLE "customers" IS 'Table holding Customer information';
 
-COMMENT ON COLUMN "customer"."prefix" IS '3 characters, case-sensitive';
+COMMENT ON COLUMN "customers"."prefix" IS '3 characters, case-sensitive';
 
-COMMENT ON COLUMN "customer"."api_key" IS 'API key';
+COMMENT ON COLUMN "customers"."api_key" IS 'API key';
 
-COMMENT ON COLUMN "customer"."status" IS 'e: enabled, d: disabled';
+COMMENT ON COLUMN "customers"."status" IS 'e: enabled, d: disabled';
 
-COMMENT ON COLUMN "customer"."created_at" IS 'Timestamp of creation';
+COMMENT ON COLUMN "customers"."created_at" IS 'Timestamp of creation';
 
-COMMENT ON COLUMN "customer"."updated_at" IS 'Timestamp of last update';
+COMMENT ON COLUMN "customers"."updated_at" IS 'Timestamp of last update';
 
-COMMENT ON TABLE "short_url" IS 'Table holding short URL information';
+COMMENT ON TABLE "short_urls" IS 'Table holding short URL information';
 
-COMMENT ON COLUMN "short_url"."short_url_key" IS '6 characters, case-sensitive';
+COMMENT ON COLUMN "short_urls"."short_url_key" IS '6 characters, case-sensitive';
 
-COMMENT ON COLUMN "short_url"."status" IS 'e: enabled, d: disabled';
+COMMENT ON COLUMN "short_urls"."status" IS 'e: enabled, d: disabled';
 
-COMMENT ON COLUMN "short_url"."click_count" IS 'Aggregate updated by the redirection server';
+COMMENT ON COLUMN "short_urls"."tracking_status" IS 'e: enabled, d: disabled';
 
-COMMENT ON COLUMN "short_url"."first_click_date_time" IS 'Aggregate set by the redirection server';
+COMMENT ON COLUMN "short_urls"."click_count" IS 'Aggregate updated by the redirection server';
 
-COMMENT ON COLUMN "short_url"."last_click_date_time" IS 'Aggregate set by the redirection server';
+COMMENT ON COLUMN "short_urls"."first_click_date_time" IS 'Aggregate set by the redirection server';
 
-COMMENT ON COLUMN "short_url"."created_at" IS 'Timestamp of creation';
+COMMENT ON COLUMN "short_urls"."last_click_date_time" IS 'Aggregate set by the redirection server';
 
-COMMENT ON COLUMN "short_url"."updated_at" IS 'Timestamp of last update';
+COMMENT ON COLUMN "short_urls"."created_at" IS 'Timestamp of creation';
 
-COMMENT ON TABLE "click" IS 'Table holding click information';
+COMMENT ON COLUMN "short_urls"."updated_at" IS 'Timestamp of last update';
 
-COMMENT ON COLUMN "click"."click_date_time" IS 'Timestamp of click';
+COMMENT ON TABLE "clicks" IS 'Table holding click information';
 
-ALTER TABLE "customer" ADD FOREIGN KEY ("id") REFERENCES "short_url" ("customer_id");
+COMMENT ON COLUMN "clicks"."click_date_time" IS 'Timestamp of click';
 
-ALTER TABLE "short_url" ADD FOREIGN KEY ("id") REFERENCES "click" ("short_url_id");
+ALTER TABLE "short_urls" ADD FOREIGN KEY ("customer_id") REFERENCES "customers" ("id");
+
+ALTER TABLE "clicks" ADD FOREIGN KEY ("short_url_id") REFERENCES "short_urls" ("id");
 ```
 
 ## Database Access Layer Queries
@@ -337,25 +341,25 @@ ALTER TABLE "short_url" ADD FOREIGN KEY ("id") REFERENCES "click" ("short_url_id
 ### Query 1: Check if username exists:
 ```sql
 -- name: CheckUsernameExists
-SELECT EXISTS(SELECT 1 FROM customer WHERE username = $1);
+SELECT EXISTS(SELECT 1 FROM customers WHERE username = $1);
 ```
 
 ### Query 2: Check if email exists:
 ```sql
 -- name: CheckEmailExists
-SELECT EXISTS(SELECT 1 FROM customer WHERE email = $1);
+SELECT EXISTS(SELECT 1 FROM customers WHERE email = $1);
 ```
 
 ### Query 3: Check if api_key exists:
 ```sql
 -- name: CheckApiKeyExists
-SELECT EXISTS(SELECT 1 FROM customer WHERE api_key = $1);
+SELECT EXISTS(SELECT 1 FROM customers WHERE api_key = $1);
 ```
 
 ### Query 4: Insert a new customer:
 ```sql
 -- name: InsertNewCustomer
-INSERT INTO customer (id, prefix, username, email, api_key, status, created_at, updated_at)
+INSERT INTO customers (id, prefix, username, email, api_key, status, created_at, updated_at)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
 ```
@@ -363,21 +367,21 @@ RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
 ### Query 5: Update customer status by username:
 ```sql
 -- name: UpdateCustomerStatusByUsername
-UPDATE customer SET status = $1 WHERE username = $2
+UPDATE customers SET status = $1 WHERE username = $2
 RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
 ```
 
 ### Query 6: Update customer status by prefix:
 ```sql
 -- name: UpdateCustomerStatusByPrefix
-UPDATE customer SET status = $1 WHERE prefix = $2
+UPDATE customers SET status = $1 WHERE prefix = $2
 RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
 ```
 
 ### Query 7: Update customer status by api_key:
 ```sql
 -- name: UpdateCustomerStatusByApiKey
-UPDATE customer SET status = $1 WHERE api_key = $2
+UPDATE customers SET status = $1 WHERE api_key = $2
 RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
 ```
 
@@ -385,34 +389,34 @@ RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
 ```sql
 -- name: GetCustomerByUsername
 SELECT id, prefix, username, email, api_key, status, created_at, updated_at
-FROM customer WHERE username = $1;
+FROM customers WHERE username = $1;
 ```
 
 ### Query 9: Get customer by prefix:
 ```sql
 -- name: GetCustomerByPrefix
 SELECT id, prefix, username, email, api_key, status, created_at, updated_at
-FROM customer WHERE prefix = $1;
+FROM customers WHERE prefix = $1;
 ```
 
 ### Query 10: Get customer by api_key:
 ```sql
 -- name: GetCustomerByApiKey
 SELECT id, prefix, username, email, api_key, status, created_at, updated_at
-FROM customer WHERE api_key = $1;
+FROM customers WHERE api_key = $1;
 ```
 
 
 ### Query 11:  Check if short_url_key exists for a specific customer_id:
 ```sql
 -- name: CheckShortUrlKeyExists
-SELECT EXISTS(SELECT 1 FROM short_url WHERE short_url_key = $1 AND customer_id = $2);
+SELECT EXISTS(SELECT 1 FROM short_urls WHERE short_url_key = $1 AND customer_id = $2);
 ```
 
 ### Query 12: Insert a new short URL:
 ```sql
 -- name: InsertNewShortURL
-INSERT INTO short_url (id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at)
+INSERT INTO short_urls (id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
 ```
@@ -420,35 +424,35 @@ RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_c
 ### Query 13: Update short URL status:
 ```sql
 -- name: UpdateShortURLStatus
-UPDATE short_url SET status = $1 WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET status = $1 WHERE short_url_key = $2 AND customer_id = $3
 RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
 ```
 
 ### Query 14: Update short URL long URL:
 ```sql
 -- name: UpdateShortURLLongURL
-UPDATE short_url SET long_url = $1 WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET long_url = $1 WHERE short_url_key = $2 AND customer_id = $3
 RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
 ```
 
 ### Query 15:  Increment short URL click count:
 ```sql
 -- name: IncrementShortURLClickCount
-UPDATE short_url SET click_count = click_count + 1 WHERE short_url_key = $1 AND customer_id = $2
+UPDATE short_urls SET click_count = click_count + 1 WHERE short_url_key = $1 AND customer_id = $2
 RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
 ```
 
 ### Query 16: Set short URL first click date:
 ```sql
 -- name: SetShortURLFirstClickDate
-UPDATE short_url SET first_click_date_time = $1 WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET first_click_date_time = $1 WHERE short_url_key = $2 AND customer_id = $3
 RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
 ```
 
 ### Query 17: Set short URL last click date:
 ```sql
 -- name: SetShortURLLastClickDate
-UPDATE short_url SET last_click_date_time = $1 WHERE short_url_key = $2 AND customer_id = $3
+UPDATE short_urls SET last_click_date_time = $1 WHERE short_url_key = $2 AND customer_id = $3
 RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
 ```
 
@@ -456,13 +460,13 @@ RETURNING id, short_url_key, customer_id, long_url, status, click_count, first_c
 ```sql
 -- name: GetShortURLByCustomerIDAndShortURLKey
 SELECT id, short_url_key, customer_id, long_url, status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at
-FROM short_url WHERE customer_id = $1 AND short_url_key = $2;
+FROM short_urls WHERE customer_id = $1 AND short_url_key = $2;
 ```
 
 ### Query 19:  Insert a new click:
 ```sql
 -- name: InsertNewClick
-INSERT INTO click (id, short_url_id, click_date_time, user_agent, ip_address)
+INSERT INTO clicks (id, short_url_id, click_date_time, user_agent, ip_address)
 VALUES ($1, $2, $3, $4, $5);
 ```
 

@@ -133,7 +133,7 @@ paths:
           schema:
             type: object
             properties:
-              short_url_key:
+              short_url:
                 type: string
         400:
           description: Bad Request

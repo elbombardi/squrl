@@ -1,4 +1,4 @@
-Table customer {
+Table customers {
   id int [pk]
   prefix varchar(3) [unique, not null, note: '3 characters, case-sensitive']
   username varchar [unique, not null]
@@ -17,12 +17,13 @@ Table customer {
   note: "Table holding Customer information"
 }
 
-Table short_url {
+Table short_urls {
   id int [pk]
   short_url_key varchar [note: '6 characters, case-sensitive']
   customer_id int [not null]
   long_url varchar [not null]
   status varchar(1) [default: 'e', note: 'e: enabled, d: disabled']
+  tracking_status varchar(1) [default: 'e', note: 'e: enabled, d: disabled']
   click_count int [default: 0, note: 'Aggregate updated by the redirection server']
   first_click_date_time timestamp [note: 'Aggregate set by the redirection server']
   last_click_date_time timestamp [note: 'Aggregate set by the redirection server']
@@ -37,7 +38,7 @@ Table short_url {
   note: "Table holding short URL information"
 }
 
-Table click {
+Table clicks {
   id int [pk]
   short_url_id int [not null]
   click_date_time timestamp [default: `now()`, note: 'Timestamp of click']
@@ -51,5 +52,5 @@ Table click {
   note: "Table holding click information"
 }
 
-Ref: customer.id > short_url.customer_id
-Ref: short_url.id > click.short_url_id
+Ref: short_urls.customer_id > customers.id  
+Ref: clicks.short_url_id > short_urls.id  

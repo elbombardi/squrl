@@ -12,8 +12,13 @@ alt #ffcccc Error: Invalid request data
 API-->Customer: HTTP 400 Bad Request
 end
 
+API->API: Verify Customer Status
+alt #ffcccc Error: Customer is not active
+API-->Customer: HTTP 401 Unauthorized
+end
+
 API->API: Generate Short URL Key
 
 API->Database: Insert New Short URL
 API<--Database: Short URL created successfully
-API-->Customer: HTTP 200 Created
+API-->Customer: HTTP 200 Created	

@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS "click";
+DROP TABLE IF EXISTS "short_url";
+DROP TABLE IF EXISTS "customer";

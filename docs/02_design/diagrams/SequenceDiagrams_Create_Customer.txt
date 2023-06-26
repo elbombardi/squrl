@@ -12,13 +12,6 @@ API-->Admin: HTTP 400 Bad Request
 end 
 API<--Database: Username is unique
 
-API->Database: Is email unique?
-alt #ffcccc Error: Email already exists
-API<--Database:  Email already exists
-API-->Admin: HTTP 400 Bad Request
-end
-API<--Database: Email is unique
-
 API->API: Generate a unique customer prefix
 API->API: Generate a unique customer API Key
 API->Database: INSERT Into customer table
