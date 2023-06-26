@@ -181,7 +181,7 @@ func generateRandomString(n int) string {
      - 'short_url_key' is required.
      - 'new_long_url' is optional, if it's not provided, the long url will not be updated.
      - 'tracking_status' is optional, if it's not provided, the tracking status will not be updated. Possible values: "active", "inactive".
-   - Response JSON Structure (on success):
+    - Response JSON Structure (on success):
      ```json
      {
        "status": "string"
