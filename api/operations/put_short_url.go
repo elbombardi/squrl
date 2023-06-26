@@ -110,6 +110,10 @@ type PutShortURLBody struct {
 	// Required: true
 	ShortURLKey *string `json:"short_url_key"`
 
+	// status
+	// Enum: [active inactive]
+	Status string `json:"status,omitempty"`
+
 	// tracking status
 	// Enum: [active inactive]
 	TrackingStatus string `json:"tracking_status,omitempty"`
@@ -120,6 +124,10 @@ func (o *PutShortURLBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := o.validateShortURLKey(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateStatus(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -136,6 +144,48 @@ func (o *PutShortURLBody) Validate(formats strfmt.Registry) error {
 func (o *PutShortURLBody) validateShortURLKey(formats strfmt.Registry) error {
 
 	if err := validate.Required("body"+"."+"short_url_key", "body", o.ShortURLKey); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var putShortUrlBodyTypeStatusPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["active","inactive"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		putShortUrlBodyTypeStatusPropEnum = append(putShortUrlBodyTypeStatusPropEnum, v)
+	}
+}
+
+const (
+
+	// PutShortURLBodyStatusActive captures enum value "active"
+	PutShortURLBodyStatusActive string = "active"
+
+	// PutShortURLBodyStatusInactive captures enum value "inactive"
+	PutShortURLBodyStatusInactive string = "inactive"
+)
+
+// prop value enum
+func (o *PutShortURLBody) validateStatusEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, putShortUrlBodyTypeStatusPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (o *PutShortURLBody) validateStatus(formats strfmt.Registry) error {
+	if swag.IsZero(o.Status) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := o.validateStatusEnum("body"+"."+"status", "body", o.Status); err != nil {
 		return err
 	}
 
@@ -249,8 +299,14 @@ func (o *PutShortURLNotFoundBody) UnmarshalBinary(b []byte) error {
 // swagger:model PutShortURLOKBody
 type PutShortURLOKBody struct {
 
+	// long url
+	LongURL string `json:"long_url,omitempty"`
+
 	// status
 	Status string `json:"status,omitempty"`
+
+	// tracking status
+	TrackingStatus string `json:"tracking_status,omitempty"`
 }
 
 // Validate validates this put short URL o k body

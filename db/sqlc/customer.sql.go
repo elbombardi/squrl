@@ -11,7 +11,7 @@ import (
 )
 
 const checkApiKeyExists = `-- name: CheckApiKeyExists :one
-SELECT EXISTS(SELECT 1 FROM customer WHERE api_key = $1)
+SELECT EXISTS(SELECT 1 FROM customers WHERE api_key = $1)
 `
 
 func (q *Queries) CheckApiKeyExists(ctx context.Context, apiKey string) (bool, error) {
@@ -22,7 +22,7 @@ func (q *Queries) CheckApiKeyExists(ctx context.Context, apiKey string) (bool, e
 }
 
 const checkEmailExists = `-- name: CheckEmailExists :one
-SELECT EXISTS(SELECT 1 FROM customer WHERE email = $1)
+SELECT EXISTS(SELECT 1 FROM customers WHERE email = $1)
 `
 
 func (q *Queries) CheckEmailExists(ctx context.Context, email string) (bool, error) {
@@ -33,7 +33,7 @@ func (q *Queries) CheckEmailExists(ctx context.Context, email string) (bool, err
 }
 
 const checkUsernameExists = `-- name: CheckUsernameExists :one
-SELECT EXISTS(SELECT 1 FROM customer WHERE username = $1)
+SELECT EXISTS(SELECT 1 FROM customers WHERE username = $1)
 `
 
 func (q *Queries) CheckUsernameExists(ctx context.Context, username string) (bool, error) {
@@ -45,7 +45,7 @@ func (q *Queries) CheckUsernameExists(ctx context.Context, username string) (boo
 
 const getCustomerByApiKey = `-- name: GetCustomerByApiKey :one
 SELECT id, prefix, username, email, api_key, status, created_at, updated_at
-FROM customer WHERE api_key = $1
+FROM customers WHERE api_key = $1
 `
 
 func (q *Queries) GetCustomerByApiKey(ctx context.Context, apiKey string) (Customer, error) {
@@ -66,7 +66,7 @@ func (q *Queries) GetCustomerByApiKey(ctx context.Context, apiKey string) (Custo
 
 const getCustomerByPrefix = `-- name: GetCustomerByPrefix :one
 SELECT id, prefix, username, email, api_key, status, created_at, updated_at
-FROM customer WHERE prefix = $1
+FROM customers WHERE prefix = $1
 `
 
 func (q *Queries) GetCustomerByPrefix(ctx context.Context, prefix string) (Customer, error) {
@@ -87,7 +87,7 @@ func (q *Queries) GetCustomerByPrefix(ctx context.Context, prefix string) (Custo
 
 const getCustomerByUsername = `-- name: GetCustomerByUsername :one
 SELECT id, prefix, username, email, api_key, status, created_at, updated_at
-FROM customer WHERE username = $1
+FROM customers WHERE username = $1
 `
 
 func (q *Queries) GetCustomerByUsername(ctx context.Context, username string) (Customer, error) {
@@ -107,7 +107,7 @@ func (q *Queries) GetCustomerByUsername(ctx context.Context, username string) (C
 }
 
 const insertNewCustomer = `-- name: InsertNewCustomer :exec
-INSERT INTO customer (id, prefix, username, email, api_key, status, created_at, updated_at)
+INSERT INTO customers (id, prefix, username, email, api_key, status, created_at, updated_at)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 RETURNING id, prefix, username, email, api_key, status, created_at, updated_at
 `
@@ -138,7 +138,7 @@ func (q *Queries) InsertNewCustomer(ctx context.Context, arg InsertNewCustomerPa
 }
 
 const updateCustomerStatusByApiKey = `-- name: UpdateCustomerStatusByApiKey :exec
-UPDATE customer SET status = $1 WHERE api_key = $2
+UPDATE customers SET status = $1 WHERE api_key = $2
 RETURNING id, prefix, username, email, api_key, status, created_at, updated_at
 `
 
@@ -153,7 +153,7 @@ func (q *Queries) UpdateCustomerStatusByApiKey(ctx context.Context, arg UpdateCu
 }
 
 const updateCustomerStatusByPrefix = `-- name: UpdateCustomerStatusByPrefix :exec
-UPDATE customer SET status = $1 WHERE prefix = $2
+UPDATE customers SET status = $1 WHERE prefix = $2
 RETURNING id, prefix, username, email, api_key, status, created_at, updated_at
 `
 
@@ -168,7 +168,7 @@ func (q *Queries) UpdateCustomerStatusByPrefix(ctx context.Context, arg UpdateCu
 }
 
 const updateCustomerStatusByUsername = `-- name: UpdateCustomerStatusByUsername :exec
-UPDATE customer SET status = $1 WHERE username = $2
+UPDATE customers SET status = $1 WHERE username = $2
 RETURNING id, prefix, username, email, api_key, status, created_at, updated_at
 `
 

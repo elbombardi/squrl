@@ -44,6 +44,8 @@ type ShortUrl struct {
 	LongUrl     string
 	// e: enabled, d: disabled
 	Status sql.NullString
+	// e: enabled, d: disabled
+	TrackingStatus sql.NullString
 	// Aggregate updated by the redirection server
 	ClickCount sql.NullInt32
 	// Aggregate set by the redirection server

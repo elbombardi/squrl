@@ -142,6 +142,13 @@ func init() {
                 "short_url_key": {
                   "type": "string"
                 },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "inactive"
+                  ]
+                },
                 "tracking_status": {
                   "type": "string",
                   "enum": [
@@ -159,7 +166,13 @@ func init() {
             "schema": {
               "type": "object",
               "properties": {
+                "long_url": {
+                  "type": "string"
+                },
                 "status": {
+                  "type": "string"
+                },
+                "tracking_status": {
                   "type": "string"
                 }
               }
@@ -328,6 +341,13 @@ func init() {
                 "short_url_key": {
                   "type": "string"
                 },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "inactive"
+                  ]
+                },
                 "tracking_status": {
                   "type": "string",
                   "enum": [
@@ -345,7 +365,13 @@ func init() {
             "schema": {
               "type": "object",
               "properties": {
+                "long_url": {
+                  "type": "string"
+                },
                 "status": {
+                  "type": "string"
+                },
+                "tracking_status": {
                   "type": "string"
                 }
               }

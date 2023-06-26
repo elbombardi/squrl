@@ -262,6 +262,7 @@ Status: Not Found
 |------|------|---------|:--------:| ------- |-------------|---------|
 | new_long_url | string| `string` |  | |  |  |
 | short_url_key | string| `string` | ✓ | |  |  |
+| status | string| `string` |  | |  |  |
 | tracking_status | string| `string` |  | |  |  |
 
 
@@ -292,7 +293,9 @@ Status: Not Found
 
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
+| long_url | string| `string` |  | |  |  |
 | status | string| `string` |  | |  |  |
+| tracking_status | string| `string` |  | |  |  |
 
 
 

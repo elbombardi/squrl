@@ -133,6 +133,8 @@ paths:
           schema:
             type: object
             properties:
+              short_url_key:
+                type: string
               short_url:
                 type: string
         400:
@@ -169,6 +171,11 @@ paths:
                 type: string
               new_long_url:
                 type: string
+              status: 
+                type: string
+                enum:
+                  - active
+                  - inactive
               tracking_status:
                 type: string
                 enum:
@@ -183,7 +190,11 @@ paths:
           schema:
             type: object
             properties:
+              long_url:
+                type: string
               status:
+                type: string
+              tracking_status:
                 type: string
         400:
           description: Bad Request
