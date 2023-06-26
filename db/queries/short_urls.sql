@@ -2,8 +2,8 @@
 SELECT EXISTS(SELECT 1 FROM short_urls WHERE short_url_key = $1 AND customer_id = $2);
 
 -- name: InsertNewShortURL :exec
-INSERT INTO short_urls (id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+INSERT INTO short_urls (short_url_key, customer_id, long_url)
+VALUES ($1, $2, $3)
 RETURNING id, short_url_key, customer_id, long_url, status, tracking_status, click_count, first_click_date_time, last_click_date_time, created_at, updated_at;
 
 -- name: UpdateShortURLStatus :exec

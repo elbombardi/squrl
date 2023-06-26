@@ -15,7 +15,6 @@ func generateRandomString(n int) string {
 	for i := range b {
 		b[i] = alphanums[r.Intn(len(alphanums))]
 	}
-
 	return string(b)
 }
 

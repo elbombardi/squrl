@@ -8,12 +8,12 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/elbombardi/squrl/api/operations"
+	"github.com/elbombardi/squrl/api_service/api/operations"
+	"github.com/elbombardi/squrl/api_service/handlers"
 )
 
-//go:generate swagger generate server --target ../../squrl --name Shorturl --spec ../swagger/api.yml --server-package api --principal interface{} --exclude-main
+//go:generate swagger generate server --target ../../api_service --name Shorturl --spec ../../swagger/api.yml --server-package api --principal interface{} --exclude-main
 
 func configureFlags(api *operations.ShorturlAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -37,16 +37,10 @@ func configureAPI(api *operations.ShorturlAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.PutCustomerHandler == nil {
-		api.PutCustomerHandler = operations.PutCustomerHandlerFunc(func(params operations.PutCustomerParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.PutCustomer has not yet been implemented")
-		})
-	}
-	if api.PutShortURLHandler == nil {
-		api.PutShortURLHandler = operations.PutShortURLHandlerFunc(func(params operations.PutShortURLParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.PutShortURL has not yet been implemented")
-		})
-	}
+	api.PostCustomerHandler = operations.PostCustomerHandlerFunc(handlers.CreateCustomerHandler)
+	api.PostShortURLHandler = operations.PostShortURLHandlerFunc(handlers.CreateShortURLHandler)
+	api.PutCustomerHandler = operations.PutCustomerHandlerFunc(handlers.UpdateCustomerHandler)
+	api.PutShortURLHandler = operations.PutShortURLHandlerFunc(handlers.UpdateShortURLHandler)
 
 	api.PreServerShutdown = func() {}
 

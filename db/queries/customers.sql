@@ -9,20 +9,12 @@ SELECT EXISTS(SELECT 1 FROM customers WHERE email = $1);
 SELECT EXISTS(SELECT 1 FROM customers WHERE api_key = $1);
 
 -- name: InsertNewCustomer :exec
-INSERT INTO customers (id, prefix, username, email, api_key, status, created_at, updated_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+INSERT INTO customers (prefix, username, email, api_key)
+VALUES ($1, $2, $3, $4)
 RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
 
 -- name: UpdateCustomerStatusByUsername :exec
-UPDATE customers SET status = $1 WHERE username = $2
-RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
-
--- name: UpdateCustomerStatusByPrefix :exec
-UPDATE customers SET status = $1 WHERE prefix = $2
-RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
-
--- name: UpdateCustomerStatusByApiKey :exec
-UPDATE customers SET status = $1 WHERE api_key = $2
+UPDATE customers SET status = $1, updated_at=now() WHERE username = $2
 RETURNING id, prefix, username, email, api_key, status, created_at, updated_at;
 
 -- name: GetCustomerByUsername :one

@@ -1,5 +1,5 @@
 Table customers {
-  id int [pk]
+  id int [pk, increment]
   prefix varchar(3) [unique, not null, note: '3 characters, case-sensitive']
   username varchar [unique, not null]
   email varchar [unique, not null]
@@ -18,7 +18,7 @@ Table customers {
 }
 
 Table short_urls {
-  id int [pk]
+  id int [pk, increment]
   short_url_key varchar [note: '6 characters, case-sensitive']
   customer_id int [not null]
   long_url varchar [not null]
@@ -39,7 +39,7 @@ Table short_urls {
 }
 
 Table clicks {
-  id int [pk]
+  id int [pk, increment]
   short_url_id int [not null]
   click_date_time timestamp [default: `now()`, note: 'Timestamp of click']
   user_agent varchar

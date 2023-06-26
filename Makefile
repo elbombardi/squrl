@@ -2,14 +2,14 @@ swagger_install:
 	/bin/bash swagger/install.sh
 
 swagger_validate: 
-	swagger validate swagger/orders.yml
+	swagger validate swagger/api.yml
 
 swagger_generate: 
 	make swagger_generate_api_server
 	make swagger_generate_documentation
 
 swagger_generate_api_server:
-	swagger generate server --exclude-main -s api --name shorturl --target . -f swagger/api.yml
+	swagger generate server --exclude-main -s api --name shorturl --target api_service -f swagger/api.yml
 	
 swagger_generate_documentation: 
 	swagger generate markdown --output ./docs/03_installation_usage/api.md -f swagger/api.yml

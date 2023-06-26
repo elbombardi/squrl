@@ -42,6 +42,12 @@ func NewShorturlAPI(spec *loads.Document) *ShorturlAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
+		PostCustomerHandler: PostCustomerHandlerFunc(func(params PostCustomerParams) middleware.Responder {
+			return middleware.NotImplemented("operation PostCustomer has not yet been implemented")
+		}),
+		PostShortURLHandler: PostShortURLHandlerFunc(func(params PostShortURLParams) middleware.Responder {
+			return middleware.NotImplemented("operation PostShortURL has not yet been implemented")
+		}),
 		PutCustomerHandler: PutCustomerHandlerFunc(func(params PutCustomerParams) middleware.Responder {
 			return middleware.NotImplemented("operation PutCustomer has not yet been implemented")
 		}),
@@ -84,6 +90,10 @@ type ShorturlAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
+	// PostCustomerHandler sets the operation handler for the post customer operation
+	PostCustomerHandler PostCustomerHandler
+	// PostShortURLHandler sets the operation handler for the post short URL operation
+	PostShortURLHandler PostShortURLHandler
 	// PutCustomerHandler sets the operation handler for the put customer operation
 	PutCustomerHandler PutCustomerHandler
 	// PutShortURLHandler sets the operation handler for the put short URL operation
@@ -165,6 +175,12 @@ func (o *ShorturlAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
+	if o.PostCustomerHandler == nil {
+		unregistered = append(unregistered, "PostCustomerHandler")
+	}
+	if o.PostShortURLHandler == nil {
+		unregistered = append(unregistered, "PostShortURLHandler")
+	}
 	if o.PutCustomerHandler == nil {
 		unregistered = append(unregistered, "PutCustomerHandler")
 	}
@@ -259,6 +275,14 @@ func (o *ShorturlAPI) initHandlerCache() {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/customer"] = NewPostCustomer(o.context, o.PostCustomerHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/short-url"] = NewPostShortURL(o.context, o.PostShortURLHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}

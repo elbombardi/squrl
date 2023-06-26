@@ -12,10 +12,10 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
 
-  orders_db_init:
+  db_init:
     build:
       context: .
-      dockerfile: orders_service/db/Dockerfile      
+      dockerfile: db/Dockerfile      
     entrypoint: [ '/bin/sh', '-c' ]
     environment:
       DB_DRIVER: postgres
@@ -24,12 +24,11 @@ services:
       "
       # Wait for Postgres server : 
       sh /app/wait-for.sh db:5432 -- /app/migrate --path /app/migration/ --database postgresql://postgres:postgres@db:5432/postgres?sslmode=disable up
-      sh /app/wait-for.sh db:5432 -- /app/demo-data
       "
 
 
   api_service:
-    container_name: platform_orders_server
+    container_name: squrl_api_server
     build:
       context: .
       dockerfile: orders_service/Dockerfile

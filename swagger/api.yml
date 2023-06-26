@@ -52,8 +52,6 @@ paths:
             properties:
               error:
                 type: string
-
-  /customer:
     put:
       summary: Update Customer
       parameters:
@@ -151,8 +149,6 @@ paths:
             properties:
               error:
                 type: string
-
-  /short-url:
     put:
       summary: Update ShortURL
       parameters:

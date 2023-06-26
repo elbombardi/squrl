@@ -1,3 +1,7 @@
+# Requirements
+
+# Environement variables
+
 # How to test the platform locally ? 
 1. Start the components by typing : 
 ```
@@ -27,9 +31,6 @@ Mock data is stored in this folder [./mock_data](./mock_data).
     - Database : *postgres*
     - Username : *postgres*
     - Password : *postgres*
-    
-6. To check Kafka : 
-[http://[::]:8082/](http://[::]:8082).
 
 
 # Code Structure

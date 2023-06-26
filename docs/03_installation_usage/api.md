@@ -27,12 +27,240 @@
 
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
+| POST | /api/customer | [post customer](#post-customer) | Create Customer |
+| POST | /api/short-url | [post short URL](#post-short-url) | Create ShortURL |
 | PUT | /api/customer | [put customer](#put-customer) | Update Customer |
 | PUT | /api/short-url | [put short URL](#put-short-url) | Update ShortURL |
   
 
 
 ## Paths
+
+### <span id="post-customer"></span> Create Customer (*PostCustomer*)
+
+```
+POST /api/customer
+```
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| X-API-KEY | `header` | string | `string` |  | ✓ |  | The admin API key. |
+| customer | `body` | [PostCustomerBody](#post-customer-body) | `PostCustomerBody` | | ✓ | |  |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [200](#post-customer-200) | OK | Success |  | [schema](#post-customer-200-schema) |
+| [400](#post-customer-400) | Bad Request | Bad Request |  | [schema](#post-customer-400-schema) |
+| [401](#post-customer-401) | Unauthorized | Unauthorized |  | [schema](#post-customer-401-schema) |
+
+#### Responses
+
+
+##### <span id="post-customer-200"></span> 200 - Success
+Status: OK
+
+###### <span id="post-customer-200-schema"></span> Schema
+   
+  
+
+[PostCustomerOKBody](#post-customer-o-k-body)
+
+##### <span id="post-customer-400"></span> 400 - Bad Request
+Status: Bad Request
+
+###### <span id="post-customer-400-schema"></span> Schema
+   
+  
+
+[PostCustomerBadRequestBody](#post-customer-bad-request-body)
+
+##### <span id="post-customer-401"></span> 401 - Unauthorized
+Status: Unauthorized
+
+###### <span id="post-customer-401-schema"></span> Schema
+   
+  
+
+[PostCustomerUnauthorizedBody](#post-customer-unauthorized-body)
+
+###### Inlined models
+
+**<span id="post-customer-bad-request-body"></span> PostCustomerBadRequestBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| error | string| `string` |  | |  |  |
+
+
+
+**<span id="post-customer-body"></span> PostCustomerBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| email | string| `string` | ✓ | |  |  |
+| username | string| `string` | ✓ | |  |  |
+
+
+
+**<span id="post-customer-o-k-body"></span> PostCustomerOKBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| api_key | string| `string` |  | |  |  |
+
+
+
+**<span id="post-customer-unauthorized-body"></span> PostCustomerUnauthorizedBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| error | string| `string` |  | |  |  |
+
+
+
+### <span id="post-short-url"></span> Create ShortURL (*PostShortURL*)
+
+```
+POST /api/short-url
+```
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| X-API-KEY | `header` | string | `string` |  | ✓ |  | The customer API key. |
+| body | `body` | [PostShortURLBody](#post-short-url-body) | `PostShortURLBody` | | ✓ | |  |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [200](#post-short-url-200) | OK | Success |  | [schema](#post-short-url-200-schema) |
+| [400](#post-short-url-400) | Bad Request | Bad Request |  | [schema](#post-short-url-400-schema) |
+| [401](#post-short-url-401) | Unauthorized | Unauthorized |  | [schema](#post-short-url-401-schema) |
+
+#### Responses
+
+
+##### <span id="post-short-url-200"></span> 200 - Success
+Status: OK
+
+###### <span id="post-short-url-200-schema"></span> Schema
+   
+  
+
+[PostShortURLOKBody](#post-short-url-o-k-body)
+
+##### <span id="post-short-url-400"></span> 400 - Bad Request
+Status: Bad Request
+
+###### <span id="post-short-url-400-schema"></span> Schema
+   
+  
+
+[PostShortURLBadRequestBody](#post-short-url-bad-request-body)
+
+##### <span id="post-short-url-401"></span> 401 - Unauthorized
+Status: Unauthorized
+
+###### <span id="post-short-url-401-schema"></span> Schema
+   
+  
+
+[PostShortURLUnauthorizedBody](#post-short-url-unauthorized-body)
+
+###### Inlined models
+
+**<span id="post-short-url-bad-request-body"></span> PostShortURLBadRequestBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| error | string| `string` |  | |  |  |
+
+
+
+**<span id="post-short-url-body"></span> PostShortURLBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| long_url | string| `string` | ✓ | |  |  |
+
+
+
+**<span id="post-short-url-o-k-body"></span> PostShortURLOKBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| short_url | string| `string` |  | |  |  |
+| short_url_key | string| `string` |  | |  |  |
+
+
+
+**<span id="post-short-url-unauthorized-body"></span> PostShortURLUnauthorizedBody**
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| error | string| `string` |  | |  |  |
+
+
 
 ### <span id="put-customer"></span> Update Customer (*PutCustomer*)
 
