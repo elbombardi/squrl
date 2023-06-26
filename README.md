@@ -16,6 +16,10 @@ To run this project, you need to have the following tools installed on your mach
 - Docker
 
 ### How to test the platform locally ? 
+#### 0. Clone this repository on your machine:
+```
+    git clone https://github.com/elbombardi/squrl.git
+```
 #### 1. Go to the root of the project.
 There should be the following files: 
 - `env` => configuration, used in development mode
