@@ -14,6 +14,7 @@ func main() {
 	flag.IntVar(&port, "port", 8080, "Port to listen on")
 	flag.StringVar(&host, "host", "0.0.0.0", "Host to listen on")
 	flag.Parse()
+	defer finalizeApp()
 
 	routes, err := initializeApp()
 	if err != nil {

@@ -13,21 +13,24 @@ import (
 )
 
 const (
-	DB_DRIVER             = "DB_DRIVER"
-	DB_SOURCE             = "DB_SOURCE"
-	DB_MAX_IDLE_CONNS     = "DB_MAX_IDLE_CONNS"
-	DB_MAX_OPEN_CONNS     = "DB_MAX_OPEN_CONNS"
-	DB_CONN_MAX_IDLE_TIME = "DB_CONN_MAX_IDLE_TIME"
-	DB_CONN_MAX_LIFE_TIME = "DB_CONN_MAX_LIFE_TIME"
-
-	ADMIN_APi_KEY = "ADMIN_API_KEY"
-
-	REDIRECTION_SERVER_BASE_URL = "REDIRECTION_SERVER_BASE_URL"
-
+	DB_DRIVER                     = "DB_DRIVER"
+	DB_SOURCE                     = "DB_SOURCE"
+	DB_MAX_IDLE_CONNS             = "DB_MAX_IDLE_CONNS"
 	DB_MAX_IDLE_CONNS_DEFAULT     = 5
+	DB_MAX_OPEN_CONNS             = "DB_MAX_OPEN_CONNS"
 	DB_MAX_OPEN_CONNS_DEFAULT     = 10
+	DB_CONN_MAX_IDLE_TIME         = "DB_CONN_MAX_IDLE_TIME"
 	DB_CONN_MAX_IDLE_TIME_DEFAULT = 1 * time.Second
+	DB_CONN_MAX_LIFE_TIME         = "DB_CONN_MAX_LIFE_TIME"
 	DB_CONN_MAX_LIFE_TIME_DEFAULT = 30 * time.Second
+
+	ADMIN_API_KEY = "ADMIN_API_KEY"
+
+	REDIRECTION_SERVER_BASE_URL               = "REDIRECTION_SERVER_BASE_URL"
+	REDIRECTION_PERSISTENCE_POOL_SIZE         = "REDIRECTION_PERSISTENCE_POOL_SIZE"
+	REDIRECTION_PERSISTENCE_POOL_SIZE_DEFAULT = 10
+	REDIRECTION_404_PAGE                      = "REDIRECTION_404_PAGE"
+	REDIRECTION_500_PAGE                      = "REDIRECTION_500_PAGE"
 )
 
 var envMap map[string]string
@@ -51,7 +54,7 @@ func LoadConfig() error {
 	required := []string{
 		DB_DRIVER,
 		DB_SOURCE,
-		ADMIN_APi_KEY,
+		ADMIN_API_KEY,
 		REDIRECTION_SERVER_BASE_URL,
 	}
 	errMsg := ""
@@ -139,11 +142,22 @@ func ConfigDBConnMaxLifeTime() (time.Duration, error) {
 }
 
 func ConfigAdminAPIKey() *string {
-	return get(ADMIN_APi_KEY)
+	return get(ADMIN_API_KEY)
 }
 
 func ConfigRedirectionServerBaseURL() *string {
 	return get(REDIRECTION_SERVER_BASE_URL)
+}
+
+func ConfigRedirectionPersistencePoolSize() int {
+	value, err := getInt(REDIRECTION_PERSISTENCE_POOL_SIZE)
+	if err != nil {
+		return REDIRECTION_PERSISTENCE_POOL_SIZE_DEFAULT
+	}
+	if value == nil {
+		return REDIRECTION_PERSISTENCE_POOL_SIZE_DEFAULT
+	}
+	return *value
 }
 
 func get(key string) *string {

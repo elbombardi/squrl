@@ -5,6 +5,7 @@ import (
 	"log"
 
 	db "github.com/elbombardi/squrl/db/sqlc"
+	"github.com/elbombardi/squrl/redirection_service"
 	"github.com/elbombardi/squrl/redirection_service/routes"
 	"github.com/elbombardi/squrl/util"
 )
@@ -27,10 +28,20 @@ func initializeApp() (*routes.Routes, error) {
 		return nil, fmt.Errorf("could not connect to the database")
 	}
 
+	log.Println("Starting Persistence Pool..")
+	pool := redirection_service.NewPersistencePool(
+		util.ConfigRedirectionPersistencePoolSize(),
+		store,
+		store,
+	)
+	pool.Start()
+
 	log.Println("Initializing App. Services..")
 	return &routes.Routes{
 		CustomersRepository: store,
 		ShortURLsRepository: store,
-		ClicksRepository:    store,
+		PersistClick: func(shortUrl *db.ShortUrl) {
+			pool.AddJob(shortUrl)
+		},
 	}, nil
 }
