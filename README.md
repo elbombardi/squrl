@@ -86,11 +86,11 @@ Then Short API server is now accessible on : [http://localhost:8081/api/docs](ht
 ### Environment Variables
 This is a list of the environment variables that can be used to configure the application.
 - DB_DRIVER=postgres
-- DB_SOURCE=<Url of Postgres database> for example `postgresql://postgres:password@localhost:5433/postgres?sslmode=disable`
-- ADMIN_API_KEY=<API Key to be used by the admin> for example `1234`
-- REDIRECTION_SERVER_BASE_URL=<Base URL of the redirection server> for our example `http://localhost:8085`
-- REDIRECTION_404_PAGE=<Page to be shown by the redirection server if customer or short url are not found or if they are disabled>, default `redirection_404.html`
-- REDIRECTION_500_PAGE=<Page to be show by the redirection server if there is an unexpected internal error>, default: redirection_500.html
+- DB_SOURCE=Url of Postgres database for example `postgresql://postgres:password@localhost:5433/postgres?sslmode=disable`
+- ADMIN_API_KEY=API Key to be used by the admin for example `1234`
+- REDIRECTION_SERVER_BASE_URL=Base URL of the redirection server for our example `http://localhost:8085`
+- REDIRECTION_404_PAGE=Page to be shown by the redirection server if customer or short url are not found or if they are disabled default `redirection_404.html`
+- REDIRECTION_500_PAGE=Page to be show by the redirection server if there is an unexpected internal error default: redirection_500.html
 
 ### Code Structure
 TODO
