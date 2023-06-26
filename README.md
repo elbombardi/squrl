@@ -19,11 +19,9 @@ To run this project, you need to have the following tools installed on your mach
 ### How to test the platform locally ? 
 #### 1. Go to the root of the project.
 There should be the following files: 
-```
-   env => configuration, used in development mode
-   redirection_400.html => html page to be shown by the redirection server if customer or short url are not found or if they are disabled
-   redirection_500.html => html page to be show by the redirection server if there is an unexpected internal error
-```
+- `env` => configuration, used in development mode
+- `redirection_400.html` => html page to be shown by the redirection server if customer or short url are not found or if they are disabled
+- `redirection_500.html` => html page to be show by the redirection server if there is an unexpected internal error
 
 #### 2. Start postgres database using Docker : 
 ```
