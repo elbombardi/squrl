@@ -12,7 +12,7 @@ API-->Admin: HTTP 404 Not Found
 end 
 API<--Database: Customer
 
-API->API: Update customer status (enabled or disabled)
+API->Database: Update customer status (enabled or disabled)
 Database-->API: Customer updated
 API-->Admin: HTTP 200 Created
 
