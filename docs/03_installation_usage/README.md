@@ -36,7 +36,7 @@ Keep the terminal open, the database will be stopped and deleted when you close 
 ```
 	go run ./cmd/api-server/ --port 8081 --host localhost 
 ```
-Then Short API server is now accessible on : [http://localhost:8081/docs](http://localhost:8081/docs)
+Then Short API server is now accessible on : [http://localhost:8081/api/docs](http://localhost:8081/api/docs)
 
 ## 6. Start the Redirection server on port 8085 : 
 ```
