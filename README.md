@@ -1,4 +1,4 @@
-# URL Shortner Application
+I'll# URL Shortner Application
 
 ## Requirements
 The requirements are gathered in this document : [docs/01_requirements/README.md](docs/01_requirements/README.md)
@@ -46,11 +46,11 @@ There should be the following files:
 ```
 <project>/db/migration/000001_init_schema.up.sql
 ```
-#### 6. In terminal 2 : Start the Short API Server on port 8081 : 
+#### 6. In terminal 2 : Start the API Server on port 8081 : 
 ```
 	go run ./cmd/api-server/ --port 8081 --host localhost 
 ```
-Then Short API server is now accessible on : [http://localhost:8081/api/docs](http://localhost:8081/api/docs)
+Then API server is now accessible on : [http://localhost:8081/api/docs](http://localhost:8081/api/docs)
 
 #### 7. In terminal 3 : Start the Redirection server on port 8085 : 
 ```
