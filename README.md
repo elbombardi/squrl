@@ -13,7 +13,6 @@ This is a quick guide to how to run the programs locally from source (a more det
 To run this project, you need to have the following tools installed on your machine :
 - Git
 - Golang (1.20)
-- Make
 - Docker
 
 ### How to test the platform locally ? 
