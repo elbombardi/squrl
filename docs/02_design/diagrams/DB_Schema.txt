@@ -2,7 +2,7 @@ Table customers {
   id int [pk, increment]
   prefix varchar(3) [unique, not null, note: '3 characters, case-sensitive']
   username varchar [unique, not null]
-  email varchar [unique, not null]
+  email varchar [not null]
   api_key varchar [unique, not null, note: 'API key']
   status varchar(1) [default: 'e', not null, note: 'e: enabled, d: disabled']
   created_at timestamp [default: `now()`, note: 'Timestamp of creation']

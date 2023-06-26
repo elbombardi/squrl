@@ -20,12 +20,12 @@ func (q *Queries) CheckApiKeyExists(ctx context.Context, apiKey string) (bool, e
 	return exists, err
 }
 
-const checkEmailExists = `-- name: CheckEmailExists :one
-SELECT EXISTS(SELECT 1 FROM customers WHERE email = $1)
+const checkPrefixExists = `-- name: CheckPrefixExists :one
+SELECT EXISTS(SELECT 1 FROM customers WHERE prefix = $1)
 `
 
-func (q *Queries) CheckEmailExists(ctx context.Context, email string) (bool, error) {
-	row := q.db.QueryRowContext(ctx, checkEmailExists, email)
+func (q *Queries) CheckPrefixExists(ctx context.Context, prefix string) (bool, error) {
+	row := q.db.QueryRowContext(ctx, checkPrefixExists, prefix)
 	var exists bool
 	err := row.Scan(&exists)
 	return exists, err

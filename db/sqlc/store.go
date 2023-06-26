@@ -10,7 +10,7 @@ import (
 
 type CustomersRepository interface {
 	CheckApiKeyExists(ctx context.Context, apiKey string) (bool, error)
-	CheckEmailExists(ctx context.Context, email string) (bool, error)
+	CheckPrefixExists(ctx context.Context, prefix string) (bool, error)
 	CheckUsernameExists(ctx context.Context, username string) (bool, error)
 	GetCustomerByApiKey(ctx context.Context, apiKey string) (Customer, error)
 	GetCustomerByPrefix(ctx context.Context, prefix string) (Customer, error)

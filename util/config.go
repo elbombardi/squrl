@@ -20,6 +20,8 @@ const (
 	DB_CONN_MAX_IDLE_TIME = "DB_CONN_MAX_IDLE_TIME"
 	DB_CONN_MAX_LIFE_TIME = "DB_CONN_MAX_LIFE_TIME"
 
+	ADMIN_APi_KEY = "ADMIN_API_KEY"
+
 	DB_MAX_IDLE_CONNS_DEFAULT     = 5
 	DB_MAX_OPEN_CONNS_DEFAULT     = 10
 	DB_CONN_MAX_IDLE_TIME_DEFAULT = 1 * time.Second
@@ -47,6 +49,7 @@ func LoadConfig() error {
 	required := []string{
 		DB_DRIVER,
 		DB_SOURCE,
+		ADMIN_APi_KEY,
 	}
 	errMsg := ""
 	for _, param := range required {
@@ -130,6 +133,10 @@ func ConfigDBConnMaxLifeTime() (time.Duration, error) {
 		return DB_CONN_MAX_LIFE_TIME_DEFAULT, nil
 	}
 	return time.Second * time.Duration(*value), nil
+}
+
+func ConfigAdminAPIKey() *string {
+	return get(ADMIN_APi_KEY)
 }
 
 func get(key string) *string {
