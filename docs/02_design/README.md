@@ -223,11 +223,12 @@ func generateRandomString(n int) string {
 - The persistence of the click information is done asynchronously, so that the redirection is not delayed by the database operations, by using a channel and a pool of workers (goroutines).
 - The size of the persistence worker pool can be configured using an environment variable.
 - The storage operation consists of two write operations:
-    - Insert a new line in the `Click` table.
-    - Update 3 agregates in `Short URL` table : increment the `Click Count` column, set `First Click Date Time` column (optionally), update `Last Click Date and Time` column.
+    - Insert a new line in the `Clicks` table.
+    - Update 3 agregates in `Short URLs` table : increment the `Click Count` column, set `First Click Date Time` column (optionally), update `Last Click Date and Time` column.
 
 - The following sequence diagram shows the flow of the redirection request:
 <p align="center"><img src="images/Sequence_Redirection_Flow.png"/></p>
+
 ## Database Design
 - The database is a relational database (PostgreSql).
 - The database has 3 tables:
