@@ -1,5 +1,4 @@
-# squrl
-URL Shortner Application
+# URL Shortner Application
 
 ## Requirements
 The requirements are gathered in this document : [docs/01_requirements/README.md](docs/01_requirements/README.md)
