@@ -4,23 +4,33 @@
 - Golang 1.20
 
 ## Building instructions
-- **Step 1.1.** Change directory to the root of this project:
+- **Step 1.1.** Change directory to the root of this project
+```bash
+cd <root_folder>
+```
 - **Step 1.2.** Build the API Server
+```bash
+go build -o build/short_url_api_server ./cmd/api-server
+```
+
 - **Step 1.3.** Build the redirection server
-   
+```bash
+go build -o build/short_url_redirection_server ./cmd/redirection-server
+```
+
 # Install
 The binaries can be installed seperately, in two different machines, the only requirement is that they should be able to access the same database.
 
-- **Step 2.1.** Copy the binary of the API Server (short_url_api_server) to `/usr/local/bin` (or any other folder in your PATH).
-- **Step 2.2.** Copy the binary of the redirection Server (short_url_api_server) to `/usr/local/bin` (or any other folder in your PATH).
-- **Step 2.3.** Copy the redirection_404.html and redirection_500.html files to a dedicated folder (for example /opt/short_url/).
+- **Step 2.1.** Copy the binary of the API Server (`build/short_url_api_server`) to `/usr/local/bin` (or any other folder in your `PATH`).
+- **Step 2.2.** Copy the binary of the redirection Server (`build/short_url_api_server`) to `/usr/local/bin` (or any other folder in your `PATH`).
+- **Step 2.3.** Copy the `redirection_404.html` and `redirection_500.html` files to a dedicated folder (for example `/opt/short_url/`).
 
 # Database preparation
 - **Step 3.1.** Create a dedicated user for the application.
 - **Step 3.2.** Create a new database in Postgres.
-- **Step 3.3.** Run the following script to create the tables: ./db/migration/000001_init_schema.up.sql
+- **Step 3.3.** Run the following script to create the tables: `./db/migration/000001_init_schema.up.sql`
 - **Step 3.4.** Take a note of the following information: 
-    - Host name : The IP adress or the hostname of the Postgres server.  
+    - Hostname : The IP adress or the hostname of the Postgres server.  
     - Port : The network port on which the Postgres server is listening (usually *5432*)
     - Database : The name of the database created in step 3.2.
     - Username : The name of the user created in step 3.1.
@@ -28,8 +38,12 @@ The binaries can be installed seperately, in two different machines, the only re
 
 # Configuration 
 Create the following environment variables:
+
+Please ensure that you set the required environment variables accordingly, while the optional ones can be adjusted as per your specific needs. 
+The default values, if applicable, will be used when the optional variables are not explicitly provided.
+
 ## Common configuration 
-This is a list of common environment variables that are needed by both servers (if the servers are installed on different machines, those environment variables should be set on both machines)
+This is a list of common environment variables that are used by both servers (if the servers are installed on different machines, those environment variables should be set on both machines)
 
 | Name                        | Description                                                  | Required/Optional | Default Value | Example                                                                  |
 |-----------------------------|--------------------------------------------------------------|-------------------|---------------|--------------------------------------------------------------------------|
@@ -49,8 +63,6 @@ This is a list of common environment variables that are needed by both servers (
 |-----------------------------|--------------------------------------------------------------|-------------------|---------------|--------------------------------------------------------------------------|
 | `REDIRECTION_404_PAGE`      | Path to the 404 error page for the redirection server.       | Required          |               | `/opt/short_url/redirection_404.html`                                    |
 | `REDIRECTION_500_PAGE`      | Path to the 500 error page for the redirection server.       | Required          |               | `/opt/short_url/redirection_500.html`                                    |
-
-Please ensure that you set the required environment variables accordingly, while the optional ones can be adjusted as per your specific needs. The default values, if applicable, will be used when the optional variables are not explicitly provided.
 # Launch
 
 # Future development
