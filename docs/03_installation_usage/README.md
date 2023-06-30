@@ -22,7 +22,7 @@ go build -o build/short_url_redirection_server ./cmd/redirection-server
 The binaries can be installed seperately, in two different machines, the only requirement is that they should be able to access the same database.
 
 - **Step 2.1.** Copy the binary of the API Server (`build/short_url_api_server`) to `/usr/local/bin` (or any other folder in your `PATH`).
-- **Step 2.2.** Copy the binary of the redirection Server (`build/short_url_api_server`) to `/usr/local/bin` (or any other folder in your `PATH`).
+- **Step 2.2.** Copy the binary of the redirection Server (`build/short_url_redirection_server`) to `/usr/local/bin` (or any other folder in your `PATH`).
 - **Step 2.3.** Copy the `redirection_404.html` and `redirection_500.html` files to a dedicated folder (for example `/opt/short_url/`).
 
 # Database preparation
