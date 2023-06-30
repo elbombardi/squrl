@@ -31,24 +31,26 @@ Create the following environment variables:
 ## Common configuration 
 This is a list of common environment variables that are needed by both servers (if the servers are installed on different machines, those environment variables should be set on both machines)
 
-| Name                           | Description                                                                                                        | Example                                                                                                               |
-|--------------------------------|--------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| `DB_DRIVER`                    | Should always be `postgres`.                                                                                    |                                                                                                                 |
-| `DB_SOURCE`                    | URL of the PostgreSQL database (check the [official documentation for more information](https://pkg.go.dev/github.com/lib/pq))                                                                                    | `postgresql://{*user name*}:{*user password*}@{*host name*}:{*port number*}/{*database name*}?{*more configuration options*}`                                                |
-| `DB_SOURCE`                    | URL of the PostgreSQL database (check the [official documentation for more information](https://pkg.go.dev/github.com/lib/pq))                                                                                    | `postgresql://{*user name*}:{*user password*}@{*host name*}:{*port number*}/{*database name*}?{*more configuration options*}`                                                |
-| `ADMIN_API_KEY`                | API key used by the admin.                                                                                          | `1234`                                                                                                                |
-| `REDIRECTION_SERVER_BASE_URL`  | Base URL of the redirection server.                                                                                 | `http://localhost:8085`                                                                                              |
-| `REDIRECTION_404_PAGE`         | Page shown by the redirection server when the customer or short URL is not found or disabled.                      | `redirection_404.html`                                                                                                |
-| `REDIRECTION_500_PAGE`         | Page shown by the redirection server in case of an unexpected internal error.                                       | `redirection_500.html`                                                                                                |
+| Name                        | Description                                                  | Required/Optional | Default Value | Example                                                                  |
+|-----------------------------|--------------------------------------------------------------|-------------------|---------------|--------------------------------------------------------------------------|
+| `DB_DRIVER`                 | Database driver name.                                        | Required          |               | `postgres`                                                               |
+| `DB_SOURCE`                 | URL of the PostgreSQL database.                              | Required          |               | `postgresql://postgres:password@localhost:5433/postgres?sslmode=disable` |
+| `DB_MAX_IDLE_CONNS`         | Maximum number of idle connections in the connection pool.    | Optional          | 5             | `5`                                                                      |
+| `DB_MAX_OPEN_CONNS`         | Maximum number of open connections in the connection pool.    | Optional          | 10            | `10`                                                                     |
+| `DB_CONN_MAX_IDLE_TIME`     | Maximum time (in minutes) a connection can be idle.           | Optional          | 1             | `1`                                                                      |
+| `DB_CONN_MAX_LIFE_TIME`     | Maximum time (in minutes) a connection can be kept open.      | Optional          | 30            | `30`                                                                     |
 
-Please ensure that you set these environment variables according to your specific setup and requirements.
-- DB_DRIVER=postgres
-- DB_SOURCE=<Url of Postgres database> for example `postgresql://postgres:password@localhost:5433/postgres?sslmode=disable`
-- ADMIN_API_KEY=<API Key to be used by the admin> for example `1234`
-- REDIRECTION_SERVER_BASE_URL=<Base URL of the redirection server> for our example `http://localhost:8085`
-- REDIRECTION_404_PAGE=<Page to be shown by the redirection server if customer or short url are not found or if they are disabled>, default `redirection_404.html`
-- REDIRECTION_500_PAGE=<Page to be show by the redirection server if there is an unexpected internal error>, default: redirection_500.html
+| Name                        | Description                                                  | Required/Optional | Default Value | Example                                                                  |
+|-----------------------------|--------------------------------------------------------------|-------------------|---------------|--------------------------------------------------------------------------|
+| `ADMIN_API_KEY`             | API key used by the admin.                                   | Required          |               | `1234`                                                                   |
+| `REDIRECTION_SERVER_BASE_URL` | Base URL of the redirection server.                           | Required          |               | `http://localhost:8085`                                                  |
 
+| Name                        | Description                                                  | Required/Optional | Default Value | Example                                                                  |
+|-----------------------------|--------------------------------------------------------------|-------------------|---------------|--------------------------------------------------------------------------|
+| `REDIRECTION_404_PAGE`      | Path to the 404 error page for the redirection server.       | Required          |               | `/opt/short_url/redirection_404.html`                                    |
+| `REDIRECTION_500_PAGE`      | Path to the 500 error page for the redirection server.       | Required          |               | `/opt/short_url/redirection_500.html`                                    |
+
+Please ensure that you set the required environment variables accordingly, while the optional ones can be adjusted as per your specific needs. The default values, if applicable, will be used when the optional variables are not explicitly provided.
 # Launch
 
 # Future development

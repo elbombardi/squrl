@@ -14,6 +14,7 @@ import (
 
 const (
 	DB_DRIVER                     = "DB_DRIVER"
+	DB_DRIVER_DEFAULT             = "postgres"
 	DB_SOURCE                     = "DB_SOURCE"
 	DB_MAX_IDLE_CONNS             = "DB_MAX_IDLE_CONNS"
 	DB_MAX_IDLE_CONNS_DEFAULT     = 5
@@ -54,7 +55,6 @@ func LoadConfig() error {
 	}
 
 	required := []string{
-		DB_DRIVER,
 		DB_SOURCE,
 		ADMIN_API_KEY,
 		REDIRECTION_SERVER_BASE_URL,
@@ -91,8 +91,12 @@ func LoadConfig() error {
 	return nil
 }
 
-func ConfigDBDriver() *string {
-	return get(DB_DRIVER)
+func ConfigDBDriver() string {
+	value := get(DB_DRIVER)
+	if value == nil {
+		return DB_DRIVER_DEFAULT
+	}
+	return *value
 }
 
 func ConfigDBSource() *string {

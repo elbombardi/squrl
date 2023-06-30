@@ -1,12 +1,12 @@
-DB_DRIVER=postgres
-DB_SOURCE=postgresql://postgres:password@localhost:5433/postgres?sslmode=disable
-DB_MAX_IDLE_CONNS=5
-DB_MAX_OPEN_CONNS=10
-DB_CONN_MAX_IDLE_TIME=1
-DB_CONN_MAX_LIFE_TIME=30
+DB_DRIVER=postgres       required
+DB_SOURCE=postgresql://postgres:password@localhost:5433/postgres?sslmode=disable        required
+DB_MAX_IDLE_CONNS=5     optional, default 5
+DB_MAX_OPEN_CONNS=10    optioanl, default 10
+DB_CONN_MAX_IDLE_TIME=1 optioanl, default 1
+DB_CONN_MAX_LIFE_TIME=30    optional, default 30
 
-ADMIN_API_KEY=1234
-REDIRECTION_SERVER_BASE_URL=http://localhost:8085
+ADMIN_API_KEY=1234, required
+REDIRECTION_SERVER_BASE_URL=http://localhost:8085, required
 
-REDIRECTION_404_PAGE=redirection_404.html
-REDIRECTION_500_PAGE=redirection_500.html
+REDIRECTION_404_PAGE=/opt/short_url/redirection_404.html required   
+REDIRECTION_500_PAGE=/opt/short_url/redirection_500.html required

@@ -50,7 +50,7 @@ var dbInstance *sql.DB
 func GetStoreInstance() (*SQLStore, error) {
 	if dbInstance == nil {
 		var err error
-		dbInstance, err = sql.Open(*util.ConfigDBDriver(), *util.ConfigDBSource())
+		dbInstance, err = sql.Open(util.ConfigDBDriver(), *util.ConfigDBSource())
 		if err != nil {
 			return nil, err
 		}
