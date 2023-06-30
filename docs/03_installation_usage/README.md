@@ -4,22 +4,22 @@
 - Golang 1.20
 
 ## Building instructions
-Step 1.1. Change directory to the root of this project:
-Step 1.2. Build the API Server
-Step 1.3. Build the redirection server
+- Step 1.1. Change directory to the root of this project:
+- Step 1.2. Build the API Server
+- Step 1.3. Build the redirection server
    
 # Install
 The binaries can be installed seperately, in two different machines, the only requirement is that they should be able to access the same database.
 
-Step 2.1. Copy the binary of the API Server (short_url_api_server) to `/usr/local/bin` (or any other folder in your PATH).
-Step 2.2. Copy the binary of the redirection Server (short_url_api_server) to `/usr/local/bin` (or any other folder in your PATH).
-Step 2.3. Copy the redirection_404.html and redirection_500.html files to a dedicated folder (for example /opt/short_url/).
+- Step 2.1. Copy the binary of the API Server (short_url_api_server) to `/usr/local/bin` (or any other folder in your PATH).
+- Step 2.2. Copy the binary of the redirection Server (short_url_api_server) to `/usr/local/bin` (or any other folder in your PATH).
+- Step 2.3. Copy the redirection_404.html and redirection_500.html files to a dedicated folder (for example /opt/short_url/).
 
 # Database preparation
-Step 3.1 Create a dedicated user for the application.
-Step 3.2. Create a new database in Postgres.
-Step 3.3. Run the following script to create the tables: ./db/migration/000001_init_schema.up.sql
-Step 3.4. Take a note of the following information: 
+- Step 3.1 Create a dedicated user for the application.
+- Step 3.2. Create a new database in Postgres.
+- Step 3.3. Run the following script to create the tables: ./db/migration/000001_init_schema.up.sql
+- Step 3.4. Take a note of the following information: 
     - Host name : The IP adress or the hostname of the Postgres server.  
     - Port : The network port on which the Postgres server is listening (usually *5432*)
     - Database : The name of the database created in step 3.2.
