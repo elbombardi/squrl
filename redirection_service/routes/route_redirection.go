@@ -26,6 +26,7 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 	}
 	// If the customer is not active, send 404 not found error page
 	if customer.Status != "e" {
+		log.Printf("Error: Customer %v is disabled \n", customer.Username)
 		return page404(c)
 	}
 
@@ -42,6 +43,7 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 
 	//If the short URL is not active, send 404 not found error page
 	if shortURL.Status.String != "e" {
+		log.Printf("Error: Short URL /%v is disabled \n", shortURL.ShortUrlKey.String)
 		return page404(c)
 	}
 
