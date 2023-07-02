@@ -70,8 +70,16 @@ func validateCreateCustomerParams(params operations.PostCustomerParams) error {
 	if params.Customer.Username == nil {
 		return errors.New("missing username")
 	}
+	err := util.ValidateUsername(*params.Customer.Username)
+	if err != nil {
+		return err
+	}
 	if params.Customer.Email == nil {
 		return errors.New("missing email")
+	}
+	err = util.ValidateEmail(*params.Customer.Email)
+	if err != nil {
+		return err
 	}
 	if params.XAPIKEY == "" {
 		return errors.New("missing x-api-key header")

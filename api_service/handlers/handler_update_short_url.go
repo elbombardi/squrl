@@ -106,7 +106,8 @@ func validateUpdateShortURLParams(params operations.PutShortURLParams) error {
 		return errors.New("missing parameter : 'short_url_key'")
 	}
 	if params.Body.NewLongURL != "" {
-		if valid, err := util.IsValidURL(params.Body.NewLongURL); !valid {
+		err := util.ValidateURL(params.Body.NewLongURL)
+		if err != nil {
 			return err
 		}
 	}

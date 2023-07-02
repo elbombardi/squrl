@@ -70,7 +70,8 @@ func validateCreateShortURLParams(params operations.PostShortURLParams) error {
 		return errors.New("missing param : long_url")
 	}
 	// URL should be a valid URL
-	if valid, err := util.IsValidURL(*params.Body.LongURL); !valid {
+	err := util.ValidateURL(*params.Body.LongURL)
+	if err != nil {
 		return err
 	}
 	return nil
