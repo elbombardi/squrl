@@ -3,15 +3,9 @@ package util
 import (
 	"fmt"
 	"regexp"
-	"strings"
 )
 
 func ValidateURL(url string) error {
-	// Script injection check
-	err := DetectScriptInjection(url)
-	if err != nil {
-		return err
-	}
 	// URL pattern regular expression
 	urlPattern := `^(http(s)?:\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$`
 
@@ -53,13 +47,5 @@ func ValidateUsername(username string) error {
 		return fmt.Errorf("invalid username format. Username accepts only alphanumeric characters, dash and underscore")
 	}
 
-	return nil
-}
-
-func DetectScriptInjection(input string) error {
-	// Check for <script> tag in the input
-	if strings.Contains(strings.ToLower(input), "<script>") {
-		return fmt.Errorf("potential script injection detected")
-	}
 	return nil
 }
