@@ -78,7 +78,7 @@ func (h *Handlers) UpdateShortURLHandler(params operations.PutShortURLParams) mi
 			String: encodeStatus(params.Body.TrackingStatus),
 			Valid:  true,
 		}
-		shortUrl.Status = newTrackingStatus
+		shortUrl.TrackingStatus = newTrackingStatus
 		err = h.ShortURLsRepository.UpdateShortURLTrackingStatus(context.Background(),
 			db.UpdateShortURLTrackingStatusParams{
 				TrackingStatus: newTrackingStatus,
