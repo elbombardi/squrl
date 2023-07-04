@@ -1,141 +1,174 @@
+# Short URL App: Installation & Usage Guide
 
-# Table of contents
+Hello there! Welcome to the installation and usage guide for the Short URL App. We'll walk you through the steps required to get the app up and running. Let's dive right in!
 
-- I. [Build from code](#i-build-from-code)
-- II. [Install](#ii-install)
-- III. [Database preparation](#iii-database-preparation)
-- IV. [Configuration](#iv-configuration)
-- V. [Launch](#v-launch)
-- VI. [Annexe: Short URL API Documentation](#vi-annexe-short-url-api-documentation)
+## I. Build from Code
 
-# I. Build from code
-## Requirment to build this code 
+To begin, let's build the Short URL App from the source code. Here's what you need:
+
+### Requirements
 - Golang 1.20
 
-## Building instructions
-- **Step 1.1.** Change directory to the root of this project
-```bash
-cd <root_folder>
-```
-- **Step 1.2.** Build the API Server
-```bash
-go build -o build/short_url_api_server ./cmd/api-server
-```
+### Building Instructions
+To build the app, follow these steps:
 
-- **Step 1.3.** Build the redirection server
-```bash
-go build -o build/short_url_redirection_server ./cmd/redirection-server
-```
+1. **Step 1.1.** Change your current directory to the root folder of the project:
+   ```bash
+   cd <root_folder>
+   ```
 
-# II. Install
-The binaries can be installed seperately, in two different machines, the only requirement is that they should be able to access the same database.
+2. **Step 1.2.** Build the API Server:
+   ```bash
+   go build -o build/short_url_api_server ./cmd/api-server
+   ```
 
-- **Step 2.1.** Copy the binary of the API Server (`build/short_url_api_server`) to `/usr/local/bin` (or any other folder in your `PATH`).
-```bash
-sudo cp build/short_url_api_server /usr/local/bin
-```
+3. **Step 1.3.** Build the Redirection Server:
+   ```bash
+   go build -o build/short_url_redirection_server ./cmd/redirection-server
+   ```
 
-- **Step 2.2.** Copy the binary of the redirection Server (`build/short_url_redirection_server`) to `/usr/local/bin` (or any other folder in your `PATH`).
-```bash
-sudo cp build/short_url_redirection_server /usr/local/bin
-```
+Great job! You have successfully built the Short URL App from the source code.
 
-- **Step 2.3.** Copy the `redirection_404.html` and `redirection_500.html` files to a dedicated folder (for example `/opt/short_url/`).
-```bash
-sudo mkdir /opt/short_url
-sudo cp redirection_404.html /opt/short_url/
-sudo cp redirection_500.html /opt/short_url/
-```
+## II. Install
 
-# III. Database preparation
-- **Step 3.1.** Create a dedicated user for the application.
-```bash
-sudo -u postgres createuser <username>
-```
+Now, let's install the binaries for the API Server and the Redirection Server. You can install them separately on different machines, as long as they can access the same database.
 
-- **Step 3.2.** Create a new database in Postgres.
-```bash
-sudo -u postgres createdb <dbname>
-```
-- **Step 3.3.** Give the user a password.
-```bash
-sudo -u postgres psql
-psql=# alter user <username> with encrypted password '<password>';
-```
+Here's what you need to do:
 
-- **Step 3.4.** Grant the user access to the database.
-```bash
-psql=# grant all privileges on database <dbname> to <username>;
-```
+1. **Step 2.1.** Copy the API Server binary (`build/short_url_api_server`) to a location in your `PATH`, such as `/usr/local/bin`:
+   ```bash
+   sudo cp build/short_url_api_server /usr/local/bin
+   ```
 
-- **Step 3.5.** Run the following script to create the tables: `./db/migration/000001_init_schema.up.sql`
-- **Step 3.6.** Take a note of the following information: 
-    - Hostname : The IP adress or the hostname of the Postgres server.  
-    - Port : The network port on which the Postgres server is listening (usually *5432*)
-    - Database : The name of the database created in step 3.2.
-    - Username : The name of the user created in step 3.1.
-    - Password : The password of the user created in step 3.3.
+2. **Step 2.2.** Copy the Redirection Server binary (`build/short_url_redirection_server`) to a location in your `PATH`, like `/usr/local/bin`:
+   ```bash
+   sudo cp build/short_url_redirection_server /usr/local/bin
+   ```
 
-# IV. Configuration 
-Create the following environment variables:
+3. **Step 2.3.** Copy the `redirection_404.html` and `redirection_500.html` files to a dedicated folder (e.g., `/opt/short_url/`):
+   ```bash
+   sudo mkdir /opt/short_url
+   sudo cp redirection_404.html /opt/short_url/
+   sudo cp redirection_500.html /opt/short_url/
+   ```
 
-Please ensure that you set the required environment variables accordingly, while the optional ones can be adjusted as per your specific needs. 
-The default values, if applicable, will be used when the optional variables are not explicitly provided.
+Fantastic! The binaries and necessary files are now installed and ready for use.
 
-## Common configuration 
-This is a list of common environment variables that are used by both servers (if the servers are installed on different machines, those environment variables should be set on both machines)
+## III. Database Preparation
 
-| Name                        | Description                                                  | Required/Optional | Default Value | Example                                                                  |
-|-----------------------------|--------------------------------------------------------------|-------------------|---------------|--------------------------------------------------------------------------|
-| `DB_DRIVER`                 | Database driver name.                                        | Required          |               | `postgres`                                                               |
-| `DB_SOURCE`                 | URL of the PostgreSQL database. More detail about the format of this parameter can be found here: https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters                              | Required          |               | `postgresql://postgres:password@localhost:5433/postgres?sslmode=disable`1 |
-| `DB_MAX_IDLE_CONNS`         | Maximum number of idle connections in the connection pool.    | Optional          | 5             | `5`                                                                      |
-| `DB_MAX_OPEN_CONNS`         | Maximum number of open connections in the connection pool.    | Optional          | 10            | `10`                                                                     |
-| `DB_CONN_MAX_IDLE_TIME`     | Maximum time (in minutes) a connection can be idle.           | Optional          | 1             | `1`                                                                      |
-| `DB_CONN_MAX_LIFE_TIME`     | Maximum time (in minutes) a connection can be kept open.      | Optional          | 30            | `30`                                                                     |
+Before running the app, we need to prepare the database. Here are the steps:
 
-## API Server configuration
-This is a list of environment variables that are used by the API Server only.
+1. **Step 3.1.** Create a dedicated user for the application:
+   ```bash
+   sudo -u postgres createuser <username>
+   ```
+
+2. **Step 3.2.** Create a new database in Postgres:
+   ```bash
+   sudo -u postgres createdb <dbname>
+   ```
+
+3. **Step 3.3.** Assign a password to the user:
+   ```bash
+   sudo -u postgres psql
+   psql=# alter user <username> with encrypted password '<password>';
+   ```
+
+4. **Step 3.4.** Grant the user access to the database:
+   ```bash
+   psql=# grant all privileges on database <dbname> to <username>;
+   ```
+
+5. **Step 3.5.** Run the script `./db/migration/000001_init_schema.up.sql` to create the necessary tables.
+
+6. **Step 3.6.** Make a note of the following information:
+   - Hostname: The IP address or hostname of the Postgres server.
+   - Port: The network port on which the Postgres server is listening (usually *
+
+5432*).
+   - Database: The name of the database created in Step 3.2.
+   - Username: The name of the user created in Step 3.1.
+   - Password: The password of the user created in Step 3.3.
+
+Excellent! The database is now prepared for the Short URL App.
+
+## IV. Configuration
+
+Next, let's configure the Short URL App by setting the required environment variables. Don't worry, we'll guide you through it!
+
+Please ensure that you set the required environment variables accordingly. The optional variables can be adjusted as per your specific needs. If optional variables are not explicitly provided, the app will use their default values.
+
+### Common Configuration
+
+Here are some common environment variables used by both servers:
+
+| Name                   | Description                                                 | Required/Optional | Default Value | Example                                                                  |
+|------------------------|-------------------------------------------------------------|-------------------|---------------|--------------------------------------------------------------------------|
+| `DB_DRIVER`            | Database driver name.                                       | Required          |               | `postgres`                                                               |
+| `DB_SOURCE`            | URL of the PostgreSQL database.                             | Required          |               | `postgresql://postgres:password@localhost:5433/postgres?sslmode=disable` |
+| `DB_MAX_IDLE_CONNS`    | Maximum number of idle connections in the connection pool.   | Optional          | 5             | `5`                                                                      |
+| `DB_MAX_OPEN_CONNS`    | Maximum number of open connections in the connection pool.   | Optional          | 10            | `10`                                                                     |
+| `DB_CONN_MAX_IDLE_TIME`| Maximum time (in minutes) a connection can be idle.          | Optional          | 1             | `1`                                                                      |
+| `DB_CONN_MAX_LIFE_TIME`| Maximum time (in minutes) a connection can be kept open.     | Optional          | 30            | `30`                                                                     |
+
+### API Server Configuration
+
+Here are the environment variables used by the API Server:
+
 | Name                        | Description                                                  | Required/Optional | Default Value | Example                                                                  |
 |-----------------------------|--------------------------------------------------------------|-------------------|---------------|--------------------------------------------------------------------------|
 | `ADMIN_API_KEY`             | API key used by the admin.                                   | Required          |               | `1234`                                                                   |
-| `REDIRECTION_SERVER_BASE_URL` | Base URL of the redirection server, this must be a public accessible URL. If the redirection server is deployed behind a reverse proxy, use the URL of the reverse proxy and not the local address of the application server.                            | Required          |               | `https://domain.name`                                                  |
+| `REDIRECTION_SERVER_BASE_URL` | Base URL of the redirection server.                          | Required          |               | `https://domain.name`                                                  |
 
-## Redirection Server configuration
-This is a list of environment variables that are used by the Redirection Server only.
+### Redirection Server Configuration
+
+Here are the environment variables used by the Redirection Server:
+
 | Name                        | Description                                                  | Required/Optional | Default Value | Example                                                                  |
 |-----------------------------|--------------------------------------------------------------|-------------------|---------------|--------------------------------------------------------------------------|
 | `REDIRECTION_404_PAGE`      | Path to the 404 error page for the redirection server.       | Required          |               | `/opt/short_url/redirection_404.html`                                    |
 | `REDIRECTION_500_PAGE`      | Path to the 500 error page for the redirection server.       | Required          |               | `/opt/short_url/redirection_500.html`                                    |
 
-# V. Launch
+Let's make sure you've got the configuration covered!
 
-## API Server
-Launch the API Server using the following command, by specifyging port and host:
+## V. Launch
 
-```bash
-short_url_api_server --port 8080 --host localhost 
-```
+It's time to launch the Short URL App. We'll start by launching the API Server and the Redirection Server. Follow the instructions below:
 
-### Parameters : 
-- `--port` : The port on which the API Server will listen to.
-- `--host` : The hostname or IP address of the host machine.
+### API Server
 
-### API Documentation: 
-A detailed documentation of the API can be found in [the annexe](#vi-annexe-short-url-api-documentation)
-
-## Redirection Server
-Launch the Redirection Server using the following command, by specifyging port and host:
+Launch the API Server with the following command, specifying the port and host:
 
 ```bash
-short_url_redirection_server --port 8085 --host localhost 
+short_url_api_server --port 8080 --host localhost
 ```
-### Parameters : 
-- `--port` : The port on which the Redirection Server will listen to.
-- `--host` : The hostname or IP address of the host machine.
+
+#### Parameters:
+- `--port`: The port on which the API Server will listen.
+- `--host`: The hostname or IP address of the host machine.
+
+For detailed documentation of the API, please refer to the [Annexe: Short URL API Documentation](#vi-annexe-short-url-api-documentation) section.
+
+
+### Redirection Server
+
+Launch the Redirection Server using the following command, specifying the port and host:
+
+```bash
+
+
+short_url_redirection_server --port 8085 --host localhost
+```
+
+#### Parameters:
+- `--port`: The port on which the Redirection Server will listen.
+- `--host`: The hostname or IP address of the host machine.
+
+Well done! The Short URL App is up and running.
+
+If you have any further questions or need assistance, feel free to ask. Enjoy using the Short URL App!
 
 ## VI. Annexe: Short URL API Documentation
-
 
 ## Informations
 
