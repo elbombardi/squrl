@@ -1,12 +1,12 @@
 
 # Table of contents
 
-[I. Build from code](#i-build-from-code)
-[II. Install](#ii-install)
-[III. Database preparation](#iii-database-preparation)
-[IV. Configuration](#iv-configuration)
-[V. Launch](#v-launch)
-[VI. Annexe: Short URL API Documentation](#vi-annexe-short-url-api-documentation)
+- I. [Build from code](#i-build-from-code)
+- II. [Install](#ii-install)
+- III. [Database preparation](#iii-database-preparation)
+- IV. [Configuration](#iv-configuration)
+- V. [Launch](#v-launch)
+- VI. [Annexe: Short URL API Documentation](#vi-annexe-short-url-api-documentation)
 
 # I. Build from code
 ## Requirment to build this code 
