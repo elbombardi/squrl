@@ -109,11 +109,11 @@ short_url_api_server --port 8080 --host localhost
 ```
 
 ### Parameters : 
-    - `--port` : The port on which the API Server will listen to.
-    - `--host` : The hostname or IP address of the host machine.
+- `--port` : The port on which the API Server will listen to.
+- `--host` : The hostname or IP address of the host machine.
 
 ### API Documentation: 
-A detailed documentation of the API can be found in [the annexe]()
+A detailed documentation of the API can be found in [the annexe](#vi-annexe-short-url-api-documentation)
 
 ## Redirection Server
 Launch the Redirection Server using the following command, by specifyging port and host:
@@ -122,8 +122,8 @@ Launch the Redirection Server using the following command, by specifyging port a
 short_url_redirection_server --port 8085 --host localhost 
 ```
 ### Parameters : 
-    - `--port` : The port on which the Redirection Server will listen to.
-    - `--host` : The hostname or IP address of the host machine.
+- `--port` : The port on which the Redirection Server will listen to.
+- `--host` : The hostname or IP address of the host machine.
 
 ## VI. Annexe: Short URL API Documentation
 
