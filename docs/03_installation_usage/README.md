@@ -108,9 +108,19 @@ Launch the API Server using the following command, by specifyging port and host:
 short_url_api_server --port 8080 --host localhost 
 ```
 
+### Parameters : 
+    - `--port` : The port on which the API Server will listen to.
+    - `--host` : The hostname or IP address of the host machine.
+
+### API Documentation: 
+A detailed documentation of the API can be found [here](api.md)
+
 ## Redirection Server
 Launch the Redirection Server using the following command, by specifyging port and host:
 
 ```bash
 short_url_redirection_server --port 8085 --host localhost 
 ```
+### Parameters : 
+    - `--port` : The port on which the Redirection Server will listen to.
+    - `--host` : The hostname or IP address of the host machine.
