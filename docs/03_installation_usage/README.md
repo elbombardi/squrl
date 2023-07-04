@@ -128,26 +128,26 @@ short_url_redirection_server --port 8085 --host localhost
 ## VI. Annexe: Short URL API Documentation
 
 
-#### Informations
+## Informations
 
-##### Version
+### Version
 
 1.0.0
 
-#### Content negotiation
+## Content negotiation
 
-##### URI Schemes
+### URI Schemes
   * http
 
-##### Consumes
+### Consumes
   * application/json
 
-##### Produces
+### Produces
   * application/json
 
-#### All endpoints
+## All endpoints
 
-#####  operations
+###  operations
 
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
@@ -158,22 +158,22 @@ short_url_redirection_server --port 8085 --host localhost
   
 
 
-#### Paths
+## Paths
 
-##### <span id="post-customer"></span> Create Customer (*PostCustomer*)
+### <span id="post-customer"></span> Create Customer (*PostCustomer*)
 
 ```
 POST /api/customer
 ```
 
-###### Parameters
+#### Parameters
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
 | X-API-KEY | `header` | string | `string` |  | ✓ |  | The admin API key. |
 | customer | `body` | [PostCustomerBody](#post-customer-body) | `PostCustomerBody` | | ✓ | |  |
 
-###### All responses
+#### All responses
 | Code | Status | Description | Has headers | Schema |
 |------|--------|-------------|:-----------:|--------|
 | [200](#post-customer-200) | OK | Success |  | [schema](#post-customer-200-schema) |
@@ -181,46 +181,46 @@ POST /api/customer
 | [401](#post-customer-401) | Unauthorized | Unauthorized |  | [schema](#post-customer-401-schema) |
 | [500](#post-customer-500) | Internal Server Error | Internal Server Error |  | [schema](#post-customer-500-schema) |
 
-###### Responses
+#### Responses
 
 
-####### <span id="post-customer-200"></span> 200 - Success
+##### <span id="post-customer-200"></span> 200 - Success
 Status: OK
 
-######## <span id="post-customer-200-schema"></span> Schema
+###### <span id="post-customer-200-schema"></span> Schema
    
   
 
 [PostCustomerOKBody](#post-customer-o-k-body)
 
-####### <span id="post-customer-400"></span> 400 - Bad Request
+##### <span id="post-customer-400"></span> 400 - Bad Request
 Status: Bad Request
 
-######## <span id="post-customer-400-schema"></span> Schema
+###### <span id="post-customer-400-schema"></span> Schema
    
   
 
 [PostCustomerBadRequestBody](#post-customer-bad-request-body)
 
-####### <span id="post-customer-401"></span> 401 - Unauthorized
+##### <span id="post-customer-401"></span> 401 - Unauthorized
 Status: Unauthorized
 
-######## <span id="post-customer-401-schema"></span> Schema
+###### <span id="post-customer-401-schema"></span> Schema
    
   
 
 [PostCustomerUnauthorizedBody](#post-customer-unauthorized-body)
 
-####### <span id="post-customer-500"></span> 500 - Internal Server Error
+##### <span id="post-customer-500"></span> 500 - Internal Server Error
 Status: Internal Server Error
 
-######## <span id="post-customer-500-schema"></span> Schema
+###### <span id="post-customer-500-schema"></span> Schema
    
   
 
 [PostCustomerInternalServerErrorBody](#post-customer-internal-server-error-body)
 
-######## Inlined models
+###### Inlined models
 
 **<span id="post-customer-bad-request-body"></span> PostCustomerBadRequestBody**
 
@@ -299,20 +299,20 @@ Status: Internal Server Error
 
 
 
-##### <span id="post-short-url"></span> Create ShortURL (*PostShortURL*)
+### <span id="post-short-url"></span> Create ShortURL (*PostShortURL*)
 
 ```
 POST /api/short-url
 ```
 
-###### Parameters
+#### Parameters
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
 | X-API-KEY | `header` | string | `string` |  | ✓ |  | The customer API key. |
 | body | `body` | [PostShortURLBody](#post-short-url-body) | `PostShortURLBody` | | ✓ | |  |
 
-###### All responses
+#### All responses
 | Code | Status | Description | Has headers | Schema |
 |------|--------|-------------|:-----------:|--------|
 | [200](#post-short-url-200) | OK | Success |  | [schema](#post-short-url-200-schema) |
@@ -320,46 +320,46 @@ POST /api/short-url
 | [401](#post-short-url-401) | Unauthorized | Unauthorized |  | [schema](#post-short-url-401-schema) |
 | [500](#post-short-url-500) | Internal Server Error | Internal Server Error |  | [schema](#post-short-url-500-schema) |
 
-###### Responses
+#### Responses
 
 
-####### <span id="post-short-url-200"></span> 200 - Success
+##### <span id="post-short-url-200"></span> 200 - Success
 Status: OK
 
-######## <span id="post-short-url-200-schema"></span> Schema
+###### <span id="post-short-url-200-schema"></span> Schema
    
   
 
 [PostShortURLOKBody](#post-short-url-o-k-body)
 
-####### <span id="post-short-url-400"></span> 400 - Bad Request
+##### <span id="post-short-url-400"></span> 400 - Bad Request
 Status: Bad Request
 
-######## <span id="post-short-url-400-schema"></span> Schema
+###### <span id="post-short-url-400-schema"></span> Schema
    
   
 
 [PostShortURLBadRequestBody](#post-short-url-bad-request-body)
 
-####### <span id="post-short-url-401"></span> 401 - Unauthorized
+##### <span id="post-short-url-401"></span> 401 - Unauthorized
 Status: Unauthorized
 
-######## <span id="post-short-url-401-schema"></span> Schema
+###### <span id="post-short-url-401-schema"></span> Schema
    
   
 
 [PostShortURLUnauthorizedBody](#post-short-url-unauthorized-body)
 
-####### <span id="post-short-url-500"></span> 500 - Internal Server Error
+##### <span id="post-short-url-500"></span> 500 - Internal Server Error
 Status: Internal Server Error
 
-######## <span id="post-short-url-500-schema"></span> Schema
+###### <span id="post-short-url-500-schema"></span> Schema
    
   
 
 [PostShortURLInternalServerErrorBody](#post-short-url-internal-server-error-body)
 
-######## Inlined models
+###### Inlined models
 
 **<span id="post-short-url-bad-request-body"></span> PostShortURLBadRequestBody**
 
@@ -437,20 +437,20 @@ Status: Internal Server Error
 
 
 
-##### <span id="put-customer"></span> Update Customer (*PutCustomer*)
+### <span id="put-customer"></span> Update Customer (*PutCustomer*)
 
 ```
 PUT /api/customer
 ```
 
-###### Parameters
+#### Parameters
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
 | X-API-KEY | `header` | string | `string` |  | ✓ |  | The admin API key. |
 | body | `body` | [PutCustomerBody](#put-customer-body) | `PutCustomerBody` | | ✓ | |  |
 
-###### All responses
+#### All responses
 | Code | Status | Description | Has headers | Schema |
 |------|--------|-------------|:-----------:|--------|
 | [200](#put-customer-200) | OK | Success |  | [schema](#put-customer-200-schema) |
@@ -459,55 +459,55 @@ PUT /api/customer
 | [404](#put-customer-404) | Not Found | Not Found |  | [schema](#put-customer-404-schema) |
 | [500](#put-customer-500) | Internal Server Error | Internal Server Error |  | [schema](#put-customer-500-schema) |
 
-###### Responses
+#### Responses
 
 
-####### <span id="put-customer-200"></span> 200 - Success
+##### <span id="put-customer-200"></span> 200 - Success
 Status: OK
 
-######## <span id="put-customer-200-schema"></span> Schema
+###### <span id="put-customer-200-schema"></span> Schema
    
   
 
 [PutCustomerOKBody](#put-customer-o-k-body)
 
-####### <span id="put-customer-400"></span> 400 - Bad Request
+##### <span id="put-customer-400"></span> 400 - Bad Request
 Status: Bad Request
 
-######## <span id="put-customer-400-schema"></span> Schema
+###### <span id="put-customer-400-schema"></span> Schema
    
   
 
 [PutCustomerBadRequestBody](#put-customer-bad-request-body)
 
-####### <span id="put-customer-401"></span> 401 - Unauthorized
+##### <span id="put-customer-401"></span> 401 - Unauthorized
 Status: Unauthorized
 
-######## <span id="put-customer-401-schema"></span> Schema
+###### <span id="put-customer-401-schema"></span> Schema
    
   
 
 [PutCustomerUnauthorizedBody](#put-customer-unauthorized-body)
 
-####### <span id="put-customer-404"></span> 404 - Not Found
+##### <span id="put-customer-404"></span> 404 - Not Found
 Status: Not Found
 
-######## <span id="put-customer-404-schema"></span> Schema
+###### <span id="put-customer-404-schema"></span> Schema
    
   
 
 [PutCustomerNotFoundBody](#put-customer-not-found-body)
 
-####### <span id="put-customer-500"></span> 500 - Internal Server Error
+##### <span id="put-customer-500"></span> 500 - Internal Server Error
 Status: Internal Server Error
 
-######## <span id="put-customer-500-schema"></span> Schema
+###### <span id="put-customer-500-schema"></span> Schema
    
   
 
 [PutCustomerInternalServerErrorBody](#put-customer-internal-server-error-body)
 
-######## Inlined models
+###### Inlined models
 
 **<span id="put-customer-bad-request-body"></span> PutCustomerBadRequestBody**
 
@@ -600,20 +600,20 @@ Status: Internal Server Error
 
 
 
-##### <span id="put-short-url"></span> Update ShortURL (*PutShortURL*)
+### <span id="put-short-url"></span> Update ShortURL (*PutShortURL*)
 
 ```
 PUT /api/short-url
 ```
 
-###### Parameters
+#### Parameters
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
 | X-API-KEY | `header` | string | `string` |  | ✓ |  | The customer API key. |
 | body | `body` | [PutShortURLBody](#put-short-url-body) | `PutShortURLBody` | | ✓ | |  |
 
-###### All responses
+#### All responses
 | Code | Status | Description | Has headers | Schema |
 |------|--------|-------------|:-----------:|--------|
 | [200](#put-short-url-200) | OK | Success |  | [schema](#put-short-url-200-schema) |
@@ -622,55 +622,55 @@ PUT /api/short-url
 | [404](#put-short-url-404) | Not Found | Not Found |  | [schema](#put-short-url-404-schema) |
 | [500](#put-short-url-500) | Internal Server Error | Internal Server Error |  | [schema](#put-short-url-500-schema) |
 
-###### Responses
+#### Responses
 
 
-####### <span id="put-short-url-200"></span> 200 - Success
+##### <span id="put-short-url-200"></span> 200 - Success
 Status: OK
 
-######## <span id="put-short-url-200-schema"></span> Schema
+###### <span id="put-short-url-200-schema"></span> Schema
    
   
 
 [PutShortURLOKBody](#put-short-url-o-k-body)
 
-####### <span id="put-short-url-400"></span> 400 - Bad Request
+##### <span id="put-short-url-400"></span> 400 - Bad Request
 Status: Bad Request
 
-######## <span id="put-short-url-400-schema"></span> Schema
+###### <span id="put-short-url-400-schema"></span> Schema
    
   
 
 [PutShortURLBadRequestBody](#put-short-url-bad-request-body)
 
-####### <span id="put-short-url-401"></span> 401 - Unauthorized
+##### <span id="put-short-url-401"></span> 401 - Unauthorized
 Status: Unauthorized
 
-######## <span id="put-short-url-401-schema"></span> Schema
+###### <span id="put-short-url-401-schema"></span> Schema
    
   
 
 [PutShortURLUnauthorizedBody](#put-short-url-unauthorized-body)
 
-####### <span id="put-short-url-404"></span> 404 - Not Found
+##### <span id="put-short-url-404"></span> 404 - Not Found
 Status: Not Found
 
-######## <span id="put-short-url-404-schema"></span> Schema
+###### <span id="put-short-url-404-schema"></span> Schema
    
   
 
 [PutShortURLNotFoundBody](#put-short-url-not-found-body)
 
-####### <span id="put-short-url-500"></span> 500 - Internal Server Error
+##### <span id="put-short-url-500"></span> 500 - Internal Server Error
 Status: Internal Server Error
 
-######## <span id="put-short-url-500-schema"></span> Schema
+###### <span id="put-short-url-500-schema"></span> Schema
    
   
 
 [PutShortURLInternalServerErrorBody](#put-short-url-internal-server-error-body)
 
-######## Inlined models
+###### Inlined models
 
 **<span id="put-short-url-bad-request-body"></span> PutShortURLBadRequestBody**
 
@@ -767,4 +767,4 @@ Status: Internal Server Error
 
 
 
-#### Models
+## Models
