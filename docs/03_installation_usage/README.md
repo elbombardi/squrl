@@ -90,7 +90,7 @@ This is a list of environment variables that are used by the API Server only.
 | Name                        | Description                                                  | Required/Optional | Default Value | Example                                                                  |
 |-----------------------------|--------------------------------------------------------------|-------------------|---------------|--------------------------------------------------------------------------|
 | `ADMIN_API_KEY`             | API key used by the admin.                                   | Required          |               | `1234`                                                                   |
-| `REDIRECTION_SERVER_BASE_URL` | Base URL of the redirection server, this must be a public accessible URL                           | Required          |               | `https://domain.name`                                                  |
+| `REDIRECTION_SERVER_BASE_URL` | Base URL of the redirection server, this must be a public accessible URL. If the redirection server is deployed behind a reverse proxy, use the URL of the reverse proxy and not the local address of the application server.                            | Required          |               | `https://domain.name`                                                  |
 
 ## Redirection Server configuration
 This is a list of environment variables that are used by the Redirection Server only.
