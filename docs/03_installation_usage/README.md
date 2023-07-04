@@ -764,7 +764,3 @@ Status: Internal Server Error
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
 | error | string| `string` |  | |  |  |
-
-
-
-## Models
