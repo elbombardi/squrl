@@ -1,0 +1,308 @@
+swagger: "2.0"
+info:
+  version: "2.0.0"
+  title: SQURL - ADMIN API
+basePath: /v2
+schemes:
+  - http
+produces:
+  - application/json
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+paths:
+  # /auth/signin:
+  #   post:
+  #     summary: Sign in with Basic Auth and get a JWT token
+  #     description: |
+  #       Authenticate using Basic Auth credentials and returns a JWT token upon successful sign-in.
+  #       This endpoint expects the Authorization header with Basic Auth credentials in the format "Basic base64(username:password)".
+  #     parameters:
+  #       - name: X-API-KEY
+  #         in: header
+  #         description: Admin API Key
+  #         required: true
+  #         type: string
+  #         format: basic
+        
+  #     responses:
+  #       '200':
+  #         description: Successful sign-in. Returns a JWT token.
+  #         schema:
+  #           type: string
+  #       '401':
+  #         description: Unauthorized
+
+  /account :
+    post:
+      summary: Create account
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: JWT Token.
+        - name: account
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              email:
+                type: string
+            required:
+              - username
+              - email
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              api_key:
+                type: string
+              prefix:
+                type: string
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+    put:
+      summary: Update Account
+      parameters:
+        - name: X-API-KEY
+          in: header
+          type: string
+          required: true
+          description: The admin API key.
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              status:
+                type: string
+                enum:
+                  - active
+                  - inactive
+            required:
+              - username
+              - status
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+  /short-url:
+    post:
+      summary: Create ShortURL
+      parameters:
+        - name: X-API-KEY
+          in: header
+          type: string
+          required: true
+          description: The account API key.
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              long_url:
+                type: string
+            required:
+              - long_url
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              short_url_key:
+                type: string
+              short_url:
+                type: string
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+    put:
+      summary: Update ShortURL
+      parameters:
+        - name: X-API-KEY
+          in: header
+          type: string
+          required: true
+          description: The account API key.
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              short_url_key:
+                type: string
+              new_long_url:
+                type: string
+              status:
+                type: string
+                enum:
+                  - active
+                  - inactive
+              tracking_status:
+                type: string
+                enum:
+                  - active
+                  - inactive
+            required:
+              - short_url_key
+
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              long_url:
+                type: string
+              status:
+                type: string
+              tracking_status:
+                type: string
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        500:
+          description: Internal Server Error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+definitions:
+  LoginInfo:
+    type: object
+    required: [email,password]
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  LoginSuccess:
+    type: object
+    properties:
+      success:
+        type: boolean
+      token:
+        type: string
+  CartPreview:
+    type: array
+    items:
+      $ref: '#/definitions/CartItem'
+  CartItem:
+    type: object
+    properties:
+      productId:
+        type: integer
+      productName:
+        type: string
+      quantity:
+        type: integer
+      unitPrice:
+        type: number
+      imageUrl:
+        type: string
+      currency:
+        type: string

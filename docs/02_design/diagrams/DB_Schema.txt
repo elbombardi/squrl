@@ -1,10 +1,10 @@
-Table customers {
+Table account {
   id int [pk, increment]
   prefix varchar(3) [unique, not null, note: '3 characters, case-sensitive']
   username varchar [unique, not null]
   email varchar [not null]
   api_key varchar [unique, not null, note: 'API key']
-  status varchar(1) [default: 'e', not null, note: 'e: enabled, d: disabled']
+  enabled bool [default: true, not null, note: 'A flag that enables/disables the account and its urls']
   created_at timestamp [default: `now()`, note: 'Timestamp of creation']
   updated_at timestamp [note: 'Timestamp of last update']
 
@@ -14,43 +14,40 @@ Table customers {
     api_key [note: 'Index for api_key column']
   }
 
-  note: "Table holding Customer information"
+  note: "Table holding Account information"
 }
 
-Table short_urls {
+Table url {
   id int [pk, increment]
   short_url_key varchar [note: '6 characters, case-sensitive']
-  customer_id int [not null]
+  account_id int [not null]
   long_url varchar [not null]
-  status varchar(1) [default: 'e', note: 'e: enabled, d: disabled']
-  tracking_status varchar(1) [default: 'e', note: 'e: enabled, d: disabled']
-  click_count int [default: 0, note: 'Aggregate updated by the redirection server']
-  first_click_date_time timestamp [note: 'Aggregate set by the redirection server']
-  last_click_date_time timestamp [note: 'Aggregate set by the redirection server']
+  enabled boolean [default: true, not null, note: 'A flag to enable/disable the url redirection']
+  tracking_enabled boolean [default: true, not null, note: 'A flag that enable/disable url tracking on redirection']
   created_at timestamp [default: `now()`, note: 'Timestamp of creation']
   updated_at timestamp [note: 'Timestamp of last update']
 
   Indexes {
-    customer_id [note: 'Index for customer_id column']
-    (short_url_key, customer_id) [unique, note: 'Composite unique index for short_url_key and customer_id']
+    account_id [note: 'Index for account_id column']
+    (short_url_key, account_id) [unique, note: 'Composite unique index for short_url_key and account_id']
   }
 
-  note: "Table holding short URL information"
+  note: "Table holding URL information"
 }
 
-Table clicks {
+Table click {
   id int [pk, increment]
-  short_url_id int [not null]
+  url_id int [not null]
   click_date_time timestamp [default: `now()`, note: 'Timestamp of click']
   user_agent varchar
   ip_address varchar
 
   Indexes {
-    short_url_id [note: 'Index for short_url_id column']
+    url_id [note: 'Index for url_id column']
   }
 
   note: "Table holding click information"
 }
 
-Ref: short_urls.customer_id > customers.id  
-Ref: clicks.short_url_id > short_urls.id  
+Ref: url.account_id > account.id  
+Ref: click.url_id > url.id  

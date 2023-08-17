@@ -2,26 +2,27 @@
 
 ## Architecture 
 - There are 2 main components in this system
-    - API Server
+    - AdminAPI Server
     - Redirection Server
-- API Server is the main server that handle all the API requests from the admin or customers
-- Redirection Server is the server that handle all the redirection requests from the public
-- Both servers run on HTTP. Securing the communication between the servers and the clients is done using HTTPS, and it is delegated to a reverse proxy that handles the SSL/TLS encryption and decryption.
+- AdminAPI Server is the main server that handles all the API requests from the admin or account users
+- Redirection Server is the server that handle all the redirection requests from the public users
+- Both servers run on HTTP. Securing the communication between the servers and the clients is done using HTTPS, and it is delegated to a reverse proxy that handles the SSL/TLS.
 - The separation between the two components has two benefits : 
     - The servers can be scaled independently of each other.
-    - Security: The API server is not exposed to public users, it's only used by authenticated users. The redirection server is exposed to public users, it doesn't require authentication, but it doesn't modify customer and short URL data, it only reads data, and inserts tracking data.
+    - Security: The AdminAPI server is not exposed to public users, it's only used by authenticated users. The redirection server is exposed to public users, it doesn't require authentication, but it doesn't modify Account and URL data, it only reads this data, and inserts tracking data (clicks).
+- For the sake of simplicity both components share the same database (Postgres).
 
 <p align="center"><img src="images/ArchitectureDiagrams.drawio.png"/></p>
 
-## API Server
-- The API server is the main server that handle all the API requests from the admin and customers.
-- The API server is a REST API server, it's built using Golang & Swagger.
-- The API server is stateless, it doesn't store any data, it only reads and writes data to the database.
-- The API server is secured using API key. Each customer has an API key stored in the database, and the admin has a specific API key stored as an environment variable.
+## Admin API Server
+- The AdminAPI server is the main server that handle all the API requests from the admin and account users.
+- .. is a REST server, it's built using Golang & Swagger.
+- .. is stateless, it doesn't store any data, it only reads and writes data to the database.
+- .. is secured using API key & JWT. Each account has an API key stored in the database, and the admin has a specific API key stored as an environment variable.
 
 ### Simple random string generation algorithm : 
 - The random alphanumerics (a-z, A-Z and 0-9) string generator is a function that generates a random alphanumeric string of n characters.
-- This function will be used to generate the customer prefix (3 characters), the short URL key (6 characters), and the API key (32 characters).
+- This function will be used to generate the customer prefix of 3 characters (which gives 62^3 possibilities), the short URL key (6 characters), and the API key (32 characters).
 - To guarantee unicity, the generated key will be checked against the database, if it already exists, a new key will be generated and checked again, until a unique key is found.
 
 ```go
@@ -37,7 +38,7 @@ func generateRandomString(n int) string {
 ```
 
 
-### 1. Create Customer:
+### 1. Create Account:
 #### 1.1. Sequence diagram:
 <p align="center"><img src="images/Sequence_Create_Customer.png"/></p>
 
