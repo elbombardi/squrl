@@ -18,6 +18,10 @@ import (
 	"github.com/go-openapi/spec"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+
+	"github.com/elbombardi/squrl/src/api_service/api/operations/accounts"
+	"github.com/elbombardi/squrl/src/api_service/api/operations/general"
+	"github.com/elbombardi/squrl/src/api_service/api/operations/urls"
 )
 
 // NewAdminAPI creates a new Admin instance
@@ -42,17 +46,23 @@ func NewAdminAPI(spec *loads.Document) *AdminAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		PostAccountHandler: PostAccountHandlerFunc(func(params PostAccountParams) middleware.Responder {
-			return middleware.NotImplemented("operation PostAccount has not yet been implemented")
+		AccountsCreateAccountHandler: accounts.CreateAccountHandlerFunc(func(params accounts.CreateAccountParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation accounts.CreateAccount has not yet been implemented")
 		}),
-		PostShortURLHandler: PostShortURLHandlerFunc(func(params PostShortURLParams) middleware.Responder {
-			return middleware.NotImplemented("operation PostShortURL has not yet been implemented")
+		UrlsCreateURLHandler: urls.CreateURLHandlerFunc(func(params urls.CreateURLParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation urls.CreateURL has not yet been implemented")
 		}),
-		PutAccountHandler: PutAccountHandlerFunc(func(params PutAccountParams) middleware.Responder {
-			return middleware.NotImplemented("operation PutAccount has not yet been implemented")
+		GeneralHealthcheckHandler: general.HealthcheckHandlerFunc(func(params general.HealthcheckParams) middleware.Responder {
+			return middleware.NotImplemented("operation general.Healthcheck has not yet been implemented")
 		}),
-		PutShortURLHandler: PutShortURLHandlerFunc(func(params PutShortURLParams) middleware.Responder {
-			return middleware.NotImplemented("operation PutShortURL has not yet been implemented")
+		GeneralLoginHandler: general.LoginHandlerFunc(func(params general.LoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation general.Login has not yet been implemented")
+		}),
+		AccountsUpdateAccountHandler: accounts.UpdateAccountHandlerFunc(func(params accounts.UpdateAccountParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation accounts.UpdateAccount has not yet been implemented")
+		}),
+		UrlsUpdateURLHandler: urls.UpdateURLHandlerFunc(func(params urls.UpdateURLParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation urls.UpdateURL has not yet been implemented")
 		}),
 	}
 }
@@ -90,14 +100,18 @@ type AdminAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
-	// PostAccountHandler sets the operation handler for the post account operation
-	PostAccountHandler PostAccountHandler
-	// PostShortURLHandler sets the operation handler for the post short URL operation
-	PostShortURLHandler PostShortURLHandler
-	// PutAccountHandler sets the operation handler for the put account operation
-	PutAccountHandler PutAccountHandler
-	// PutShortURLHandler sets the operation handler for the put short URL operation
-	PutShortURLHandler PutShortURLHandler
+	// AccountsCreateAccountHandler sets the operation handler for the create account operation
+	AccountsCreateAccountHandler accounts.CreateAccountHandler
+	// UrlsCreateURLHandler sets the operation handler for the create URL operation
+	UrlsCreateURLHandler urls.CreateURLHandler
+	// GeneralHealthcheckHandler sets the operation handler for the healthcheck operation
+	GeneralHealthcheckHandler general.HealthcheckHandler
+	// GeneralLoginHandler sets the operation handler for the login operation
+	GeneralLoginHandler general.LoginHandler
+	// AccountsUpdateAccountHandler sets the operation handler for the update account operation
+	AccountsUpdateAccountHandler accounts.UpdateAccountHandler
+	// UrlsUpdateURLHandler sets the operation handler for the update URL operation
+	UrlsUpdateURLHandler urls.UpdateURLHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -175,17 +189,23 @@ func (o *AdminAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.PostAccountHandler == nil {
-		unregistered = append(unregistered, "PostAccountHandler")
+	if o.AccountsCreateAccountHandler == nil {
+		unregistered = append(unregistered, "accounts.CreateAccountHandler")
 	}
-	if o.PostShortURLHandler == nil {
-		unregistered = append(unregistered, "PostShortURLHandler")
+	if o.UrlsCreateURLHandler == nil {
+		unregistered = append(unregistered, "urls.CreateURLHandler")
 	}
-	if o.PutAccountHandler == nil {
-		unregistered = append(unregistered, "PutAccountHandler")
+	if o.GeneralHealthcheckHandler == nil {
+		unregistered = append(unregistered, "general.HealthcheckHandler")
 	}
-	if o.PutShortURLHandler == nil {
-		unregistered = append(unregistered, "PutShortURLHandler")
+	if o.GeneralLoginHandler == nil {
+		unregistered = append(unregistered, "general.LoginHandler")
+	}
+	if o.AccountsUpdateAccountHandler == nil {
+		unregistered = append(unregistered, "accounts.UpdateAccountHandler")
+	}
+	if o.UrlsUpdateURLHandler == nil {
+		unregistered = append(unregistered, "urls.UpdateURLHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -278,19 +298,27 @@ func (o *AdminAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/account"] = NewPostAccount(o.context, o.PostAccountHandler)
+	o.handlers["POST"]["/account"] = accounts.NewCreateAccount(o.context, o.AccountsCreateAccountHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/short-url"] = NewPostShortURL(o.context, o.PostShortURLHandler)
+	o.handlers["POST"]["/url"] = urls.NewCreateURL(o.context, o.UrlsCreateURLHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/health"] = general.NewHealthcheck(o.context, o.GeneralHealthcheckHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/login"] = general.NewLogin(o.context, o.GeneralLoginHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/account"] = NewPutAccount(o.context, o.PutAccountHandler)
+	o.handlers["PUT"]["/account"] = accounts.NewUpdateAccount(o.context, o.AccountsUpdateAccountHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/short-url"] = NewPutShortURL(o.context, o.PutShortURLHandler)
+	o.handlers["PUT"]["/url"] = urls.NewUpdateURL(o.context, o.UrlsUpdateURLHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

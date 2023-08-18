@@ -1,0 +1,11 @@
+Add endpoint: Clicks Summary
+Add endpoint: List accounts
+Add endpoint: List URLs for an account
+Authentication login
+Authorization with jwt
+Logs
+Tests
+Dockerization
+Kubernetes
+CICD Github actions ==> AWS Fragate
+Monitoring

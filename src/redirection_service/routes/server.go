@@ -23,5 +23,7 @@ func NewServer(port int, host string, routes *Routes) *Server {
 func (s *Server) Serve() error {
 	app := fiber.New()
 	app.Get("/:account_prefix/:short_url_key", s.Routes.RedirectRoute)
+	app.Get("/healthcheck", s.Routes.HealthcheckRoute)
+
 	return app.Listen(fmt.Sprintf("%v:%v", s.Host, s.Port))
 }

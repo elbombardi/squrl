@@ -11,9 +11,12 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 
 	"github.com/elbombardi/squrl/src/api_service/api/operations"
+	"github.com/elbombardi/squrl/src/api_service/api/operations/accounts"
+	"github.com/elbombardi/squrl/src/api_service/api/operations/general"
+	"github.com/elbombardi/squrl/src/api_service/api/operations/urls"
 )
 
-//go:generate swagger generate server --target ../../api_service --name Admin --spec ../swagger.yml --server-package api --principal interface{} --exclude-main
+//go:generate swagger generate server --target ../../api_service --name Admin --spec ../swagger.yml --model-package api/models --server-package api --principal interface{} --exclude-main
 
 func configureFlags(api *operations.AdminAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -37,24 +40,34 @@ func configureAPI(api *operations.AdminAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.PostAccountHandler == nil {
-		api.PostAccountHandler = operations.PostAccountHandlerFunc(func(params operations.PostAccountParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.PostAccount has not yet been implemented")
+	if api.AccountsCreateAccountHandler == nil {
+		api.AccountsCreateAccountHandler = accounts.CreateAccountHandlerFunc(func(params accounts.CreateAccountParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation accounts.CreateAccount has not yet been implemented")
 		})
 	}
-	if api.PostShortURLHandler == nil {
-		api.PostShortURLHandler = operations.PostShortURLHandlerFunc(func(params operations.PostShortURLParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.PostShortURL has not yet been implemented")
+	if api.UrlsCreateURLHandler == nil {
+		api.UrlsCreateURLHandler = urls.CreateURLHandlerFunc(func(params urls.CreateURLParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation urls.CreateURL has not yet been implemented")
 		})
 	}
-	if api.PutAccountHandler == nil {
-		api.PutAccountHandler = operations.PutAccountHandlerFunc(func(params operations.PutAccountParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.PutAccount has not yet been implemented")
+	if api.GeneralHealthcheckHandler == nil {
+		api.GeneralHealthcheckHandler = general.HealthcheckHandlerFunc(func(params general.HealthcheckParams) middleware.Responder {
+			return middleware.NotImplemented("operation general.Healthcheck has not yet been implemented")
 		})
 	}
-	if api.PutShortURLHandler == nil {
-		api.PutShortURLHandler = operations.PutShortURLHandlerFunc(func(params operations.PutShortURLParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.PutShortURL has not yet been implemented")
+	if api.GeneralLoginHandler == nil {
+		api.GeneralLoginHandler = general.LoginHandlerFunc(func(params general.LoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation general.Login has not yet been implemented")
+		})
+	}
+	if api.AccountsUpdateAccountHandler == nil {
+		api.AccountsUpdateAccountHandler = accounts.UpdateAccountHandlerFunc(func(params accounts.UpdateAccountParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation accounts.UpdateAccount has not yet been implemented")
+		})
+	}
+	if api.UrlsUpdateURLHandler == nil {
+		api.UrlsUpdateURLHandler = urls.UpdateURLHandlerFunc(func(params urls.UpdateURLParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation urls.UpdateURL has not yet been implemented")
 		})
 	}
 

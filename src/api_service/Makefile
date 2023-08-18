@@ -8,7 +8,7 @@ swagger_validate:
 
 swagger_generate_api_server:
 	rm -fr api
-	swagger generate server --exclude-main -s api --name Admin --target . -f swagger.yml
+	swagger generate server --exclude-main -s api -m api/models --name Admin --target . -f swagger.yml
 	
 swagger_generate_documentation: 
 	swagger generate markdown --output ../../docs/03_installation_usage/admin_api.md -f swagger.yml

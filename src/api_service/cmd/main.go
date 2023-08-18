@@ -21,8 +21,8 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	shortURLAPI := operations.NewAdminAPI(swaggerSpec)
-	server := api.NewServer(shortURLAPI)
+	adminAPI := operations.NewAdminAPI(swaggerSpec)
+	server := api.NewServer(adminAPI)
 	defer server.Shutdown()
 	defer finalizeApp()
 
@@ -31,7 +31,7 @@ func main() {
 		log.Println("Initialization Error. Shutting down..")
 		return
 	}
-	handlers.InstallHandlers(shortURLAPI)
+	handlers.InstallHandlers(adminAPI)
 
 	server.Port = port
 	server.Host = host

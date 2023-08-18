@@ -1,43 +1,69 @@
 swagger: "2.0"
 info:
-  version: "2.0.0"
+  version: "1.0.0"
   title: SQURL - ADMIN API
-basePath: /v2
+basePath: /v1
 schemes:
   - http
 produces:
   - application/json
-securityDefinitions:
-  Bearer:
-    type: apiKey
-    name: Authorization
-    in: header
 paths:
-  # /auth/signin:
-  #   post:
-  #     summary: Sign in with Basic Auth and get a JWT token
-  #     description: |
-  #       Authenticate using Basic Auth credentials and returns a JWT token upon successful sign-in.
-  #       This endpoint expects the Authorization header with Basic Auth credentials in the format "Basic base64(username:password)".
-  #     parameters:
-  #       - name: X-API-KEY
-  #         in: header
-  #         description: Admin API Key
-  #         required: true
-  #         type: string
-  #         format: basic
-        
-  #     responses:
-  #       '200':
-  #         description: Successful sign-in. Returns a JWT token.
-  #         schema:
-  #           type: string
-  #       '401':
-  #         description: Unauthorized
+  /health:
+    get:
+      description: Health check endpoint
+      summary: Healthcheck
+      operationId: Healthcheck
+      tags:
+        - general
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: string
 
+  /login:
+    post:
+      description: Returns JWT token for authorized user
+      summary: Login
+      operationId: Login
+      tags:
+        - general
+      consumes:
+        - "application/json"
+      parameters:
+        - name: 'login'
+          in: 'body'
+          required: true
+          description: 'Login Payload'
+          schema:
+            $ref: '#/definitions/LoginInfo'
+      responses:
+        200:
+          description: Successful login
+          schema:
+            $ref: '#/definitions/LoginSuccess'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+        
   /account :
     post:
-      summary: Create account
+      description: Create a new account
+      summary: Create an account
+      operationId: CreateAccount
+      tags:
+        - accounts
+      security:
+        - Bearer: []
       parameters:
         - name: Authorization
           in: header
@@ -48,187 +74,107 @@ paths:
           in: body
           required: true
           schema:
-            type: object
-            properties:
-              username:
-                type: string
-              email:
-                type: string
-            required:
-              - username
-              - email
+            $ref: '#/definitions/Account'
       responses:
         200:
           description: Success
           schema:
-            type: object
-            properties:
-              api_key:
-                type: string
-              prefix:
-                type: string
+            $ref: '#/definitions/AccountCreated'
         400:
           description: Bad Request
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
         401:
           description: Unauthorized
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
         500:
           description: Internal Server Error
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
     put:
-      summary: Update Account
+      description: Update an account
+      operationId: UpdateAccount
+      summary: Update an account
+      tags:
+        - accounts
+      security:
+        - Bearer: []
       parameters:
-        - name: X-API-KEY
-          in: header
-          type: string
-          required: true
-          description: The admin API key.
         - name: body
           in: body
           required: true
           schema:
-            type: object
-            properties:
-              username:
-                type: string
-              status:
-                type: string
-                enum:
-                  - active
-                  - inactive
-            required:
-              - username
-              - status
+            $ref: '#/definitions/AccountUpdate'
       responses:
         200:
           description: Success
           schema:
-            type: object
-            properties:
-              status:
-                type: string
+            type: string
         400:
           description: Bad Request
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
         401:
           description: Unauthorized
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
         404:
           description: Not Found
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
         500:
           description: Internal Server Error
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
 
-  /short-url:
+  /url:
     post:
-      summary: Create ShortURL
+      description: Create a new URL
+      operationId: CreateURL
+      summary: Create a new URL
+      tags:
+        - urls
+      security:
+        - Bearer: []
       parameters:
-        - name: X-API-KEY
-          in: header
-          type: string
-          required: true
-          description: The account API key.
         - name: body
           in: body
           required: true
           schema:
-            type: object
-            properties:
-              long_url:
-                type: string
-            required:
-              - long_url
+            $ref: '#/definitions/URL'
+
       responses:
         200:
           description: Success
           schema:
-            type: object
-            properties:
-              short_url_key:
-                type: string
-              short_url:
-                type: string
+            $ref: '#/definitions/URLCreated'
         400:
           description: Bad Request
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
         401:
           description: Unauthorized
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
         500:
           description: Internal Server Error
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
     put:
-      summary: Update ShortURL
+      description: Update URL
+      operationId: UpdateURL
+      summary: Update a URL
+      tags:
+        - urls
+      security:
+        - Bearer: []      
       parameters:
-        - name: X-API-KEY
-          in: header
-          type: string
-          required: true
-          description: The account API key.
         - name: body
           in: body
           required: true
           schema:
-            type: object
-            properties:
-              short_url_key:
-                type: string
-              new_long_url:
-                type: string
-              status:
-                type: string
-                enum:
-                  - active
-                  - inactive
-              tracking_status:
-                type: string
-                enum:
-                  - active
-                  - inactive
-            required:
-              - short_url_key
+            $ref: '#/definitions/URLUpdate'
 
       responses:
         200:
@@ -245,41 +191,39 @@ paths:
         400:
           description: Bad Request
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
         401:
           description: Unauthorized
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
         404:
           description: Not Found
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
         500:
           description: Internal Server Error
           schema:
-            type: object
-            properties:
-              error:
-                type: string
+            $ref: '#/definitions/Error'
 
 definitions:
+
+  Error:
+    type: object
+    properties:
+      error:
+        type: string
+
   LoginInfo:
     type: object
-    required: [email,password]
     properties:
-      email:
+      username:
         type: string
       password:
         type: string
+    required: 
+      - username
+      - password
+
   LoginSuccess:
     type: object
     properties:
@@ -287,22 +231,72 @@ definitions:
         type: boolean
       token:
         type: string
-  CartPreview:
-    type: array
-    items:
-      $ref: '#/definitions/CartItem'
-  CartItem:
+
+  Account:
     type: object
     properties:
-      productId:
-        type: integer
-      productName:
+      username:
         type: string
-      quantity:
-        type: integer
-      unitPrice:
-        type: number
-      imageUrl:
+      email:
         type: string
-      currency:
+    required:
+      - username
+      - email
+
+  AccountCreated:
+    type: object
+    properties:
+      api_key:
         type: string
+      prefix:
+        type: string
+
+  AccountUpdate:
+    type: object
+    properties:
+      username:
+        type: string
+      status:
+        type: string
+        enum:
+          - active
+          - inactive
+    required:
+      - username
+      - status
+
+  URL:
+    type: object
+    properties:
+      long_url:
+        type: string
+    required:
+      - long_url
+  
+  URLCreated:
+    type: object
+    properties:
+      short_url_key:
+        type: string
+      short_url:
+        type: string
+
+  URLUpdate:
+    type: object
+    properties:
+      short_url_key:
+        type: string
+      new_long_url:
+        type: string
+      status:
+        type: string
+        enum:
+          - active
+          - inactive
+      tracking_status:
+        type: string
+        enum:
+          - active
+          - inactive
+    required:
+      - short_url_key

@@ -27,43 +27,30 @@ func init() {
   "swagger": "2.0",
   "info": {
     "title": "SQURL - ADMIN API",
-    "version": "2.0.0"
+    "version": "1.0.0"
   },
-  "basePath": "/v2",
+  "basePath": "/v1",
   "paths": {
     "/account": {
       "put": {
-        "summary": "Update Account",
-        "parameters": [
+        "security": [
           {
-            "type": "string",
-            "description": "The admin API key.",
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true
-          },
+            "Bearer": []
+          }
+        ],
+        "description": "Update an account",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Update an account",
+        "operationId": "UpdateAccount",
+        "parameters": [
           {
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "required": [
-                "username",
-                "status"
-              ],
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "enum": [
-                    "active",
-                    "inactive"
-                  ]
-                },
-                "username": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/AccountUpdate"
             }
           }
         ],
@@ -71,62 +58,47 @@ func init() {
           "200": {
             "description": "Success",
             "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string"
-                }
-              }
+              "type": "string"
             }
           },
           "400": {
             "description": "Bad Request",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "401": {
             "description": "Unauthorized",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "404": {
             "description": "Not Found",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "500": {
             "description": "Internal Server Error",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           }
         }
       },
       "post": {
-        "summary": "Create account",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "description": "Create a new account",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Create an account",
+        "operationId": "CreateAccount",
         "parameters": [
           {
             "type": "string",
@@ -140,19 +112,7 @@ func init() {
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "required": [
-                "username",
-                "email"
-              ],
-              "properties": {
-                "email": {
-                  "type": "string"
-                },
-                "username": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Account"
             }
           }
         ],
@@ -160,186 +120,118 @@ func init() {
           "200": {
             "description": "Success",
             "schema": {
-              "type": "object",
-              "properties": {
-                "api_key": {
-                  "type": "string"
-                },
-                "prefix": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/AccountCreated"
             }
           },
           "400": {
             "description": "Bad Request",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "401": {
             "description": "Unauthorized",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "500": {
             "description": "Internal Server Error",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           }
         }
       }
     },
-    "/short-url": {
-      "put": {
-        "summary": "Update ShortURL",
+    "/health": {
+      "get": {
+        "description": "Health check endpoint",
+        "tags": [
+          "general"
+        ],
+        "summary": "Healthcheck",
+        "operationId": "Healthcheck",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "description": "Returns JWT token for authorized user",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "general"
+        ],
+        "summary": "Login",
+        "operationId": "Login",
         "parameters": [
           {
-            "type": "string",
-            "description": "The account API key.",
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true
-          },
-          {
-            "name": "body",
+            "description": "Login Payload",
+            "name": "login",
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "required": [
-                "short_url_key"
-              ],
-              "properties": {
-                "new_long_url": {
-                  "type": "string"
-                },
-                "short_url_key": {
-                  "type": "string"
-                },
-                "status": {
-                  "type": "string",
-                  "enum": [
-                    "active",
-                    "inactive"
-                  ]
-                },
-                "tracking_status": {
-                  "type": "string",
-                  "enum": [
-                    "active",
-                    "inactive"
-                  ]
-                }
-              }
+              "$ref": "#/definitions/LoginInfo"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successful login",
             "schema": {
-              "type": "object",
-              "properties": {
-                "long_url": {
-                  "type": "string"
-                },
-                "status": {
-                  "type": "string"
-                },
-                "tracking_status": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/LoginSuccess"
             }
           },
           "400": {
             "description": "Bad Request",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "404": {
             "description": "Not Found",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "500": {
             "description": "Internal Server Error",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           }
         }
-      },
-      "post": {
-        "summary": "Create ShortURL",
-        "parameters": [
+      }
+    },
+    "/url": {
+      "put": {
+        "security": [
           {
-            "type": "string",
-            "description": "The account API key.",
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true
-          },
+            "Bearer": []
+          }
+        ],
+        "description": "Update URL",
+        "tags": [
+          "urls"
+        ],
+        "summary": "Update a URL",
+        "operationId": "UpdateURL",
+        "parameters": [
           {
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "required": [
-                "long_url"
-              ],
-              "properties": {
-                "long_url": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/URLUpdate"
             }
           }
         ],
@@ -349,10 +241,13 @@ func init() {
             "schema": {
               "type": "object",
               "properties": {
-                "short_url": {
+                "long_url": {
                   "type": "string"
                 },
-                "short_url_key": {
+                "status": {
+                  "type": "string"
+                },
+                "tracking_status": {
                   "type": "string"
                 }
               }
@@ -361,34 +256,74 @@ func init() {
           "400": {
             "description": "Bad Request",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "401": {
             "description": "Unauthorized",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           },
           "500": {
             "description": "Internal Server Error",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "description": "Create a new URL",
+        "tags": [
+          "urls"
+        ],
+        "summary": "Create a new URL",
+        "operationId": "CreateURL",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/URL"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/URLCreated"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -396,46 +331,70 @@ func init() {
     }
   },
   "definitions": {
-    "CartItem": {
-      "type": "object",
-      "properties": {
-        "currency": {
-          "type": "string"
-        },
-        "imageUrl": {
-          "type": "string"
-        },
-        "productId": {
-          "type": "integer"
-        },
-        "productName": {
-          "type": "string"
-        },
-        "quantity": {
-          "type": "integer"
-        },
-        "unitPrice": {
-          "type": "number"
-        }
-      }
-    },
-    "CartPreview": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/CartItem"
-      }
-    },
-    "LoginInfo": {
+    "Account": {
       "type": "object",
       "required": [
-        "email",
-        "password"
+        "username",
+        "email"
       ],
       "properties": {
         "email": {
           "type": "string"
         },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "AccountCreated": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "type": "string"
+        },
+        "prefix": {
+          "type": "string"
+        }
+      }
+    },
+    "AccountUpdate": {
+      "type": "object",
+      "required": [
+        "username",
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive"
+          ]
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginInfo": {
+      "type": "object",
+      "required": [
+        "username",
+        "password"
+      ],
+      "properties": {
         "password": {
+          "type": "string"
+        },
+        "username": {
           "type": "string"
         }
       }
@@ -450,13 +409,56 @@ func init() {
           "type": "string"
         }
       }
-    }
-  },
-  "securityDefinitions": {
-    "Bearer": {
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header"
+    },
+    "URL": {
+      "type": "object",
+      "required": [
+        "long_url"
+      ],
+      "properties": {
+        "long_url": {
+          "type": "string"
+        }
+      }
+    },
+    "URLCreated": {
+      "type": "object",
+      "properties": {
+        "short_url": {
+          "type": "string"
+        },
+        "short_url_key": {
+          "type": "string"
+        }
+      }
+    },
+    "URLUpdate": {
+      "type": "object",
+      "required": [
+        "short_url_key"
+      ],
+      "properties": {
+        "new_long_url": {
+          "type": "string"
+        },
+        "short_url_key": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive"
+          ]
+        },
+        "tracking_status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive"
+          ]
+        }
+      }
     }
   }
 }`))
@@ -470,43 +472,30 @@ func init() {
   "swagger": "2.0",
   "info": {
     "title": "SQURL - ADMIN API",
-    "version": "2.0.0"
+    "version": "1.0.0"
   },
-  "basePath": "/v2",
+  "basePath": "/v1",
   "paths": {
     "/account": {
       "put": {
-        "summary": "Update Account",
-        "parameters": [
+        "security": [
           {
-            "type": "string",
-            "description": "The admin API key.",
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true
-          },
+            "Bearer": []
+          }
+        ],
+        "description": "Update an account",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Update an account",
+        "operationId": "UpdateAccount",
+        "parameters": [
           {
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "required": [
-                "username",
-                "status"
-              ],
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "enum": [
-                    "active",
-                    "inactive"
-                  ]
-                },
-                "username": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/AccountUpdate"
             }
           }
         ],
@@ -514,62 +503,47 @@ func init() {
           "200": {
             "description": "Success",
             "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string"
-                }
-              }
+              "type": "string"
             }
           },
           "400": {
             "description": "Bad Request",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "401": {
             "description": "Unauthorized",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "404": {
             "description": "Not Found",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "500": {
             "description": "Internal Server Error",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           }
         }
       },
       "post": {
-        "summary": "Create account",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "description": "Create a new account",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Create an account",
+        "operationId": "CreateAccount",
         "parameters": [
           {
             "type": "string",
@@ -583,19 +557,7 @@ func init() {
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "required": [
-                "username",
-                "email"
-              ],
-              "properties": {
-                "email": {
-                  "type": "string"
-                },
-                "username": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Account"
             }
           }
         ],
@@ -603,186 +565,118 @@ func init() {
           "200": {
             "description": "Success",
             "schema": {
-              "type": "object",
-              "properties": {
-                "api_key": {
-                  "type": "string"
-                },
-                "prefix": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/AccountCreated"
             }
           },
           "400": {
             "description": "Bad Request",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "401": {
             "description": "Unauthorized",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "500": {
             "description": "Internal Server Error",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           }
         }
       }
     },
-    "/short-url": {
-      "put": {
-        "summary": "Update ShortURL",
+    "/health": {
+      "get": {
+        "description": "Health check endpoint",
+        "tags": [
+          "general"
+        ],
+        "summary": "Healthcheck",
+        "operationId": "Healthcheck",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "description": "Returns JWT token for authorized user",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "general"
+        ],
+        "summary": "Login",
+        "operationId": "Login",
         "parameters": [
           {
-            "type": "string",
-            "description": "The account API key.",
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true
-          },
-          {
-            "name": "body",
+            "description": "Login Payload",
+            "name": "login",
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "required": [
-                "short_url_key"
-              ],
-              "properties": {
-                "new_long_url": {
-                  "type": "string"
-                },
-                "short_url_key": {
-                  "type": "string"
-                },
-                "status": {
-                  "type": "string",
-                  "enum": [
-                    "active",
-                    "inactive"
-                  ]
-                },
-                "tracking_status": {
-                  "type": "string",
-                  "enum": [
-                    "active",
-                    "inactive"
-                  ]
-                }
-              }
+              "$ref": "#/definitions/LoginInfo"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successful login",
             "schema": {
-              "type": "object",
-              "properties": {
-                "long_url": {
-                  "type": "string"
-                },
-                "status": {
-                  "type": "string"
-                },
-                "tracking_status": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/LoginSuccess"
             }
           },
           "400": {
             "description": "Bad Request",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "404": {
             "description": "Not Found",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "500": {
             "description": "Internal Server Error",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           }
         }
-      },
-      "post": {
-        "summary": "Create ShortURL",
-        "parameters": [
+      }
+    },
+    "/url": {
+      "put": {
+        "security": [
           {
-            "type": "string",
-            "description": "The account API key.",
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true
-          },
+            "Bearer": []
+          }
+        ],
+        "description": "Update URL",
+        "tags": [
+          "urls"
+        ],
+        "summary": "Update a URL",
+        "operationId": "UpdateURL",
+        "parameters": [
           {
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "required": [
-                "long_url"
-              ],
-              "properties": {
-                "long_url": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/URLUpdate"
             }
           }
         ],
@@ -792,10 +686,13 @@ func init() {
             "schema": {
               "type": "object",
               "properties": {
-                "short_url": {
+                "long_url": {
                   "type": "string"
                 },
-                "short_url_key": {
+                "status": {
+                  "type": "string"
+                },
+                "tracking_status": {
                   "type": "string"
                 }
               }
@@ -804,34 +701,74 @@ func init() {
           "400": {
             "description": "Bad Request",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
             }
           },
           "401": {
             "description": "Unauthorized",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           },
           "500": {
             "description": "Internal Server Error",
             "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "description": "Create a new URL",
+        "tags": [
+          "urls"
+        ],
+        "summary": "Create a new URL",
+        "operationId": "CreateURL",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/URL"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/URLCreated"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -839,46 +776,70 @@ func init() {
     }
   },
   "definitions": {
-    "CartItem": {
-      "type": "object",
-      "properties": {
-        "currency": {
-          "type": "string"
-        },
-        "imageUrl": {
-          "type": "string"
-        },
-        "productId": {
-          "type": "integer"
-        },
-        "productName": {
-          "type": "string"
-        },
-        "quantity": {
-          "type": "integer"
-        },
-        "unitPrice": {
-          "type": "number"
-        }
-      }
-    },
-    "CartPreview": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/CartItem"
-      }
-    },
-    "LoginInfo": {
+    "Account": {
       "type": "object",
       "required": [
-        "email",
-        "password"
+        "username",
+        "email"
       ],
       "properties": {
         "email": {
           "type": "string"
         },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "AccountCreated": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "type": "string"
+        },
+        "prefix": {
+          "type": "string"
+        }
+      }
+    },
+    "AccountUpdate": {
+      "type": "object",
+      "required": [
+        "username",
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive"
+          ]
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginInfo": {
+      "type": "object",
+      "required": [
+        "username",
+        "password"
+      ],
+      "properties": {
         "password": {
+          "type": "string"
+        },
+        "username": {
           "type": "string"
         }
       }
@@ -893,13 +854,56 @@ func init() {
           "type": "string"
         }
       }
-    }
-  },
-  "securityDefinitions": {
-    "Bearer": {
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header"
+    },
+    "URL": {
+      "type": "object",
+      "required": [
+        "long_url"
+      ],
+      "properties": {
+        "long_url": {
+          "type": "string"
+        }
+      }
+    },
+    "URLCreated": {
+      "type": "object",
+      "properties": {
+        "short_url": {
+          "type": "string"
+        },
+        "short_url_key": {
+          "type": "string"
+        }
+      }
+    },
+    "URLUpdate": {
+      "type": "object",
+      "required": [
+        "short_url_key"
+      ],
+      "properties": {
+        "new_long_url": {
+          "type": "string"
+        },
+        "short_url_key": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive"
+          ]
+        },
+        "tracking_status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive"
+          ]
+        }
+      }
     }
   }
 }`))

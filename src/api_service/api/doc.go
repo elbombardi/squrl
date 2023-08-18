@@ -5,8 +5,8 @@
 //	Schemes:
 //	  http
 //	Host: localhost
-//	BasePath: /v2
-//	Version: 2.0.0
+//	BasePath: /v1
+//	Version: 1.0.0
 //
 //	Consumes:
 //	  - application/json
