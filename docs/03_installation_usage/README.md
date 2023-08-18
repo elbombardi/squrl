@@ -86,7 +86,7 @@ Before running the app, we need to prepare the database. Here are the steps:
    psql=# grant all privileges on database <dbname> to <username>;
    ```
 
-5. **Step 3.5.** Run the script `./db/migration/000001_init_schema.up.sql` to create the necessary tables.
+5. **Step 3.5.** Run the script `../src/db/migration/000001_init_schema.up.sql` to create the necessary tables.
 
 6. **Step 3.6.** Make a note of the following information:
    - Hostname: The IP address or hostname of the Postgres server.

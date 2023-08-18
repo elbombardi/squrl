@@ -17,8 +17,8 @@ import (
 // swagger:model AccountCreated
 type AccountCreated struct {
 
-	// api key
-	APIKey string `json:"api_key,omitempty"`
+	// password
+	Password string `json:"password,omitempty"`
 
 	// prefix
 	Prefix string `json:"prefix,omitempty"`

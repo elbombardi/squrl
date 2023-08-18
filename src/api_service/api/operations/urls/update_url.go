@@ -33,7 +33,7 @@ func NewUpdateURL(ctx *middleware.Context, handler UpdateURLHandler) *UpdateURL 
 }
 
 /*
-	UpdateURL swagger:route PUT /url urls updateUrl
+	UpdateURL swagger:route PUT /urls urls updateUrl
 
 # Update a URL
 

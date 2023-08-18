@@ -2,7 +2,7 @@ package util
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"time"
 
 	"github.com/spf13/viper"
@@ -11,18 +11,23 @@ import (
 // Config stores all configuration of the application.
 // The values are read by viper from a config file or environment variable.
 type Config struct {
-	Environment          string        `mapstructure:"ENVIRONMENT"`
-	DriverName           string        `mapstructure:"DB_DRIVER"`
-	DBSource             string        `mapstructure:"DB_SOURCE"`
-	DBMaxIdleConns       int           `mapstructure:"DB_MAX_IDLE_CONNS"`
-	DBMaxOpenConns       int           `mapstructure:"DB_MAX_OPEN_CONNS"`
-	DBMaxIdleTime        time.Duration `mapstructure:"DB_MAX_IDLE_TIME"`
-	DBMaxLifeTime        time.Duration `mapstructure:"DB_MAX_LIFE_TIME"`
-	TokenSymmetricKey    string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
-	AccessTokenDuration  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
-	RefreshTokenDuration time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
-	AdminPassword        string        `mapstructure:"ADMIN_PASSWORD"`
-	RedirectionBaseURL   string        `mapstructure:"REDIRECTION_SERVER_BASE_URL"`
+	Environment        string        `mapstructure:"ENVIRONMENT"`
+	DriverName         string        `mapstructure:"DB_DRIVER"`
+	DBSource           string        `mapstructure:"DB_SOURCE"`
+	DBMaxIdleConns     int           `mapstructure:"DB_MAX_IDLE_CONNS"`
+	DBMaxOpenConns     int           `mapstructure:"DB_MAX_OPEN_CONNS"`
+	DBMaxIdleTime      time.Duration `mapstructure:"DB_MAX_IDLE_TIME"`
+	DBMaxLifeTime      time.Duration `mapstructure:"DB_MAX_LIFE_TIME"`
+	TokenSymmetricKey  string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
+	AdminPassword      string        `mapstructure:"ADMIN_PASSWORD"`
+	RedirectionBaseURL string        `mapstructure:"REDIRECTION_SERVER_BASE_URL"`
+}
+
+var requiredConfig = []string{
+	"DB_SOURCE",
+	"ADMIN_PASSWORD",
+	"TOKEN_SYMMETRIC_KEY",
+	"REDIRECTION_SERVER_BASE_URL",
 }
 
 // LoadConfig reads configuration from file or environment variables.
@@ -47,11 +52,6 @@ func LoadConfig() (config Config, err error) {
 
 	err = viper.Unmarshal(&config)
 
-	requiredConfig := []string{
-		"DB_SOURCE",
-		"ADMIN_PASSWORD",
-		"REDIRECTION_SERVER_BASE_URL",
-	}
 	for _, key := range requiredConfig {
 		v := viper.Get(key)
 		if v == nil {
@@ -60,9 +60,9 @@ func LoadConfig() (config Config, err error) {
 	}
 
 	if config.Environment == "dev" {
-		log.Println("Configuration loaded : ")
+		slog.Info("Configuration loaded")
 		for _, key := range viper.AllKeys() {
-			log.Printf("\t* %s = %v\n", key, viper.Get(key))
+			slog.Debug("\t* %s = %v\n", key, viper.Get(key))
 		}
 	}
 

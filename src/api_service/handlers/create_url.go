@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/elbombardi/squrl/src/api_service/api/models"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/urls"
@@ -18,29 +17,38 @@ func (handlers *Handlers) HandleCreateURL(params urls.CreateURLParams, principal
 	//Validate params
 	err := validateCreateURLParams(params)
 	if err != nil {
+		util.Error("Error validating CreateURL params: ", err)
 		return urls.NewCreateURLBadRequest().WithPayload(getError(err))
 	}
+	// Check if the user is authenticated
+	if principal == nil {
+		return urls.NewCreateURLUnauthorized().WithPayload(&models.Error{
+			Error: "Unauthorized"})
+	}
 
-	//Check if the account API key is valid
-	//TODO
-	account, err := handlers.AccountRepository.GetAccountByApiKey(context.Background(), principal.(string))
+	//Check if the account exists
+	account, err := handlers.AccountRepository.GetAccountByUsername(context.Background(), principal.(string))
 	if err != nil {
 		if err == sql.ErrNoRows {
+			util.Error("Account not found for this username: ", principal.(string))
 			return urls.NewCreateURLUnauthorized().WithPayload(&models.Error{
-				Error: "Invalid API Key"})
+				Error: "Account not found for this username: " + principal.(string)})
 		}
+		util.Error("Error getting account by username: ", err)
 		return internalErrorInCreateShortURL(err)
 	}
 
 	//Check if the account is active
 	if !account.Enabled {
+		util.Info("Account disabled: ", principal.(string))
 		return urls.NewCreateURLUnauthorized().WithPayload(&models.Error{
-			Error: "Customer disabled"})
+			Error: "Account disabled"})
 	}
 
 	//Generate short URL key
-	shortURLKey, err := handlers.generateShortURLKey()
+	shortURLKey, err := handlers.generateShortURLKey(account)
 	if err != nil {
+		util.Error("Error generating short URL key: ", err)
 		return internalErrorInCreateShortURL(err)
 	}
 
@@ -51,9 +59,11 @@ func (handlers *Handlers) HandleCreateURL(params urls.CreateURLParams, principal
 		AccountID:   account.ID,
 	})
 	if err != nil {
+		util.Error("Error inserting new URL: ", err)
 		return internalErrorInCreateShortURL(err)
 	}
 
+	util.Info("New short URL created: ", shortURLKey)
 	//Return the short URL
 	return urls.NewCreateURLOK().WithPayload(&models.URLCreated{
 		ShortURL:    fmt.Sprintf("%v/%v/%v", handlers.Config.RedirectionBaseURL, account.Prefix, shortURLKey),
@@ -62,11 +72,9 @@ func (handlers *Handlers) HandleCreateURL(params urls.CreateURLParams, principal
 }
 
 func validateCreateURLParams(params urls.CreateURLParams) error {
-	// API key is required
-	//TODO
-	// if params.XAPIKEY == "" {
-	// 	return errors.New("missing x-api-key header")
-	// }
+	if params.Authorization == "" {
+		return errors.New("missing jwt header")
+	}
 	// URL is required
 	if params.Body.LongURL == nil {
 		return errors.New("missing param : long_url")
@@ -79,21 +87,23 @@ func validateCreateURLParams(params urls.CreateURLParams) error {
 	return nil
 }
 
-func (h *Handlers) generateShortURLKey() (string, error) {
-	apiKey := util.GenerateRandomString(6)
+func (h *Handlers) generateShortURLKey(account db.Account) (string, error) {
+	shortURLKey := util.GenerateRandomString(6)
 	//Check if the url key is unique
-	exists, err := h.AccountRepository.CheckApiKeyExists(context.Background(), apiKey)
+	exists, err := h.URLRepository.CheckShortUrlKeyExists(context.Background(), db.CheckShortUrlKeyExistsParams{
+		ShortUrlKey: sql.NullString{String: shortURLKey, Valid: true},
+		AccountID:   account.ID,
+	})
 	if err != nil {
 		return "", err
 	}
 	if exists {
-		return h.generateShortURLKey()
+		return h.generateShortURLKey(account)
 	}
-	return apiKey, nil
+	return shortURLKey, nil
 }
 
 func internalErrorInCreateShortURL(err error) middleware.Responder {
-	log.Println("Error creating short URL: ", err)
 	return urls.NewCreateURLInternalServerError().WithPayload(&models.Error{
 		Error: err.Error()})
 }

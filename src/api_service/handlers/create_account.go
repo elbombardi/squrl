@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"errors"
-	"log"
 
 	"github.com/elbombardi/squrl/src/api_service/api/models"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/accounts"
@@ -16,50 +15,64 @@ func (handlers *Handlers) HandleCreateAccount(params accounts.CreateAccountParam
 	//Check if the request is valid
 	err := validateCreateAccountParams(params)
 	if err != nil {
+		util.Error("Invalid parameters in create account request", err)
 		return accounts.NewCreateAccountBadRequest().WithPayload(getError(err))
 	}
+	// Check if the user is authenticated
+	if principal == nil {
+		return accounts.NewCreateAccountUnauthorized().WithPayload(&models.Error{
+			Error: "Unauthorized"})
+	}
 
-	//Check if the Admin API key is valid
-	if params.Authorization != handlers.Config.AdminPassword {
-		return accounts.NewCreateAccountUnauthorized().WithPayload(getError(err))
+	//This endpoint is only accessible by the admin
+	if principal.(string) != "admin" {
+		util.Error("Unauthorized attempt to access CreateAccount by a non admin user", principal.(string))
+		return accounts.NewCreateAccountUnauthorized().WithPayload(&models.Error{
+			Error: "Unauthorized"})
 	}
 
 	//Check if the username is unique
 	exists, err := handlers.AccountRepository.CheckUsernameExists(context.Background(), *params.Account.Username)
 	if err != nil {
+		util.Error("checking if username exists", err)
 		return internalErrorInCreateAccount(err)
 	}
 	if exists {
+		util.Error("Username already exists", *params.Account.Username)
 		return accounts.NewCreateAccountBadRequest().WithPayload(getError(err))
 	}
 
 	// Generate a prefix
 	prefix, err := handlers.generatePrefix()
 	if err != nil {
+		util.Error("Username already exists", *params.Account.Username)
 		return internalErrorInCreateAccount(err)
 	}
 
 	// Generate an API key
-	apiKey, err := handlers.generateAPIKey()
+	password, hashedPassword := handlers.generatePassword()
 	if err != nil {
+		util.Error("Error generating password", err)
 		return internalErrorInCreateAccount(err)
 	}
 
 	// Insert the new account
 	err = handlers.AccountRepository.InsertNewAccount(context.Background(), db.InsertNewAccountParams{
-		Prefix:   prefix,
-		ApiKey:   apiKey,
-		Username: *params.Account.Username,
-		Email:    *params.Account.Email,
+		Prefix:         prefix,
+		HashedPassword: hashedPassword,
+		Username:       *params.Account.Username,
+		Email:          *params.Account.Email,
 	})
 	if err != nil {
+		util.Error("Error inserting new account", err)
 		return accounts.NewCreateAccountInternalServerError().WithPayload(getError(err))
 	}
 
 	// Return response
+	util.Info("New account created successfully: '%s' \n", *params.Account.Username)
 	return accounts.NewCreateAccountOK().WithPayload(&models.AccountCreated{
-		APIKey: apiKey,
-		Prefix: prefix,
+		Password: password,
+		Prefix:   prefix,
 	})
 }
 
@@ -78,9 +91,6 @@ func validateCreateAccountParams(params accounts.CreateAccountParams) error {
 	if err != nil {
 		return err
 	}
-	if params.Authorization == "" {
-		return errors.New("missing jwt header")
-	}
 	return nil
 }
 
@@ -97,20 +107,12 @@ func (h *Handlers) generatePrefix() (string, error) {
 	return prefix, nil
 }
 
-func (h *Handlers) generateAPIKey() (string, error) {
-	apiKey := util.GenerateRandomString(32)
-	//Check if the Api key is unique
-	exists, err := h.AccountRepository.CheckApiKeyExists(context.Background(), apiKey)
-	if err != nil {
-		return "", err
-	}
-	if exists {
-		return h.generateAPIKey()
-	}
-	return apiKey, nil
+func (h *Handlers) generatePassword() (string, string) {
+	password := util.GenerateRandomString(20)
+	hashedPassword := util.HashPassword(password)
+	return password, hashedPassword
 }
 
 func internalErrorInCreateAccount(err error) middleware.Responder {
-	log.Println("Error creating account: ", err)
 	return accounts.NewCreateAccountInternalServerError().WithPayload(getError(err))
 }

@@ -2,10 +2,12 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 
 	"github.com/elbombardi/squrl/src/api_service/api"
 	"github.com/elbombardi/squrl/src/api_service/api/operations"
+	"github.com/elbombardi/squrl/src/api_service/util"
 	"github.com/go-openapi/loads"
 )
 
@@ -22,13 +24,16 @@ func main() {
 		log.Fatalln(err)
 	}
 	adminAPI := operations.NewAdminAPI(swaggerSpec)
+	adminAPI.Logger = func(s string, i ...interface{}) {
+		util.Info(fmt.Sprintf(s, i...))
+	}
 	server := api.NewServer(adminAPI)
 	defer server.Shutdown()
 	defer finalizeApp()
 
 	handlers, err := initializeApp()
 	if err != nil {
-		log.Println("Initialization Error. Shutting down..")
+		util.Error("Initialization Error. Shutting down..")
 		return
 	}
 	handlers.InstallHandlers(adminAPI)
@@ -37,7 +42,7 @@ func main() {
 	server.Host = host
 	server.ConfigureAPI()
 
-	log.Println("Starting Short URL API server..")
+	util.Info("Starting AdminAPI server..")
 	if err := server.Serve(); err != nil {
 		log.Fatalln(err)
 	}

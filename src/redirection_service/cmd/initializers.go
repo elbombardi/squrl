@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 
 	"github.com/elbombardi/squrl/src/db"
 	"github.com/elbombardi/squrl/src/redirection_service/routes"
@@ -12,11 +12,11 @@ import (
 func initializeApp() (*routes.Server, error) {
 	config, err := util.LoadConfig()
 	if err != nil {
-		log.Print(err)
+		slog.Error(err.Error())
 		return nil, err
 	}
 
-	log.Println("Initializing Database connection..")
+	slog.Info("Initializing Database connection..")
 	store, err := db.GetStoreInstance(db.DBConf{
 		DriverName:     config.DriverName,
 		DataSourceName: config.DBSource,
@@ -26,15 +26,15 @@ func initializeApp() (*routes.Server, error) {
 		MaxLifeTime:    config.DBMaxLifeTime,
 	})
 	if err != nil {
-		log.Println("Unable to initialize connection de database : ", err)
+		slog.Error("Unable to initialize connection de database : ", err)
 		return nil, err
 	}
 	if store == nil {
-		log.Println("Could not connect to the database")
+		slog.Error("Could not connect to the database")
 		return nil, fmt.Errorf("could not connect to the database")
 	}
 
-	log.Println("Initializing App. Services..")
+	slog.Info("Initializing App. Services..")
 	return routes.NewServer(port, host, &routes.Routes{
 		AccountRepository: store,
 		URLRepository:     store,

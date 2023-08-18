@@ -30,7 +30,7 @@ func NewCreateAccount(ctx *middleware.Context, handler CreateAccountHandler) *Cr
 }
 
 /*
-	CreateAccount swagger:route POST /account accounts createAccount
+	CreateAccount swagger:route POST /accounts accounts createAccount
 
 # Create an account
 

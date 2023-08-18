@@ -30,7 +30,7 @@ func NewCreateURL(ctx *middleware.Context, handler CreateURLHandler) *CreateURL 
 }
 
 /*
-	CreateURL swagger:route POST /url urls createUrl
+	CreateURL swagger:route POST /urls urls createUrl
 
 # Create a new URL
 

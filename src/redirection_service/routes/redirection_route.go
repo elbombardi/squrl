@@ -3,7 +3,7 @@ package routes
 import (
 	"context"
 	"database/sql"
-	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/elbombardi/squrl/src/db"
@@ -20,12 +20,12 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 		if err == sql.ErrNoRows {
 			return page404(c)
 		}
-		log.Println("Error retrieving Customer information: ", err)
+		slog.Error("Error retrieving Customer information: ", err)
 		return page500(c)
 	}
 	// If the account is not active, send 404 not found error page
 	if !account.Enabled {
-		log.Printf("Error: Customer %v is disabled \n", account.Username)
+		slog.Error("Error: Customer %v is disabled \n", account.Username)
 		return page404(c)
 	}
 
@@ -35,13 +35,13 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 		if err == sql.ErrNoRows {
 			return page404(c)
 		}
-		log.Println("Error retrieving short URL information: ", err)
+		slog.Error("Error retrieving short URL information: ", err)
 		return page500(c)
 	}
 
 	//If the short URL is not active, send 404 not found error page
 	if !URL.Enabled {
-		log.Printf("Error: Short URL /%v is disabled \n", URL.ShortUrlKey.String)
+		slog.Error("Error: Short URL /%v is disabled \n", URL.ShortUrlKey.String)
 		return page404(c)
 	}
 
@@ -53,7 +53,7 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 			IpAddress: sql.NullString{String: c.IP(), Valid: true},
 		})
 		if err != nil {
-			log.Println("Error inserting new click: ", err)
+			slog.Error("Error inserting new click: ", err)
 		}
 	}
 

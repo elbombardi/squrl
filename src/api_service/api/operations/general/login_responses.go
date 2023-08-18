@@ -103,15 +103,15 @@ func (o *LoginBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime
 	}
 }
 
-// LoginNotFoundCode is the HTTP code returned for type LoginNotFound
-const LoginNotFoundCode int = 404
+// LoginUnauthorizedCode is the HTTP code returned for type LoginUnauthorized
+const LoginUnauthorizedCode int = 401
 
 /*
-LoginNotFound Not Found
+LoginUnauthorized Unauthorized
 
-swagger:response loginNotFound
+swagger:response loginUnauthorized
 */
-type LoginNotFound struct {
+type LoginUnauthorized struct {
 
 	/*
 	  In: Body
@@ -119,27 +119,27 @@ type LoginNotFound struct {
 	Payload *models.Error `json:"body,omitempty"`
 }
 
-// NewLoginNotFound creates LoginNotFound with default headers values
-func NewLoginNotFound() *LoginNotFound {
+// NewLoginUnauthorized creates LoginUnauthorized with default headers values
+func NewLoginUnauthorized() *LoginUnauthorized {
 
-	return &LoginNotFound{}
+	return &LoginUnauthorized{}
 }
 
-// WithPayload adds the payload to the login not found response
-func (o *LoginNotFound) WithPayload(payload *models.Error) *LoginNotFound {
+// WithPayload adds the payload to the login unauthorized response
+func (o *LoginUnauthorized) WithPayload(payload *models.Error) *LoginUnauthorized {
 	o.Payload = payload
 	return o
 }
 
-// SetPayload sets the payload to the login not found response
-func (o *LoginNotFound) SetPayload(payload *models.Error) {
+// SetPayload sets the payload to the login unauthorized response
+func (o *LoginUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *LoginNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *LoginUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.WriteHeader(404)
+	rw.WriteHeader(401)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

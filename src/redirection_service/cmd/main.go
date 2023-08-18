@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"log"
+	"log/slog"
 )
 
 var port int
@@ -16,10 +17,10 @@ func main() {
 
 	server, err := initializeApp()
 	if err != nil {
-		log.Println("Initialization Error. Shutting down..")
+		slog.Error("Initialization Error. Shutting down..")
 		return
 	}
-	log.Println("Starting Redirection server..")
+	slog.Info("Starting Redirection server..")
 	if err := server.Serve(); err != nil {
 		log.Fatalln(err)
 	}

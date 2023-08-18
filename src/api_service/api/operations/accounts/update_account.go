@@ -30,7 +30,7 @@ func NewUpdateAccount(ctx *middleware.Context, handler UpdateAccountHandler) *Up
 }
 
 /*
-	UpdateAccount swagger:route PUT /account accounts updateAccount
+	UpdateAccount swagger:route PUT /accounts accounts updateAccount
 
 # Update an account
 

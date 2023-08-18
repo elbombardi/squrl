@@ -15,8 +15,8 @@ type Account struct {
 	Prefix   string
 	Username string
 	Email    string
-	// API key
-	ApiKey string
+	// Hashed password
+	HashedPassword string
 	// A flag that enables/disables the account and its urls
 	Enabled bool
 	// Timestamp of creation

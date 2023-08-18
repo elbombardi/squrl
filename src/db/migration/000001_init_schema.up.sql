@@ -3,7 +3,7 @@ CREATE TABLE "account" (
   "prefix" varchar(3) UNIQUE NOT NULL,
   "username" varchar UNIQUE NOT NULL,
   "email" varchar NOT NULL,
-  "api_key" varchar UNIQUE NOT NULL,
+  "hashed_password" varchar UNIQUE NOT NULL,
   "enabled" bool NOT NULL DEFAULT true,
   "created_at" timestamp DEFAULT (now()),
   "updated_at" timestamp
@@ -32,8 +32,6 @@ CREATE INDEX ON "account" ("prefix");
 
 CREATE INDEX ON "account" ("username");
 
-CREATE INDEX ON "account" ("api_key");
-
 CREATE INDEX ON "url" ("account_id");
 
 CREATE UNIQUE INDEX ON "url" ("short_url_key", "account_id");
@@ -44,7 +42,7 @@ COMMENT ON TABLE "account" IS 'Table holding Account information';
 
 COMMENT ON COLUMN "account"."prefix" IS '3 characters, case-sensitive';
 
-COMMENT ON COLUMN "account"."api_key" IS 'API key';
+COMMENT ON COLUMN "account"."hashed_password" IS 'Hashed password';
 
 COMMENT ON COLUMN "account"."enabled" IS 'A flag that enables/disables the account and its urls';
 

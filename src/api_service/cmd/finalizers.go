@@ -1,8 +1,7 @@
 package main
 
 import (
-	"log"
-
+	"github.com/elbombardi/squrl/src/api_service/util"
 	"github.com/elbombardi/squrl/src/db"
 )
 
@@ -11,6 +10,6 @@ func finalizeApp() {
 }
 
 func finalizeDatabase() {
-	log.Println("Closing Database connection..")
+	util.Info("Closing Database connection..")
 	db.Finalize()
 }

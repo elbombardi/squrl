@@ -21,14 +21,24 @@
 ### Produces
   * application/json
 
+## Access control
+
+### Security Schemes
+
+#### Bearer (header: Authorization)
+
+
+
+> **Type**: apikey
+
 ## All endpoints
 
 ###  accounts
 
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
-| POST | /v1/account | [create account](#create-account) | Create an account |
-| PUT | /v1/account | [update account](#update-account) | Update an account |
+| POST | /v1/accounts | [create account](#create-account) | Create an account |
+| PUT | /v1/accounts | [update account](#update-account) | Update an account |
   
 
 
@@ -45,8 +55,8 @@
 
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
-| POST | /v1/url | [create URL](#create-url) | Create a new URL |
-| PUT | /v1/url | [update URL](#update-url) | Update a URL |
+| POST | /v1/urls | [create URL](#create-url) | Create a new URL |
+| PUT | /v1/urls | [update URL](#update-url) | Update a URL |
   
 
 
@@ -55,7 +65,7 @@
 ### <span id="create-account"></span> Create an account (*CreateAccount*)
 
 ```
-POST /v1/account
+POST /v1/accounts
 ```
 
 Create a new account
@@ -67,7 +77,7 @@ Create a new account
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| Authorization | `header` | string | `string` |  | ✓ |  | JWT Token. |
+| Authorization | `header` | string | `string` |  | ✓ |  | Bearer <JWT Token> |
 | account | `body` | [Account](#account) | `models.Account` | | ✓ | |  |
 
 #### All responses
@@ -120,7 +130,7 @@ Status: Internal Server Error
 ### <span id="create-url"></span> Create a new URL (*CreateURL*)
 
 ```
-POST /v1/url
+POST /v1/urls
 ```
 
 Create a new URL
@@ -132,6 +142,7 @@ Create a new URL
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
+| Authorization | `header` | string | `string` |  | ✓ |  | Bearer <JWT Token> |
 | body | `body` | [URL](#url) | `models.URL` | | ✓ | |  |
 
 #### All responses
@@ -228,7 +239,7 @@ Returns JWT token for authorized user
 |------|--------|-------------|:-----------:|--------|
 | [200](#login-200) | OK | Successful login |  | [schema](#login-200-schema) |
 | [400](#login-400) | Bad Request | Bad Request |  | [schema](#login-400-schema) |
-| [404](#login-404) | Not Found | Not Found |  | [schema](#login-404-schema) |
+| [401](#login-401) | Unauthorized | Unauthorized |  | [schema](#login-401-schema) |
 | [500](#login-500) | Internal Server Error | Internal Server Error |  | [schema](#login-500-schema) |
 
 #### Responses
@@ -252,10 +263,10 @@ Status: Bad Request
 
 [Error](#error)
 
-##### <span id="login-404"></span> 404 - Not Found
-Status: Not Found
+##### <span id="login-401"></span> 401 - Unauthorized
+Status: Unauthorized
 
-###### <span id="login-404-schema"></span> Schema
+###### <span id="login-401-schema"></span> Schema
    
   
 
@@ -273,7 +284,7 @@ Status: Internal Server Error
 ### <span id="update-account"></span> Update an account (*UpdateAccount*)
 
 ```
-PUT /v1/account
+PUT /v1/accounts
 ```
 
 Update an account
@@ -285,6 +296,7 @@ Update an account
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
+| Authorization | `header` | string | `string` |  | ✓ |  | Bearer <JWT Token> |
 | body | `body` | [AccountUpdate](#account-update) | `models.AccountUpdate` | | ✓ | |  |
 
 #### All responses
@@ -347,7 +359,7 @@ Status: Internal Server Error
 ### <span id="update-url"></span> Update a URL (*UpdateURL*)
 
 ```
-PUT /v1/url
+PUT /v1/urls
 ```
 
 Update URL
@@ -359,6 +371,7 @@ Update URL
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
+| Authorization | `header` | string | `string` |  | ✓ |  | Bearer <JWT Token> |
 | body | `body` | [URLUpdate](#url-update) | `models.URLUpdate` | | ✓ | |  |
 
 #### All responses
@@ -466,7 +479,7 @@ Status: Internal Server Error
 
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
-| api_key | string| `string` |  | |  |  |
+| password | string| `string` |  | |  |  |
 | prefix | string| `string` |  | |  |  |
 
 

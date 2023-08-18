@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"log"
 
 	"github.com/elbombardi/squrl/src/api_service/api/models"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/urls"
@@ -17,22 +16,29 @@ func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, prin
 	//Validate params
 	err := validateParams(params)
 	if err != nil {
+		util.Error("Error validating UpdateURL params: ", err)
 		return urls.NewUpdateURLBadRequest().WithPayload(getError(err))
 	}
+	if principal == nil {
+		return urls.NewUpdateURLUnauthorized().WithPayload(&models.Error{
+			Error: "Unauthorized"})
+	}
 
-	//Check if the account API key is valid
-	// TODO
-	account, err := handlers.AccountRepository.GetAccountByApiKey(context.Background(), principal.(string))
+	//Check if the account exists
+	account, err := handlers.AccountRepository.GetAccountByUsername(context.Background(), principal.(string))
 	if err != nil {
 		if err == sql.ErrNoRows {
+			util.Error("Account not found for this username: ", principal.(string))
 			return urls.NewUpdateURLUnauthorized().WithPayload(&models.Error{
-				Error: "Invalid API Key"})
+				Error: "Unauthorized"})
 		}
+		util.Error("Error getting account by username: ", err)
 		return internalErrorInUpdateShortURL(err)
 	}
 
 	//Check if the customer is active
 	if !account.Enabled {
+		util.Info("account disabled: ", principal.(string))
 		return urls.NewUpdateURLUnauthorized().WithPayload(&models.Error{
 			Error: "Account disabled"})
 	}
@@ -47,9 +53,11 @@ func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, prin
 		})
 	if err != nil {
 		if err == sql.ErrNoRows {
+			util.Error("URL not found: ", *params.Body.ShortURLKey)
 			return urls.NewUpdateURLNotFound().WithPayload(&models.Error{
 				Error: "Short URL Not Found"})
 		}
+		util.Error("Error getting short URL: ", err)
 		return internalErrorInUpdateShortURL(err)
 	}
 	if params.Body.NewLongURL != "" {
@@ -59,6 +67,7 @@ func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, prin
 			ID:      url.ID,
 		})
 		if err != nil {
+			util.Error("Error updating long URL: ", err)
 			return internalErrorInUpdateShortURL(err)
 		}
 	}
@@ -69,6 +78,7 @@ func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, prin
 			ID:      url.ID,
 		})
 		if err != nil {
+			util.Error("Error updating short URL enabled status: ", err)
 			return internalErrorInUpdateShortURL(err)
 		}
 	}
@@ -80,9 +90,11 @@ func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, prin
 				ID:              url.ID,
 			})
 		if err != nil {
+			util.Error("Error updating short URL tracking enabled status: ", err)
 			return internalErrorInUpdateShortURL(err)
 		}
 	}
+	util.Infof("Short URL updated: account: %s, short url key : %s\n", principal, *params.Body.ShortURLKey)
 	return urls.NewUpdateURLOK().WithPayload(&urls.UpdateURLOKBody{
 		LongURL:        url.LongUrl,
 		Status:         decodeStatus(url.Enabled),
@@ -91,12 +103,14 @@ func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, prin
 }
 
 func internalErrorInUpdateShortURL(err error) middleware.Responder {
-	log.Println("Error updating short URL: ", err)
 	return urls.NewUpdateURLInternalServerError().WithPayload(&models.Error{
 		Error: err.Error()})
 }
 
 func validateParams(params urls.UpdateURLParams) error {
+	if params.Authorization == "" {
+		return errors.New("missing jwt header")
+	}
 	if params.Body.ShortURLKey == nil {
 		return errors.New("missing parameter : 'short_url_key'")
 	}
@@ -116,9 +130,5 @@ func validateParams(params urls.UpdateURLParams) error {
 		params.Body.TrackingStatus != "inactive" {
 		return errors.New("invalid tracking status, should be one of the two values: 'active', 'inactive'")
 	}
-	// TODO
-	// if params.XAPIKEY == "" {
-	// 	return errors.New("missing x-api-key header")
-	// }
 	return nil
 }

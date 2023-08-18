@@ -26,6 +26,15 @@ func (handlers *Handlers) InstallHandlers(api *operations.AdminAPI) {
 
 	api.UrlsCreateURLHandler = urls.CreateURLHandlerFunc(handlers.HandleCreateURL)
 	api.UrlsUpdateURLHandler = urls.UpdateURLHandlerFunc(handlers.HandleUpdateShortURL)
+
+	api.BearerAuth = func(s string) (any, error) {
+		user, err := util.ValidateJWT(s, handlers.Config.TokenSymmetricKey)
+		if err != nil {
+			util.Error("Error validating JWT Token : ", err)
+			return nil, nil
+		}
+		return user, nil
+	}
 }
 
 func encodeStatus(status string) bool {

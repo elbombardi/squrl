@@ -35,7 +35,7 @@ type CreateAccountParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*JWT Token.
+	/*Bearer <JWT Token>
 	  Required: true
 	  In: header
 	*/

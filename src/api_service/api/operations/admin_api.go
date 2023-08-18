@@ -64,6 +64,13 @@ func NewAdminAPI(spec *loads.Document) *AdminAPI {
 		UrlsUpdateURLHandler: urls.UpdateURLHandlerFunc(func(params urls.UpdateURLParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation urls.UpdateURL has not yet been implemented")
 		}),
+
+		// Applies when the "Authorization" header is set
+		BearerAuth: func(token string) (interface{}, error) {
+			return nil, errors.NotImplemented("api key auth (Bearer) Authorization from header param [Authorization] has not yet been implemented")
+		},
+		// default authorizer is authorized meaning no requests are blocked
+		APIAuthorizer: security.Authorized(),
 	}
 }
 
@@ -99,6 +106,13 @@ type AdminAPI struct {
 	// JSONProducer registers a producer for the following mime types:
 	//   - application/json
 	JSONProducer runtime.Producer
+
+	// BearerAuth registers a function that takes a token and returns a principal
+	// it performs authentication based on an api key Authorization provided in the header
+	BearerAuth func(string) (interface{}, error)
+
+	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
+	APIAuthorizer runtime.Authorizer
 
 	// AccountsCreateAccountHandler sets the operation handler for the create account operation
 	AccountsCreateAccountHandler accounts.CreateAccountHandler
@@ -189,6 +203,10 @@ func (o *AdminAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
+	if o.BearerAuth == nil {
+		unregistered = append(unregistered, "AuthorizationAuth")
+	}
+
 	if o.AccountsCreateAccountHandler == nil {
 		unregistered = append(unregistered, "accounts.CreateAccountHandler")
 	}
@@ -222,12 +240,21 @@ func (o *AdminAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
 func (o *AdminAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
-	return nil
+	result := make(map[string]runtime.Authenticator)
+	for name := range schemes {
+		switch name {
+		case "Bearer":
+			scheme := schemes[name]
+			result[name] = o.APIKeyAuthenticator(scheme.Name, scheme.In, o.BearerAuth)
+
+		}
+	}
+	return result
 }
 
 // Authorizer returns the registered authorizer
 func (o *AdminAPI) Authorizer() runtime.Authorizer {
-	return nil
+	return o.APIAuthorizer
 }
 
 // ConsumersFor gets the consumers for the specified media types.
@@ -298,11 +325,11 @@ func (o *AdminAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/account"] = accounts.NewCreateAccount(o.context, o.AccountsCreateAccountHandler)
+	o.handlers["POST"]["/accounts"] = accounts.NewCreateAccount(o.context, o.AccountsCreateAccountHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/url"] = urls.NewCreateURL(o.context, o.UrlsCreateURLHandler)
+	o.handlers["POST"]["/urls"] = urls.NewCreateURL(o.context, o.UrlsCreateURLHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -314,11 +341,11 @@ func (o *AdminAPI) initHandlerCache() {
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/account"] = accounts.NewUpdateAccount(o.context, o.AccountsUpdateAccountHandler)
+	o.handlers["PUT"]["/accounts"] = accounts.NewUpdateAccount(o.context, o.AccountsUpdateAccountHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/url"] = urls.NewUpdateURL(o.context, o.UrlsUpdateURLHandler)
+	o.handlers["PUT"]["/urls"] = urls.NewUpdateURL(o.context, o.UrlsUpdateURLHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

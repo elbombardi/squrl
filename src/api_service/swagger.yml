@@ -7,6 +7,11 @@ schemes:
   - http
 produces:
   - application/json
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
 paths:
   /health:
     get:
@@ -46,8 +51,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/Error'
-        404:
-          description: Not Found
+        401:
+          description: Unauthorized
           schema:
             $ref: '#/definitions/Error'
         500:
@@ -55,7 +60,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         
-  /account :
+  /accounts :
     post:
       description: Create a new account
       summary: Create an account
@@ -69,7 +74,7 @@ paths:
           in: header
           type: string
           required: true
-          description: JWT Token.
+          description: "Bearer <JWT Token>"
         - name: account
           in: body
           required: true
@@ -101,6 +106,11 @@ paths:
       security:
         - Bearer: []
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: "Bearer <JWT Token>"
         - name: body
           in: body
           required: true
@@ -128,7 +138,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
-  /url:
+  /urls:
     post:
       description: Create a new URL
       operationId: CreateURL
@@ -138,6 +148,11 @@ paths:
       security:
         - Bearer: []
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: "Bearer <JWT Token>"
         - name: body
           in: body
           required: true
@@ -170,6 +185,11 @@ paths:
       security:
         - Bearer: []      
       parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: "Bearer <JWT Token>"
         - name: body
           in: body
           required: true
@@ -246,7 +266,7 @@ definitions:
   AccountCreated:
     type: object
     properties:
-      api_key:
+      password:
         type: string
       prefix:
         type: string

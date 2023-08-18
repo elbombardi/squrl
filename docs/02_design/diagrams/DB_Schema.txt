@@ -3,7 +3,7 @@ Table account {
   prefix varchar(3) [unique, not null, note: '3 characters, case-sensitive']
   username varchar [unique, not null]
   email varchar [not null]
-  api_key varchar [unique, not null, note: 'API key']
+  hashed_password varchar [unique, not null, note: 'Hashed password']
   enabled bool [default: true, not null, note: 'A flag that enables/disables the account and its urls']
   created_at timestamp [default: `now()`, note: 'Timestamp of creation']
   updated_at timestamp [note: 'Timestamp of last update']
@@ -11,7 +11,6 @@ Table account {
   Indexes {
     prefix [note: 'Index for prefix column']
     username [note: 'Index for username column']
-    api_key [note: 'Index for api_key column']
   }
 
   note: "Table holding Account information"

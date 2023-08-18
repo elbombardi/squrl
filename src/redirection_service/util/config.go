@@ -2,7 +2,7 @@ package util
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"time"
 
 	"github.com/spf13/viper"
@@ -53,9 +53,9 @@ func LoadConfig() (config Config, err error) {
 	}
 
 	if config.Environment == "dev" {
-		log.Println("Configuration loaded : ")
+		slog.Info("Configuration loaded")
 		for _, key := range viper.AllKeys() {
-			log.Printf("\t* %s = %v\n", key, viper.Get(key))
+			slog.Debug("\t* %s = %v\n", key, viper.Get(key))
 		}
 	}
 

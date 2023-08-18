@@ -16,11 +16,11 @@ import (
 func initializeApp() (*handlers.Handlers, error) {
 	config, err := util.LoadConfig()
 	if err != nil {
-		log.Print(err)
+		util.Error(err.Error())
 		return nil, err
 	}
 
-	log.Println("Initializing Database connection..")
+	util.Info("Initializing Database connection..")
 	store, err := db.GetStoreInstance(db.DBConf{
 		DriverName:     config.DriverName,
 		DataSourceName: config.DBSource,
@@ -30,15 +30,15 @@ func initializeApp() (*handlers.Handlers, error) {
 		MaxLifeTime:    config.DBMaxLifeTime,
 	})
 	if err != nil {
-		log.Println("Unable to initialize connection de database : ", err)
+		util.Error("Unable to initialize connection de database : ", err)
 		return nil, err
 	}
 	if store == nil {
-		log.Println("Could not connect to the database")
+		util.Error("Could not connect to the database")
 		return nil, fmt.Errorf("could not connect to the database")
 	}
 
-	log.Println("Check for database schema changes..")
+	util.Info("Check for database schema changes..")
 	driver, err := postgres.WithInstance(store.DB, &postgres.Config{})
 	m, err := migrate.NewWithDatabaseInstance(
 		"file://../db/migration",
@@ -48,7 +48,7 @@ func initializeApp() (*handlers.Handlers, error) {
 	}
 	m.Up()
 
-	log.Println("Initializing App. Services..")
+	util.Info("Initializing App. Services..")
 	return &handlers.Handlers{
 		AccountRepository: store,
 		URLRepository:     store,

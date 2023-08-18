@@ -5,6 +5,7 @@ go 1.21.0
 replace github.com/elbombardi/squrl/src/db => ../db
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elbombardi/squrl/src/db v0.0.0-00010101000000-000000000000
 	github.com/go-openapi/errors v0.20.4
 	github.com/go-openapi/loads v0.21.2

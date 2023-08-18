@@ -31,7 +31,7 @@ func init() {
   },
   "basePath": "/v1",
   "paths": {
-    "/account": {
+    "/accounts": {
       "put": {
         "security": [
           {
@@ -45,6 +45,13 @@ func init() {
         "summary": "Update an account",
         "operationId": "UpdateAccount",
         "parameters": [
+          {
+            "type": "string",
+            "description": "Bearer \u003cJWT Token\u003e",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          },
           {
             "name": "body",
             "in": "body",
@@ -102,7 +109,7 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "description": "JWT Token.",
+            "description": "Bearer \u003cJWT Token\u003e",
             "name": "Authorization",
             "in": "header",
             "required": true
@@ -197,8 +204,8 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
-          "404": {
-            "description": "Not Found",
+          "401": {
+            "description": "Unauthorized",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -212,7 +219,7 @@ func init() {
         }
       }
     },
-    "/url": {
+    "/urls": {
       "put": {
         "security": [
           {
@@ -226,6 +233,13 @@ func init() {
         "summary": "Update a URL",
         "operationId": "UpdateURL",
         "parameters": [
+          {
+            "type": "string",
+            "description": "Bearer \u003cJWT Token\u003e",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          },
           {
             "name": "body",
             "in": "body",
@@ -293,6 +307,13 @@ func init() {
         "operationId": "CreateURL",
         "parameters": [
           {
+            "type": "string",
+            "description": "Bearer \u003cJWT Token\u003e",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
@@ -349,7 +370,7 @@ func init() {
     "AccountCreated": {
       "type": "object",
       "properties": {
-        "api_key": {
+        "password": {
           "type": "string"
         },
         "prefix": {
@@ -459,6 +480,13 @@ func init() {
           ]
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
   }
 }`))
@@ -476,7 +504,7 @@ func init() {
   },
   "basePath": "/v1",
   "paths": {
-    "/account": {
+    "/accounts": {
       "put": {
         "security": [
           {
@@ -490,6 +518,13 @@ func init() {
         "summary": "Update an account",
         "operationId": "UpdateAccount",
         "parameters": [
+          {
+            "type": "string",
+            "description": "Bearer \u003cJWT Token\u003e",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          },
           {
             "name": "body",
             "in": "body",
@@ -547,7 +582,7 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "description": "JWT Token.",
+            "description": "Bearer \u003cJWT Token\u003e",
             "name": "Authorization",
             "in": "header",
             "required": true
@@ -642,8 +677,8 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
-          "404": {
-            "description": "Not Found",
+          "401": {
+            "description": "Unauthorized",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -657,7 +692,7 @@ func init() {
         }
       }
     },
-    "/url": {
+    "/urls": {
       "put": {
         "security": [
           {
@@ -671,6 +706,13 @@ func init() {
         "summary": "Update a URL",
         "operationId": "UpdateURL",
         "parameters": [
+          {
+            "type": "string",
+            "description": "Bearer \u003cJWT Token\u003e",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          },
           {
             "name": "body",
             "in": "body",
@@ -738,6 +780,13 @@ func init() {
         "operationId": "CreateURL",
         "parameters": [
           {
+            "type": "string",
+            "description": "Bearer \u003cJWT Token\u003e",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
@@ -794,7 +843,7 @@ func init() {
     "AccountCreated": {
       "type": "object",
       "properties": {
-        "api_key": {
+        "password": {
           "type": "string"
         },
         "prefix": {
@@ -904,6 +953,13 @@ func init() {
           ]
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
   }
 }`))
