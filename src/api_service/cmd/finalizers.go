@@ -1,15 +1,16 @@
 package main
 
 import (
-	"github.com/elbombardi/squrl/src/api_service/util"
+	"log/slog"
+
 	"github.com/elbombardi/squrl/src/db"
 )
 
 func finalizeApp() {
-	defer finalizeDatabase()
+	finalizeDatabase()
 }
 
 func finalizeDatabase() {
-	util.Info("Closing Database connection..")
+	slog.Info("Closing Database connection..")
 	db.Finalize()
 }

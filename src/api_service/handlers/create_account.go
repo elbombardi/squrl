@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"github.com/elbombardi/squrl/src/api_service/api/models"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/accounts"
@@ -11,11 +12,14 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
+/*
+Handler for the POST /accounts endpoint
+*/
 func (handlers *Handlers) HandleCreateAccount(params accounts.CreateAccountParams, principal any) middleware.Responder {
 	//Check if the request is valid
 	err := validateCreateAccountParams(params)
 	if err != nil {
-		util.Error("Invalid parameters in create account request", err)
+		slog.Error("Invalid parameters in create account request", "Details", err)
 		return accounts.NewCreateAccountBadRequest().WithPayload(getError(err))
 	}
 	// Check if the user is authenticated
@@ -26,7 +30,7 @@ func (handlers *Handlers) HandleCreateAccount(params accounts.CreateAccountParam
 
 	//This endpoint is only accessible by the admin
 	if principal.(string) != "admin" {
-		util.Error("Unauthorized attempt to access CreateAccount by a non admin user", principal.(string))
+		slog.Error("Unauthorized attempt to access CreateAccount by a non admin user", "Account", principal.(string))
 		return accounts.NewCreateAccountUnauthorized().WithPayload(&models.Error{
 			Error: "Unauthorized"})
 	}
@@ -34,26 +38,26 @@ func (handlers *Handlers) HandleCreateAccount(params accounts.CreateAccountParam
 	//Check if the username is unique
 	exists, err := handlers.AccountRepository.CheckUsernameExists(context.Background(), *params.Account.Username)
 	if err != nil {
-		util.Error("checking if username exists", err)
-		return internalErrorInCreateAccount(err)
+		slog.Error("Unexpected error while checking if username exists", "Details", err)
+		return internalErrorInCreateAccount()
 	}
 	if exists {
-		util.Error("Username already exists", *params.Account.Username)
+		slog.Error("Username already exists", "Username", *params.Account.Username)
 		return accounts.NewCreateAccountBadRequest().WithPayload(getError(err))
 	}
 
-	// Generate a prefix
+	// Generate a prefix for the account
 	prefix, err := handlers.generatePrefix()
 	if err != nil {
-		util.Error("Username already exists", *params.Account.Username)
-		return internalErrorInCreateAccount(err)
+		slog.Error("Unexpected error while generating prefix for the new account", "Details", err)
+		return internalErrorInCreateAccount()
 	}
 
-	// Generate an API key
+	// Generate a password
 	password, hashedPassword := handlers.generatePassword()
 	if err != nil {
-		util.Error("Error generating password", err)
-		return internalErrorInCreateAccount(err)
+		slog.Error("Unexpected error while generating password", "Details", err)
+		return internalErrorInCreateAccount()
 	}
 
 	// Insert the new account
@@ -64,12 +68,12 @@ func (handlers *Handlers) HandleCreateAccount(params accounts.CreateAccountParam
 		Email:          *params.Account.Email,
 	})
 	if err != nil {
-		util.Error("Error inserting new account", err)
-		return accounts.NewCreateAccountInternalServerError().WithPayload(getError(err))
+		slog.Error("Unexpected error while inserting new account in DB", "Details", err)
+		return internalErrorInCreateAccount()
 	}
 
 	// Return response
-	util.Info("New account created successfully: '%s' \n", *params.Account.Username)
+	slog.Info("New account created successfully", "Username", *params.Account.Username)
 	return accounts.NewCreateAccountOK().WithPayload(&models.AccountCreated{
 		Password: password,
 		Prefix:   prefix,
@@ -113,6 +117,8 @@ func (h *Handlers) generatePassword() (string, string) {
 	return password, hashedPassword
 }
 
-func internalErrorInCreateAccount(err error) middleware.Responder {
-	return accounts.NewCreateAccountInternalServerError().WithPayload(getError(err))
+func internalErrorInCreateAccount() middleware.Responder {
+	return accounts.NewCreateAccountInternalServerError().WithPayload(&models.Error{
+		Error: "Unexpected server internal error",
+	})
 }

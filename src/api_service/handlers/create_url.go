@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log/slog"
 
 	"github.com/elbombardi/squrl/src/api_service/api/models"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/urls"
@@ -13,11 +14,14 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
+/*
+Handler for the POST /urls endpoint
+*/
 func (handlers *Handlers) HandleCreateURL(params urls.CreateURLParams, principal any) middleware.Responder {
 	//Validate params
 	err := validateCreateURLParams(params)
 	if err != nil {
-		util.Error("Error validating CreateURL params: ", err)
+		slog.Error("Bad CreateURL request params", "Details", err)
 		return urls.NewCreateURLBadRequest().WithPayload(getError(err))
 	}
 	// Check if the user is authenticated
@@ -30,17 +34,17 @@ func (handlers *Handlers) HandleCreateURL(params urls.CreateURLParams, principal
 	account, err := handlers.AccountRepository.GetAccountByUsername(context.Background(), principal.(string))
 	if err != nil {
 		if err == sql.ErrNoRows {
-			util.Error("Account not found for this username: ", principal.(string))
+			slog.Error("Account not found", "Username", principal.(string))
 			return urls.NewCreateURLUnauthorized().WithPayload(&models.Error{
 				Error: "Account not found for this username: " + principal.(string)})
 		}
-		util.Error("Error getting account by username: ", err)
-		return internalErrorInCreateShortURL(err)
+		slog.Error("Unexpected error while retrieving account by username", "Username", principal.(string), "Detail", err)
+		return internalErrorInCreateShortURL()
 	}
 
 	//Check if the account is active
 	if !account.Enabled {
-		util.Info("Account disabled: ", principal.(string))
+		slog.Info("Account disabled", "Username", principal.(string))
 		return urls.NewCreateURLUnauthorized().WithPayload(&models.Error{
 			Error: "Account disabled"})
 	}
@@ -48,8 +52,8 @@ func (handlers *Handlers) HandleCreateURL(params urls.CreateURLParams, principal
 	//Generate short URL key
 	shortURLKey, err := handlers.generateShortURLKey(account)
 	if err != nil {
-		util.Error("Error generating short URL key: ", err)
-		return internalErrorInCreateShortURL(err)
+		slog.Error("Unexpected error while generating short URL", "Details", err)
+		return internalErrorInCreateShortURL()
 	}
 
 	//Insert the new short URL in the database
@@ -59,11 +63,11 @@ func (handlers *Handlers) HandleCreateURL(params urls.CreateURLParams, principal
 		AccountID:   account.ID,
 	})
 	if err != nil {
-		util.Error("Error inserting new URL: ", err)
-		return internalErrorInCreateShortURL(err)
+		slog.Error("Error inserting new URL in DB", "Details", err)
+		return internalErrorInCreateShortURL()
 	}
 
-	util.Info("New short URL created: ", shortURLKey)
+	slog.Info("New short URL created successfully", "Account", principal, "Params", *params.Body)
 	//Return the short URL
 	return urls.NewCreateURLOK().WithPayload(&models.URLCreated{
 		ShortURL:    fmt.Sprintf("%v/%v/%v", handlers.Config.RedirectionBaseURL, account.Prefix, shortURLKey),
@@ -103,7 +107,8 @@ func (h *Handlers) generateShortURLKey(account db.Account) (string, error) {
 	return shortURLKey, nil
 }
 
-func internalErrorInCreateShortURL(err error) middleware.Responder {
+func internalErrorInCreateShortURL() middleware.Responder {
 	return urls.NewCreateURLInternalServerError().WithPayload(&models.Error{
-		Error: err.Error()})
+		Error: "Unexpected server internal error",
+	})
 }

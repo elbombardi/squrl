@@ -2,13 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"log"
-
-	"github.com/elbombardi/squrl/src/api_service/api"
-	"github.com/elbombardi/squrl/src/api_service/api/operations"
-	"github.com/elbombardi/squrl/src/api_service/util"
-	"github.com/go-openapi/loads"
+	"log/slog"
 )
 
 var port int
@@ -19,32 +13,22 @@ func main() {
 	flag.StringVar(&host, "host", "", "Host to listen on")
 	flag.Parse()
 
-	swaggerSpec, err := loads.Embedded(api.SwaggerJSON, api.FlatSwaggerJSON)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	adminAPI := operations.NewAdminAPI(swaggerSpec)
-	adminAPI.Logger = func(s string, i ...interface{}) {
-		util.Info(fmt.Sprintf(s, i...))
-	}
-	server := api.NewServer(adminAPI)
-	defer server.Shutdown()
 	defer finalizeApp()
 
-	handlers, err := initializeApp()
+	server, err := initializeApp()
 	if err != nil {
-		util.Error("Initialization Error. Shutting down..")
+		slog.Error("Initialization Error. Shutting down", "Details", err)
 		return
 	}
-	handlers.InstallHandlers(adminAPI)
+	defer server.Shutdown()
 
 	server.Port = port
 	server.Host = host
 	server.ConfigureAPI()
 
-	util.Info("Starting AdminAPI server..")
-	if err := server.Serve(); err != nil {
-		log.Fatalln(err)
+	slog.Info("Starting AdminAPI server..")
+	err = server.Serve()
+	if err != nil {
+		slog.Error("Unexpected error", "Details", err)
 	}
-
 }

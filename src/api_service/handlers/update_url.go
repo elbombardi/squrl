@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log/slog"
 
 	"github.com/elbombardi/squrl/src/api_service/api/models"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/urls"
@@ -12,11 +13,14 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
+/*
+Hanlder for the PUT /urls endpoint
+*/
 func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, principal any) middleware.Responder {
 	//Validate params
 	err := validateParams(params)
 	if err != nil {
-		util.Error("Error validating UpdateURL params: ", err)
+		slog.Error("Bad UpdateURL params", "Details", err)
 		return urls.NewUpdateURLBadRequest().WithPayload(getError(err))
 	}
 	if principal == nil {
@@ -28,17 +32,18 @@ func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, prin
 	account, err := handlers.AccountRepository.GetAccountByUsername(context.Background(), principal.(string))
 	if err != nil {
 		if err == sql.ErrNoRows {
-			util.Error("Account not found for this username: ", principal.(string))
+			slog.Error("Account not found", "Account", principal.(string))
 			return urls.NewUpdateURLUnauthorized().WithPayload(&models.Error{
 				Error: "Unauthorized"})
 		}
-		util.Error("Error getting account by username: ", err)
-		return internalErrorInUpdateShortURL(err)
+		slog.Error("Unexpected error while retrieving account by username",
+			"Account", principal, "Details", err)
+		return internalErrorInUpdateShortURL()
 	}
 
 	//Check if the customer is active
 	if !account.Enabled {
-		util.Info("account disabled: ", principal.(string))
+		slog.Info("Account disabled", "Account", principal)
 		return urls.NewUpdateURLUnauthorized().WithPayload(&models.Error{
 			Error: "Account disabled"})
 	}
@@ -53,12 +58,13 @@ func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, prin
 		})
 	if err != nil {
 		if err == sql.ErrNoRows {
-			util.Error("URL not found: ", *params.Body.ShortURLKey)
+			slog.Error("URL not found", "Account", principal.(string), "ShortURLKey", *params.Body.ShortURLKey)
 			return urls.NewUpdateURLNotFound().WithPayload(&models.Error{
-				Error: "Short URL Not Found"})
+				Error: "URL Not Found"})
 		}
-		util.Error("Error getting short URL: ", err)
-		return internalErrorInUpdateShortURL(err)
+		slog.Error("Unxpected error while retrieving short URL", "Account", principal.(string),
+			"ShortURLKey", *params.Body.ShortURLKey, "Details", err)
+		return internalErrorInUpdateShortURL()
 	}
 	if params.Body.NewLongURL != "" {
 		url.LongUrl = params.Body.NewLongURL
@@ -67,8 +73,8 @@ func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, prin
 			ID:      url.ID,
 		})
 		if err != nil {
-			util.Error("Error updating long URL: ", err)
-			return internalErrorInUpdateShortURL(err)
+			slog.Error("Unexpected error while updating long URL", "Details", err)
+			return internalErrorInUpdateShortURL()
 		}
 	}
 	if params.Body.Status != "" {
@@ -78,8 +84,8 @@ func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, prin
 			ID:      url.ID,
 		})
 		if err != nil {
-			util.Error("Error updating short URL enabled status: ", err)
-			return internalErrorInUpdateShortURL(err)
+			slog.Error("Unexpected error while updating URL enabled status", "Details", err)
+			return internalErrorInUpdateShortURL()
 		}
 	}
 	if params.Body.TrackingStatus != "" {
@@ -90,21 +96,16 @@ func (handlers *Handlers) HandleUpdateShortURL(params urls.UpdateURLParams, prin
 				ID:              url.ID,
 			})
 		if err != nil {
-			util.Error("Error updating short URL tracking enabled status: ", err)
-			return internalErrorInUpdateShortURL(err)
+			slog.Error("Unexpected error while updating URL's tracking enabled status: ", "Details", err)
+			return internalErrorInUpdateShortURL()
 		}
 	}
-	util.Infof("Short URL updated: account: %s, short url key : %s\n", principal, *params.Body.ShortURLKey)
+	slog.Info("URL updated successfully", "Account", principal, "Params", *params.Body)
 	return urls.NewUpdateURLOK().WithPayload(&urls.UpdateURLOKBody{
 		LongURL:        url.LongUrl,
 		Status:         decodeStatus(url.Enabled),
 		TrackingStatus: decodeStatus(url.TrackingEnabled),
 	})
-}
-
-func internalErrorInUpdateShortURL(err error) middleware.Responder {
-	return urls.NewUpdateURLInternalServerError().WithPayload(&models.Error{
-		Error: err.Error()})
 }
 
 func validateParams(params urls.UpdateURLParams) error {
@@ -131,4 +132,10 @@ func validateParams(params urls.UpdateURLParams) error {
 		return errors.New("invalid tracking status, should be one of the two values: 'active', 'inactive'")
 	}
 	return nil
+}
+
+func internalErrorInUpdateShortURL() middleware.Responder {
+	return urls.NewUpdateURLInternalServerError().WithPayload(&models.Error{
+		Error: "Internal server error",
+	})
 }

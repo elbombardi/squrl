@@ -9,10 +9,8 @@ import (
 )
 
 type AccountRepository interface {
-	// CheckApiKeyExists(ctx context.Context, apiKey string) (bool, error)
 	CheckPrefixExists(ctx context.Context, prefix string) (bool, error)
 	CheckUsernameExists(ctx context.Context, username string) (bool, error)
-	//GetAccountByApiKey(ctx context.Context, apiKey string) (Account, error)
 	GetAccountByPrefix(ctx context.Context, prefix string) (Account, error)
 	GetAccountByUsername(ctx context.Context, username string) (Account, error)
 	InsertNewAccount(ctx context.Context, arg InsertNewAccountParams) error
@@ -72,7 +70,7 @@ func GetStoreInstance(conf DBConf) (*SQLStore, error) {
 
 	return &SQLStore{
 		DB:      dbInstance,
-		Queries: &Queries{db: dbInstance},
+		Queries: New(dbInstance),
 	}, nil
 }
 

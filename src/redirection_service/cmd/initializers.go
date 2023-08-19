@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log/slog"
+	"os"
 
 	"github.com/elbombardi/squrl/src/db"
 	"github.com/elbombardi/squrl/src/redirection_service/routes"
@@ -10,12 +11,22 @@ import (
 )
 
 func initializeApp() (*routes.Server, error) {
+	// Loading configuration
 	config, err := util.LoadConfig()
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("Error while loading configuration", "Details", err)
 		return nil, err
 	}
 
+	// Initializing logger
+	logHandler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: util.LogLevel(config.LogLevel),
+	})
+	logger := slog.New(logHandler)
+	slog.SetDefault(logger)
+	util.LogConfig(&config)
+
+	// Initializing DB connection
 	slog.Info("Initializing Database connection..")
 	store, err := db.GetStoreInstance(db.DBConf{
 		DriverName:     config.DriverName,
@@ -26,15 +37,16 @@ func initializeApp() (*routes.Server, error) {
 		MaxLifeTime:    config.DBMaxLifeTime,
 	})
 	if err != nil {
-		slog.Error("Unable to initialize connection de database : ", err)
+		slog.Error("Unable to initialize connection de database", "Details", err)
 		return nil, err
 	}
 	if store == nil {
 		slog.Error("Could not connect to the database")
-		return nil, fmt.Errorf("could not connect to the database")
+		return nil, fmt.Errorf("Could not connect to the database")
 	}
 
-	slog.Info("Initializing App. Services..")
+	// Initalizing server
+	slog.Info("Initializing Redirection Server..")
 	return routes.NewServer(port, host, &routes.Routes{
 		AccountRepository: store,
 		URLRepository:     store,

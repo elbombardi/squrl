@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"log/slog"
+	"strings"
 	"time"
 
 	"github.com/spf13/viper"
@@ -18,6 +19,11 @@ type Config struct {
 	DBMaxOpenConns int           `mapstructure:"DB_MAX_OPEN_CONNS"`
 	DBMaxIdleTime  time.Duration `mapstructure:"DB_MAX_IDLE_TIME"`
 	DBMaxLifeTime  time.Duration `mapstructure:"DB_MAX_LIFE_TIME"`
+	LogLevel       string        `mapstructure:"LOG_LEVEL"`
+}
+
+var requiredConfig = []string{
+	"DB_SOURCE",
 }
 
 // LoadConfig reads configuration from file or environment variables.
@@ -32,32 +38,47 @@ func LoadConfig() (config Config, err error) {
 	viper.SetDefault("DB_MAX_OPEN_CONNS", 10)
 	viper.SetDefault("DB_MAX_IDLE_TIME", 1*time.Second)
 	viper.SetDefault("DB_MAX_LIFE_TIME", 30*time.Second)
+	viper.SetDefault("LOG_LEVEL", "info")
 
 	viper.AutomaticEnv()
 
 	err = viper.ReadInConfig()
 	if err != nil {
-		return
+		return config, fmt.Errorf("Error reading config:  %v ", err)
 	}
 
 	err = viper.Unmarshal(&config)
-
-	requiredConfig := []string{
-		"DB_SOURCE",
+	if err != nil {
+		return config, fmt.Errorf("Error parsing config:  %v ", err)
 	}
+
 	for _, key := range requiredConfig {
 		v := viper.Get(key)
 		if v == nil {
 			return config, fmt.Errorf("Missing required configuration: %s", key)
 		}
 	}
-
-	if config.Environment == "dev" {
-		slog.Info("Configuration loaded")
-		for _, key := range viper.AllKeys() {
-			slog.Debug("\t* %s = %v\n", key, viper.Get(key))
-		}
-	}
-
 	return
+}
+
+func LogConfig(config *Config) {
+	slog.Debug("Configuration is : ")
+	for _, key := range viper.AllKeys() {
+		slog.Debug(fmt.Sprintf("     %s = %v", strings.ToUpper(key), viper.Get(key)))
+	}
+}
+
+var logLevels = map[string]slog.Level{
+	"debug": slog.LevelDebug,
+	"info":  slog.LevelInfo,
+	"warn":  slog.LevelWarn,
+	"error": slog.LevelError,
+}
+
+func LogLevel(levelname string) slog.Level {
+	level, ok := logLevels[levelname]
+	if !ok {
+		return slog.LevelInfo
+	}
+	return level
 }

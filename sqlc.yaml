@@ -7,4 +7,3 @@ sql:
     go: 
       package: "db"
       out: "src/db/"
-      

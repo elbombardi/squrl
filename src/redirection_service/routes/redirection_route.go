@@ -10,6 +10,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+/*
+Route that handles redirections requests (GET "/:account_prefix/:short_url_key")
+*/
 func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 	accountPrefix := c.Params("account_prefix")
 	shortURLKey := c.Params("short_url_key")
@@ -18,14 +21,15 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 	account, err := r.getAccountInfo(accountPrefix)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			slog.Error("Account not found", "Account", accountPrefix)
 			return page404(c)
 		}
-		slog.Error("Error retrieving Customer information: ", err)
+		slog.Error("Unexpected error while retrieving account information", "Details", err)
 		return page500(c)
 	}
 	// If the account is not active, send 404 not found error page
 	if !account.Enabled {
-		slog.Error("Error: Customer %v is disabled \n", account.Username)
+		slog.Info("Click on a URL belonging to a disabled account", "URL", c.Request().URI())
 		return page404(c)
 	}
 
@@ -35,13 +39,13 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 		if err == sql.ErrNoRows {
 			return page404(c)
 		}
-		slog.Error("Error retrieving short URL information: ", err)
+		slog.Error("Unexpected error retrieving short URL information", "Details", err)
 		return page500(c)
 	}
 
 	//If the short URL is not active, send 404 not found error page
 	if !URL.Enabled {
-		slog.Error("Error: Short URL /%v is disabled \n", URL.ShortUrlKey.String)
+		slog.Info("Click on a disabled URL", "URL", c.Request().URI())
 		return page404(c)
 	}
 
@@ -53,11 +57,12 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 			IpAddress: sql.NullString{String: c.IP(), Valid: true},
 		})
 		if err != nil {
-			slog.Error("Error inserting new click: ", err)
+			slog.Error("Unexptected error while inserting a new click", "Details", err)
 		}
 	}
 
 	// Redirect to the long URL
+	slog.Info("URL Clicked", "URL", c.Request().URI())
 	return c.Redirect(URL.LongUrl, http.StatusFound)
 }
 
@@ -78,9 +83,11 @@ func (r *Routes) getURLInfo(accountId int32, key string) (db.Url, error) {
 }
 
 func page404(c *fiber.Ctx) error {
-	return c.SendFile("static/404.html")
+	c.Response().Header.SetContentType(fiber.MIMETextHTML)
+	return c.SendString(RESPONSE_404)
 }
 
 func page500(c *fiber.Ctx) error {
-	return c.SendFile("static/500.html")
+	c.Response().Header.SetContentType(fiber.MIMETextHTML)
+	return c.SendString(RESPONSE_500)
 }

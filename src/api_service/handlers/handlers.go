@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"log/slog"
+
 	"github.com/elbombardi/squrl/src/api_service/api/models"
 	"github.com/elbombardi/squrl/src/api_service/api/operations"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/accounts"
@@ -30,7 +32,7 @@ func (handlers *Handlers) InstallHandlers(api *operations.AdminAPI) {
 	api.BearerAuth = func(s string) (any, error) {
 		user, err := util.ValidateJWT(s, handlers.Config.TokenSymmetricKey)
 		if err != nil {
-			util.Error("Error validating JWT Token : ", err)
+			slog.Error("Error validating JWT Token", "Details", err)
 			return nil, nil
 		}
 		return user, nil
