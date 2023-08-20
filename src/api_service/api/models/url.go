@@ -8,10 +8,8 @@ package models
 import (
 	"context"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // URL URL
@@ -20,30 +18,11 @@ import (
 type URL struct {
 
 	// long url
-	// Required: true
-	LongURL *string `json:"long_url"`
+	LongURL string `json:"long_url,omitempty"`
 }
 
 // Validate validates this URL
 func (m *URL) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateLongURL(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *URL) validateLongURL(formats strfmt.Registry) error {
-
-	if err := validate.Required("long_url", "body", m.LongURL); err != nil {
-		return err
-	}
-
 	return nil
 }
 

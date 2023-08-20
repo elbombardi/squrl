@@ -44,5 +44,4 @@ func ValidateJWT(bearerToken, tokenSymmetricKey string) (string, error) {
 		return "", errors.New(fmt.Sprint("Invalid issuer ", claims["iss"]))
 	}
 	return claims["user"].(string), nil
-
 }

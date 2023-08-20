@@ -49,13 +49,11 @@ func init() {
             "type": "string",
             "description": "Bearer \u003cJWT Token\u003e",
             "name": "Authorization",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "name": "body",
             "in": "body",
-            "required": true,
             "schema": {
               "$ref": "#/definitions/AccountUpdate"
             }
@@ -65,7 +63,7 @@ func init() {
           "200": {
             "description": "Success",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/AccountUpdated"
             }
           },
           "400": {
@@ -111,13 +109,11 @@ func init() {
             "type": "string",
             "description": "Bearer \u003cJWT Token\u003e",
             "name": "Authorization",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "name": "account",
             "in": "body",
-            "required": true,
             "schema": {
               "$ref": "#/definitions/Account"
             }
@@ -169,81 +165,29 @@ func init() {
         }
       }
     },
-    "/login": {
-      "post": {
-        "description": "Returns JWT token for authorized user",
-        "consumes": [
-          "application/json"
-        ],
-        "tags": [
-          "general"
-        ],
-        "summary": "Login",
-        "operationId": "Login",
-        "parameters": [
-          {
-            "description": "Login Payload",
-            "name": "login",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/LoginInfo"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful login",
-            "schema": {
-              "$ref": "#/definitions/LoginSuccess"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/urls": {
+    "/links": {
       "put": {
         "security": [
           {
             "Bearer": []
           }
         ],
-        "description": "Update URL",
+        "description": "Update Link",
         "tags": [
-          "urls"
+          "links"
         ],
-        "summary": "Update a URL",
-        "operationId": "UpdateURL",
+        "summary": "Update a link",
+        "operationId": "UpdateLink",
         "parameters": [
           {
             "type": "string",
             "description": "Bearer \u003cJWT Token\u003e",
             "name": "Authorization",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "name": "body",
             "in": "body",
-            "required": true,
             "schema": {
               "$ref": "#/definitions/URLUpdate"
             }
@@ -299,24 +243,22 @@ func init() {
             "Bearer": []
           }
         ],
-        "description": "Create a new URL",
+        "description": "Create a new link",
         "tags": [
-          "urls"
+          "links"
         ],
-        "summary": "Create a new URL",
-        "operationId": "CreateURL",
+        "summary": "Create a new linkL",
+        "operationId": "CreateLink",
         "parameters": [
           {
             "type": "string",
             "description": "Bearer \u003cJWT Token\u003e",
             "name": "Authorization",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "name": "body",
             "in": "body",
-            "required": true,
             "schema": {
               "$ref": "#/definitions/URL"
             }
@@ -349,15 +291,60 @@ func init() {
           }
         }
       }
+    },
+    "/login": {
+      "post": {
+        "description": "Returns JWT token for authorized user",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "general"
+        ],
+        "summary": "Login",
+        "operationId": "Login",
+        "parameters": [
+          {
+            "description": "Login Payload",
+            "name": "login",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/LoginInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "schema": {
+              "$ref": "#/definitions/LoginSuccess"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
     "Account": {
       "type": "object",
-      "required": [
-        "username",
-        "email"
-      ],
       "properties": {
         "email": {
           "type": "string"
@@ -380,19 +367,19 @@ func init() {
     },
     "AccountUpdate": {
       "type": "object",
-      "required": [
-        "username",
-        "status"
-      ],
       "properties": {
         "status": {
-          "type": "string",
-          "enum": [
-            "active",
-            "inactive"
-          ]
+          "type": "string"
         },
         "username": {
+          "type": "string"
+        }
+      }
+    },
+    "AccountUpdated": {
+      "type": "object",
+      "properties": {
+        "status": {
           "type": "string"
         }
       }
@@ -400,17 +387,16 @@ func init() {
     "Error": {
       "type": "object",
       "properties": {
-        "error": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
           "type": "string"
         }
       }
     },
     "LoginInfo": {
       "type": "object",
-      "required": [
-        "username",
-        "password"
-      ],
       "properties": {
         "password": {
           "type": "string"
@@ -433,9 +419,6 @@ func init() {
     },
     "URL": {
       "type": "object",
-      "required": [
-        "long_url"
-      ],
       "properties": {
         "long_url": {
           "type": "string"
@@ -455,9 +438,6 @@ func init() {
     },
     "URLUpdate": {
       "type": "object",
-      "required": [
-        "short_url_key"
-      ],
       "properties": {
         "new_long_url": {
           "type": "string"
@@ -466,18 +446,10 @@ func init() {
           "type": "string"
         },
         "status": {
-          "type": "string",
-          "enum": [
-            "active",
-            "inactive"
-          ]
+          "type": "string"
         },
         "tracking_status": {
-          "type": "string",
-          "enum": [
-            "active",
-            "inactive"
-          ]
+          "type": "string"
         }
       }
     }
@@ -522,13 +494,11 @@ func init() {
             "type": "string",
             "description": "Bearer \u003cJWT Token\u003e",
             "name": "Authorization",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "name": "body",
             "in": "body",
-            "required": true,
             "schema": {
               "$ref": "#/definitions/AccountUpdate"
             }
@@ -538,7 +508,7 @@ func init() {
           "200": {
             "description": "Success",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/AccountUpdated"
             }
           },
           "400": {
@@ -584,13 +554,11 @@ func init() {
             "type": "string",
             "description": "Bearer \u003cJWT Token\u003e",
             "name": "Authorization",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "name": "account",
             "in": "body",
-            "required": true,
             "schema": {
               "$ref": "#/definitions/Account"
             }
@@ -642,81 +610,29 @@ func init() {
         }
       }
     },
-    "/login": {
-      "post": {
-        "description": "Returns JWT token for authorized user",
-        "consumes": [
-          "application/json"
-        ],
-        "tags": [
-          "general"
-        ],
-        "summary": "Login",
-        "operationId": "Login",
-        "parameters": [
-          {
-            "description": "Login Payload",
-            "name": "login",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/LoginInfo"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful login",
-            "schema": {
-              "$ref": "#/definitions/LoginSuccess"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/urls": {
+    "/links": {
       "put": {
         "security": [
           {
             "Bearer": []
           }
         ],
-        "description": "Update URL",
+        "description": "Update Link",
         "tags": [
-          "urls"
+          "links"
         ],
-        "summary": "Update a URL",
-        "operationId": "UpdateURL",
+        "summary": "Update a link",
+        "operationId": "UpdateLink",
         "parameters": [
           {
             "type": "string",
             "description": "Bearer \u003cJWT Token\u003e",
             "name": "Authorization",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "name": "body",
             "in": "body",
-            "required": true,
             "schema": {
               "$ref": "#/definitions/URLUpdate"
             }
@@ -772,24 +688,22 @@ func init() {
             "Bearer": []
           }
         ],
-        "description": "Create a new URL",
+        "description": "Create a new link",
         "tags": [
-          "urls"
+          "links"
         ],
-        "summary": "Create a new URL",
-        "operationId": "CreateURL",
+        "summary": "Create a new linkL",
+        "operationId": "CreateLink",
         "parameters": [
           {
             "type": "string",
             "description": "Bearer \u003cJWT Token\u003e",
             "name": "Authorization",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "name": "body",
             "in": "body",
-            "required": true,
             "schema": {
               "$ref": "#/definitions/URL"
             }
@@ -822,15 +736,60 @@ func init() {
           }
         }
       }
+    },
+    "/login": {
+      "post": {
+        "description": "Returns JWT token for authorized user",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "general"
+        ],
+        "summary": "Login",
+        "operationId": "Login",
+        "parameters": [
+          {
+            "description": "Login Payload",
+            "name": "login",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/LoginInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "schema": {
+              "$ref": "#/definitions/LoginSuccess"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
     "Account": {
       "type": "object",
-      "required": [
-        "username",
-        "email"
-      ],
       "properties": {
         "email": {
           "type": "string"
@@ -853,19 +812,19 @@ func init() {
     },
     "AccountUpdate": {
       "type": "object",
-      "required": [
-        "username",
-        "status"
-      ],
       "properties": {
         "status": {
-          "type": "string",
-          "enum": [
-            "active",
-            "inactive"
-          ]
+          "type": "string"
         },
         "username": {
+          "type": "string"
+        }
+      }
+    },
+    "AccountUpdated": {
+      "type": "object",
+      "properties": {
+        "status": {
           "type": "string"
         }
       }
@@ -873,17 +832,16 @@ func init() {
     "Error": {
       "type": "object",
       "properties": {
-        "error": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
           "type": "string"
         }
       }
     },
     "LoginInfo": {
       "type": "object",
-      "required": [
-        "username",
-        "password"
-      ],
       "properties": {
         "password": {
           "type": "string"
@@ -906,9 +864,6 @@ func init() {
     },
     "URL": {
       "type": "object",
-      "required": [
-        "long_url"
-      ],
       "properties": {
         "long_url": {
           "type": "string"
@@ -928,9 +883,6 @@ func init() {
     },
     "URLUpdate": {
       "type": "object",
-      "required": [
-        "short_url_key"
-      ],
       "properties": {
         "new_long_url": {
           "type": "string"
@@ -939,18 +891,10 @@ func init() {
           "type": "string"
         },
         "status": {
-          "type": "string",
-          "enum": [
-            "active",
-            "inactive"
-          ]
+          "type": "string"
         },
         "tracking_status": {
-          "type": "string",
-          "enum": [
-            "active",
-            "inactive"
-          ]
+          "type": "string"
         }
       }
     }

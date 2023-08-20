@@ -21,7 +21,7 @@ import (
 
 	"github.com/elbombardi/squrl/src/api_service/api/operations/accounts"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/general"
-	"github.com/elbombardi/squrl/src/api_service/api/operations/urls"
+	"github.com/elbombardi/squrl/src/api_service/api/operations/links"
 )
 
 // NewAdminAPI creates a new Admin instance
@@ -49,8 +49,8 @@ func NewAdminAPI(spec *loads.Document) *AdminAPI {
 		AccountsCreateAccountHandler: accounts.CreateAccountHandlerFunc(func(params accounts.CreateAccountParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation accounts.CreateAccount has not yet been implemented")
 		}),
-		UrlsCreateURLHandler: urls.CreateURLHandlerFunc(func(params urls.CreateURLParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation urls.CreateURL has not yet been implemented")
+		LinksCreateLinkHandler: links.CreateLinkHandlerFunc(func(params links.CreateLinkParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation links.CreateLink has not yet been implemented")
 		}),
 		GeneralHealthcheckHandler: general.HealthcheckHandlerFunc(func(params general.HealthcheckParams) middleware.Responder {
 			return middleware.NotImplemented("operation general.Healthcheck has not yet been implemented")
@@ -61,8 +61,8 @@ func NewAdminAPI(spec *loads.Document) *AdminAPI {
 		AccountsUpdateAccountHandler: accounts.UpdateAccountHandlerFunc(func(params accounts.UpdateAccountParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation accounts.UpdateAccount has not yet been implemented")
 		}),
-		UrlsUpdateURLHandler: urls.UpdateURLHandlerFunc(func(params urls.UpdateURLParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation urls.UpdateURL has not yet been implemented")
+		LinksUpdateLinkHandler: links.UpdateLinkHandlerFunc(func(params links.UpdateLinkParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation links.UpdateLink has not yet been implemented")
 		}),
 
 		// Applies when the "Authorization" header is set
@@ -116,16 +116,16 @@ type AdminAPI struct {
 
 	// AccountsCreateAccountHandler sets the operation handler for the create account operation
 	AccountsCreateAccountHandler accounts.CreateAccountHandler
-	// UrlsCreateURLHandler sets the operation handler for the create URL operation
-	UrlsCreateURLHandler urls.CreateURLHandler
+	// LinksCreateLinkHandler sets the operation handler for the create link operation
+	LinksCreateLinkHandler links.CreateLinkHandler
 	// GeneralHealthcheckHandler sets the operation handler for the healthcheck operation
 	GeneralHealthcheckHandler general.HealthcheckHandler
 	// GeneralLoginHandler sets the operation handler for the login operation
 	GeneralLoginHandler general.LoginHandler
 	// AccountsUpdateAccountHandler sets the operation handler for the update account operation
 	AccountsUpdateAccountHandler accounts.UpdateAccountHandler
-	// UrlsUpdateURLHandler sets the operation handler for the update URL operation
-	UrlsUpdateURLHandler urls.UpdateURLHandler
+	// LinksUpdateLinkHandler sets the operation handler for the update link operation
+	LinksUpdateLinkHandler links.UpdateLinkHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -210,8 +210,8 @@ func (o *AdminAPI) Validate() error {
 	if o.AccountsCreateAccountHandler == nil {
 		unregistered = append(unregistered, "accounts.CreateAccountHandler")
 	}
-	if o.UrlsCreateURLHandler == nil {
-		unregistered = append(unregistered, "urls.CreateURLHandler")
+	if o.LinksCreateLinkHandler == nil {
+		unregistered = append(unregistered, "links.CreateLinkHandler")
 	}
 	if o.GeneralHealthcheckHandler == nil {
 		unregistered = append(unregistered, "general.HealthcheckHandler")
@@ -222,8 +222,8 @@ func (o *AdminAPI) Validate() error {
 	if o.AccountsUpdateAccountHandler == nil {
 		unregistered = append(unregistered, "accounts.UpdateAccountHandler")
 	}
-	if o.UrlsUpdateURLHandler == nil {
-		unregistered = append(unregistered, "urls.UpdateURLHandler")
+	if o.LinksUpdateLinkHandler == nil {
+		unregistered = append(unregistered, "links.UpdateLinkHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -329,7 +329,7 @@ func (o *AdminAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/urls"] = urls.NewCreateURL(o.context, o.UrlsCreateURLHandler)
+	o.handlers["POST"]["/links"] = links.NewCreateLink(o.context, o.LinksCreateLinkHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -345,7 +345,7 @@ func (o *AdminAPI) initHandlerCache() {
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/urls"] = urls.NewUpdateURL(o.context, o.UrlsUpdateURLHandler)
+	o.handlers["PUT"]["/links"] = links.NewUpdateLink(o.context, o.LinksUpdateLinkHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

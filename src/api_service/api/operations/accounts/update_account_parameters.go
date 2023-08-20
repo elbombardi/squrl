@@ -6,7 +6,6 @@ package accounts
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"io"
 	"net/http"
 
 	"github.com/go-openapi/errors"
@@ -36,12 +35,10 @@ type UpdateAccountParams struct {
 	HTTPRequest *http.Request `json:"-"`
 
 	/*Bearer <JWT Token>
-	  Required: true
 	  In: header
 	*/
-	Authorization string
+	Authorization *string
 	/*
-	  Required: true
 	  In: body
 	*/
 	Body *models.AccountUpdate
@@ -64,11 +61,7 @@ func (o *UpdateAccountParams) BindRequest(r *http.Request, route *middleware.Mat
 		defer r.Body.Close()
 		var body models.AccountUpdate
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
-				res = append(res, errors.Required("body", "body", ""))
-			} else {
-				res = append(res, errors.NewParseError("body", "body", "", err))
-			}
+			res = append(res, errors.NewParseError("body", "body", "", err))
 		} else {
 			// validate body object
 			if err := body.Validate(route.Formats); err != nil {
@@ -84,8 +77,6 @@ func (o *UpdateAccountParams) BindRequest(r *http.Request, route *middleware.Mat
 				o.Body = &body
 			}
 		}
-	} else {
-		res = append(res, errors.Required("body", "body", ""))
 	}
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
@@ -95,20 +86,17 @@ func (o *UpdateAccountParams) BindRequest(r *http.Request, route *middleware.Mat
 
 // bindAuthorization binds and validates parameter Authorization from header.
 func (o *UpdateAccountParams) bindAuthorization(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("Authorization", "header", rawData)
-	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
 
-	// Required: true
+	// Required: false
 
-	if err := validate.RequiredString("Authorization", "header", raw); err != nil {
-		return err
+	if raw == "" { // empty values pass all other validations
+		return nil
 	}
-	o.Authorization = raw
+	o.Authorization = &raw
 
 	return nil
 }

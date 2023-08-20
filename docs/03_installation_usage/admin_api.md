@@ -51,12 +51,12 @@
   
 
 
-###  urls
+###  links
 
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
-| POST | /v1/urls | [create URL](#create-url) | Create a new URL |
-| PUT | /v1/urls | [update URL](#update-url) | Update a URL |
+| POST | /v1/links | [create link](#create-link) | Create a new linkL |
+| PUT | /v1/links | [update link](#update-link) | Update a link |
   
 
 
@@ -77,8 +77,8 @@ Create a new account
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| Authorization | `header` | string | `string` |  | ✓ |  | Bearer <JWT Token> |
-| account | `body` | [Account](#account) | `models.Account` | | ✓ | |  |
+| Authorization | `header` | string | `string` |  |  |  | Bearer <JWT Token> |
+| account | `body` | [Account](#account) | `models.Account` | |  | |  |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -127,13 +127,13 @@ Status: Internal Server Error
 
 [Error](#error)
 
-### <span id="create-url"></span> Create a new URL (*CreateURL*)
+### <span id="create-link"></span> Create a new linkL (*CreateLink*)
 
 ```
-POST /v1/urls
+POST /v1/links
 ```
 
-Create a new URL
+Create a new link
 
 #### Security Requirements
   * Bearer
@@ -142,51 +142,51 @@ Create a new URL
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| Authorization | `header` | string | `string` |  | ✓ |  | Bearer <JWT Token> |
-| body | `body` | [URL](#url) | `models.URL` | | ✓ | |  |
+| Authorization | `header` | string | `string` |  |  |  | Bearer <JWT Token> |
+| body | `body` | [URL](#url) | `models.URL` | |  | |  |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
 |------|--------|-------------|:-----------:|--------|
-| [200](#create-url-200) | OK | Success |  | [schema](#create-url-200-schema) |
-| [400](#create-url-400) | Bad Request | Bad Request |  | [schema](#create-url-400-schema) |
-| [401](#create-url-401) | Unauthorized | Unauthorized |  | [schema](#create-url-401-schema) |
-| [500](#create-url-500) | Internal Server Error | Internal Server Error |  | [schema](#create-url-500-schema) |
+| [200](#create-link-200) | OK | Success |  | [schema](#create-link-200-schema) |
+| [400](#create-link-400) | Bad Request | Bad Request |  | [schema](#create-link-400-schema) |
+| [401](#create-link-401) | Unauthorized | Unauthorized |  | [schema](#create-link-401-schema) |
+| [500](#create-link-500) | Internal Server Error | Internal Server Error |  | [schema](#create-link-500-schema) |
 
 #### Responses
 
 
-##### <span id="create-url-200"></span> 200 - Success
+##### <span id="create-link-200"></span> 200 - Success
 Status: OK
 
-###### <span id="create-url-200-schema"></span> Schema
+###### <span id="create-link-200-schema"></span> Schema
    
   
 
 [URLCreated](#url-created)
 
-##### <span id="create-url-400"></span> 400 - Bad Request
+##### <span id="create-link-400"></span> 400 - Bad Request
 Status: Bad Request
 
-###### <span id="create-url-400-schema"></span> Schema
+###### <span id="create-link-400-schema"></span> Schema
    
   
 
 [Error](#error)
 
-##### <span id="create-url-401"></span> 401 - Unauthorized
+##### <span id="create-link-401"></span> 401 - Unauthorized
 Status: Unauthorized
 
-###### <span id="create-url-401-schema"></span> Schema
+###### <span id="create-link-401-schema"></span> Schema
    
   
 
 [Error](#error)
 
-##### <span id="create-url-500"></span> 500 - Internal Server Error
+##### <span id="create-link-500"></span> 500 - Internal Server Error
 Status: Internal Server Error
 
-###### <span id="create-url-500-schema"></span> Schema
+###### <span id="create-link-500-schema"></span> Schema
    
   
 
@@ -232,7 +232,7 @@ Returns JWT token for authorized user
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| login | `body` | [LoginInfo](#login-info) | `models.LoginInfo` | | ✓ | | Login Payload |
+| login | `body` | [LoginInfo](#login-info) | `models.LoginInfo` | |  | | Login Payload |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -296,8 +296,8 @@ Update an account
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| Authorization | `header` | string | `string` |  | ✓ |  | Bearer <JWT Token> |
-| body | `body` | [AccountUpdate](#account-update) | `models.AccountUpdate` | | ✓ | |  |
+| Authorization | `header` | string | `string` |  |  |  | Bearer <JWT Token> |
+| body | `body` | [AccountUpdate](#account-update) | `models.AccountUpdate` | |  | |  |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -318,7 +318,7 @@ Status: OK
    
   
 
-
+[AccountUpdated](#account-updated)
 
 ##### <span id="update-account-400"></span> 400 - Bad Request
 Status: Bad Request
@@ -356,13 +356,13 @@ Status: Internal Server Error
 
 [Error](#error)
 
-### <span id="update-url"></span> Update a URL (*UpdateURL*)
+### <span id="update-link"></span> Update a link (*UpdateLink*)
 
 ```
-PUT /v1/urls
+PUT /v1/links
 ```
 
-Update URL
+Update Link
 
 #### Security Requirements
   * Bearer
@@ -371,61 +371,61 @@ Update URL
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| Authorization | `header` | string | `string` |  | ✓ |  | Bearer <JWT Token> |
-| body | `body` | [URLUpdate](#url-update) | `models.URLUpdate` | | ✓ | |  |
+| Authorization | `header` | string | `string` |  |  |  | Bearer <JWT Token> |
+| body | `body` | [URLUpdate](#url-update) | `models.URLUpdate` | |  | |  |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
 |------|--------|-------------|:-----------:|--------|
-| [200](#update-url-200) | OK | Success |  | [schema](#update-url-200-schema) |
-| [400](#update-url-400) | Bad Request | Bad Request |  | [schema](#update-url-400-schema) |
-| [401](#update-url-401) | Unauthorized | Unauthorized |  | [schema](#update-url-401-schema) |
-| [404](#update-url-404) | Not Found | Not Found |  | [schema](#update-url-404-schema) |
-| [500](#update-url-500) | Internal Server Error | Internal Server Error |  | [schema](#update-url-500-schema) |
+| [200](#update-link-200) | OK | Success |  | [schema](#update-link-200-schema) |
+| [400](#update-link-400) | Bad Request | Bad Request |  | [schema](#update-link-400-schema) |
+| [401](#update-link-401) | Unauthorized | Unauthorized |  | [schema](#update-link-401-schema) |
+| [404](#update-link-404) | Not Found | Not Found |  | [schema](#update-link-404-schema) |
+| [500](#update-link-500) | Internal Server Error | Internal Server Error |  | [schema](#update-link-500-schema) |
 
 #### Responses
 
 
-##### <span id="update-url-200"></span> 200 - Success
+##### <span id="update-link-200"></span> 200 - Success
 Status: OK
 
-###### <span id="update-url-200-schema"></span> Schema
+###### <span id="update-link-200-schema"></span> Schema
    
   
 
-[UpdateURLOKBody](#update-url-o-k-body)
+[UpdateLinkOKBody](#update-link-o-k-body)
 
-##### <span id="update-url-400"></span> 400 - Bad Request
+##### <span id="update-link-400"></span> 400 - Bad Request
 Status: Bad Request
 
-###### <span id="update-url-400-schema"></span> Schema
+###### <span id="update-link-400-schema"></span> Schema
    
   
 
 [Error](#error)
 
-##### <span id="update-url-401"></span> 401 - Unauthorized
+##### <span id="update-link-401"></span> 401 - Unauthorized
 Status: Unauthorized
 
-###### <span id="update-url-401-schema"></span> Schema
+###### <span id="update-link-401-schema"></span> Schema
    
   
 
 [Error](#error)
 
-##### <span id="update-url-404"></span> 404 - Not Found
+##### <span id="update-link-404"></span> 404 - Not Found
 Status: Not Found
 
-###### <span id="update-url-404-schema"></span> Schema
+###### <span id="update-link-404-schema"></span> Schema
    
   
 
 [Error](#error)
 
-##### <span id="update-url-500"></span> 500 - Internal Server Error
+##### <span id="update-link-500"></span> 500 - Internal Server Error
 Status: Internal Server Error
 
-###### <span id="update-url-500-schema"></span> Schema
+###### <span id="update-link-500-schema"></span> Schema
    
   
 
@@ -433,7 +433,7 @@ Status: Internal Server Error
 
 ###### Inlined models
 
-**<span id="update-url-o-k-body"></span> UpdateURLOKBody**
+**<span id="update-link-o-k-body"></span> UpdateLinkOKBody**
 
 
   
@@ -463,8 +463,8 @@ Status: Internal Server Error
 
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
-| email | string| `string` | ✓ | |  |  |
-| username | string| `string` | ✓ | |  |  |
+| email | string| `string` |  | |  |  |
+| username | string| `string` |  | |  |  |
 
 
 
@@ -495,8 +495,23 @@ Status: Internal Server Error
 
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
-| status | string| `string` | ✓ | |  |  |
-| username | string| `string` | ✓ | |  |  |
+| status | string| `string` |  | |  |  |
+| username | string| `string` |  | |  |  |
+
+
+
+### <span id="account-updated"></span> AccountUpdated
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| status | string| `string` |  | |  |  |
 
 
 
@@ -511,7 +526,8 @@ Status: Internal Server Error
 
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
-| error | string| `string` |  | |  |  |
+| code | integer| `int64` |  | |  |  |
+| message | string| `string` |  | |  |  |
 
 
 
@@ -526,8 +542,8 @@ Status: Internal Server Error
 
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
-| password | string| `string` | ✓ | |  |  |
-| username | string| `string` | ✓ | |  |  |
+| password | string| `string` |  | |  |  |
+| username | string| `string` |  | |  |  |
 
 
 
@@ -558,7 +574,7 @@ Status: Internal Server Error
 
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
-| long_url | string| `string` | ✓ | |  |  |
+| long_url | string| `string` |  | |  |  |
 
 
 
@@ -590,7 +606,7 @@ Status: Internal Server Error
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
 | new_long_url | string| `string` |  | |  |  |
-| short_url_key | string| `string` | ✓ | |  |  |
+| short_url_key | string| `string` |  | |  |  |
 | status | string| `string` |  | |  |  |
 | tracking_status | string| `string` |  | |  |  |
 

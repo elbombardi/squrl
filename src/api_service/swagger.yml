@@ -38,7 +38,6 @@ paths:
       parameters:
         - name: 'login'
           in: 'body'
-          required: true
           description: 'Login Payload'
           schema:
             $ref: '#/definitions/LoginInfo'
@@ -73,11 +72,9 @@ paths:
         - name: Authorization
           in: header
           type: string
-          required: true
           description: "Bearer <JWT Token>"
         - name: account
           in: body
-          required: true
           schema:
             $ref: '#/definitions/Account'
       responses:
@@ -109,18 +106,16 @@ paths:
         - name: Authorization
           in: header
           type: string
-          required: true
           description: "Bearer <JWT Token>"
         - name: body
           in: body
-          required: true
           schema:
             $ref: '#/definitions/AccountUpdate'
       responses:
         200:
           description: Success
           schema:
-            type: string
+            $ref: '#/definitions/AccountUpdated'
         400:
           description: Bad Request
           schema:
@@ -138,24 +133,22 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
-  /urls:
+  /links:
     post:
-      description: Create a new URL
-      operationId: CreateURL
-      summary: Create a new URL
+      description: Create a new link
+      operationId: CreateLink
+      summary: Create a new linkL
       tags:
-        - urls
+        - links
       security:
         - Bearer: []
       parameters:
         - name: Authorization
           in: header
           type: string
-          required: true
           description: "Bearer <JWT Token>"
         - name: body
           in: body
-          required: true
           schema:
             $ref: '#/definitions/URL'
 
@@ -177,22 +170,20 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     put:
-      description: Update URL
-      operationId: UpdateURL
-      summary: Update a URL
+      description: Update Link
+      operationId: UpdateLink
+      summary: Update a link
       tags:
-        - urls
+        - links
       security:
         - Bearer: []      
       parameters:
         - name: Authorization
           in: header
           type: string
-          required: true
           description: "Bearer <JWT Token>"
         - name: body
           in: body
-          required: true
           schema:
             $ref: '#/definitions/URLUpdate'
 
@@ -230,7 +221,9 @@ definitions:
   Error:
     type: object
     properties:
-      error:
+      code:
+        type: integer
+      message:
         type: string
 
   LoginInfo:
@@ -240,9 +233,6 @@ definitions:
         type: string
       password:
         type: string
-    required: 
-      - username
-      - password
 
   LoginSuccess:
     type: object
@@ -258,10 +248,7 @@ definitions:
       username:
         type: string
       email:
-        type: string
-    required:
-      - username
-      - email
+        type: string 
 
   AccountCreated:
     type: object
@@ -278,20 +265,18 @@ definitions:
         type: string
       status:
         type: string
-        enum:
-          - active
-          - inactive
-    required:
-      - username
-      - status
+
+  AccountUpdated:
+    type: object
+    properties:
+      status:
+        type: string
 
   URL:
     type: object
     properties:
       long_url:
-        type: string
-    required:
-      - long_url
+        type: string 
   
   URLCreated:
     type: object
@@ -310,13 +295,5 @@ definitions:
         type: string
       status:
         type: string
-        enum:
-          - active
-          - inactive
       tracking_status:
         type: string
-        enum:
-          - active
-          - inactive
-    required:
-      - short_url_key

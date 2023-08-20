@@ -6,7 +6,6 @@ package general
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"io"
 	"net/http"
 
 	"github.com/go-openapi/errors"
@@ -35,7 +34,6 @@ type LoginParams struct {
 	HTTPRequest *http.Request `json:"-"`
 
 	/*Login Payload
-	  Required: true
 	  In: body
 	*/
 	Login *models.LoginInfo
@@ -54,11 +52,7 @@ func (o *LoginParams) BindRequest(r *http.Request, route *middleware.MatchedRout
 		defer r.Body.Close()
 		var body models.LoginInfo
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
-				res = append(res, errors.Required("login", "body", ""))
-			} else {
-				res = append(res, errors.NewParseError("login", "body", "", err))
-			}
+			res = append(res, errors.NewParseError("login", "body", "", err))
 		} else {
 			// validate body object
 			if err := body.Validate(route.Formats); err != nil {
@@ -74,8 +68,6 @@ func (o *LoginParams) BindRequest(r *http.Request, route *middleware.MatchedRout
 				o.Login = &body
 			}
 		}
-	} else {
-		res = append(res, errors.Required("login", "body", ""))
 	}
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

@@ -5,20 +5,20 @@ import (
 	"regexp"
 )
 
-func ValidateURL(url string) error {
-	// URL pattern regular expression
-	urlPattern := `^(http(s)?:\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$`
+// func ValidateURL(url string) error {
+// 	// URL pattern regular expression
+// 	urlPattern := `^(http(s)?:\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$`
 
-	// Compile the regular expression pattern
-	r := regexp.MustCompile(urlPattern)
+// 	// Compile the regular expression pattern
+// 	r := regexp.MustCompile(urlPattern)
 
-	// Check if the URL matches the pattern
-	if !r.MatchString(url) {
-		return fmt.Errorf("invalid URL format")
-	}
+// 	// Check if the URL matches the pattern
+// 	if !r.MatchString(url) {
+// 		return fmt.Errorf("invalid URL format")
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 func ValidateEmail(email string) error {
 	// Email pattern regular expression

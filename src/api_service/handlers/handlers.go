@@ -1,46 +1,44 @@
 package handlers
 
 import (
-	"log/slog"
-
-	"github.com/elbombardi/squrl/src/api_service/api/models"
 	"github.com/elbombardi/squrl/src/api_service/api/operations"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/accounts"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/general"
-	"github.com/elbombardi/squrl/src/api_service/api/operations/urls"
+	"github.com/elbombardi/squrl/src/api_service/api/operations/links"
+	"github.com/elbombardi/squrl/src/api_service/core"
 	"github.com/elbombardi/squrl/src/api_service/util"
-	"github.com/elbombardi/squrl/src/db"
 )
 
 type Handlers struct {
-	db.AccountRepository
-	db.URLRepository
-	db.ClickRepository
+	core.AccountsManager
+	core.Authenticator
+	core.LinksManager
 	*util.Config
 }
 
 func (handlers *Handlers) InstallHandlers(api *operations.AdminAPI) {
 	api.GeneralHealthcheckHandler = general.HealthcheckHandlerFunc(handlers.HandleHealthcheck)
 	api.GeneralLoginHandler = general.LoginHandlerFunc(handlers.HandleLogin)
-
 	api.AccountsCreateAccountHandler = accounts.CreateAccountHandlerFunc(handlers.HandleCreateAccount)
 	api.AccountsUpdateAccountHandler = accounts.UpdateAccountHandlerFunc(handlers.HandleUpdateAccount)
-
-	api.UrlsCreateURLHandler = urls.CreateURLHandlerFunc(handlers.HandleCreateURL)
-	api.UrlsUpdateURLHandler = urls.UpdateURLHandlerFunc(handlers.HandleUpdateShortURL)
-
+	api.LinksCreateLinkHandler = links.CreateLinkHandlerFunc(handlers.HandleCreateLink)
+	api.LinksUpdateLinkHandler = links.UpdateLinkHandlerFunc(handlers.HandleUpdateLink)
 	api.BearerAuth = func(s string) (any, error) {
-		user, err := util.ValidateJWT(s, handlers.Config.TokenSymmetricKey)
-		if err != nil {
-			slog.Error("Error validating JWT Token", "Details", err)
-			return nil, nil
-		}
+		user, _ := handlers.Authenticator.Validate(s)
 		return user, nil
 	}
 }
 
-func encodeStatus(status string) bool {
-	return status == "active"
+func encodeStatus(status string) core.Optional[bool] {
+	if status == "" {
+		return core.Optional[bool]{
+			IsSet: false,
+		}
+	}
+	return core.Optional[bool]{
+		IsSet: true,
+		Value: status == "active",
+	}
 }
 
 func decodeStatus(enabled bool) string {
@@ -48,8 +46,4 @@ func decodeStatus(enabled bool) string {
 		return "active"
 	}
 	return "inactive"
-}
-
-func getError(err error) *models.Error {
-	return &models.Error{Error: err.Error()}
 }

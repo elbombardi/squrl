@@ -13,7 +13,7 @@ import (
 	"github.com/elbombardi/squrl/src/api_service/api/operations"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/accounts"
 	"github.com/elbombardi/squrl/src/api_service/api/operations/general"
-	"github.com/elbombardi/squrl/src/api_service/api/operations/urls"
+	"github.com/elbombardi/squrl/src/api_service/api/operations/links"
 )
 
 //go:generate swagger generate server --target ../../api_service --name Admin --spec ../swagger.yml --model-package api/models --server-package api --principal interface{} --exclude-main
@@ -58,9 +58,9 @@ func configureAPI(api *operations.AdminAPI) http.Handler {
 			return middleware.NotImplemented("operation accounts.CreateAccount has not yet been implemented")
 		})
 	}
-	if api.UrlsCreateURLHandler == nil {
-		api.UrlsCreateURLHandler = urls.CreateURLHandlerFunc(func(params urls.CreateURLParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation urls.CreateURL has not yet been implemented")
+	if api.LinksCreateLinkHandler == nil {
+		api.LinksCreateLinkHandler = links.CreateLinkHandlerFunc(func(params links.CreateLinkParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation links.CreateLink has not yet been implemented")
 		})
 	}
 	if api.GeneralHealthcheckHandler == nil {
@@ -78,9 +78,9 @@ func configureAPI(api *operations.AdminAPI) http.Handler {
 			return middleware.NotImplemented("operation accounts.UpdateAccount has not yet been implemented")
 		})
 	}
-	if api.UrlsUpdateURLHandler == nil {
-		api.UrlsUpdateURLHandler = urls.UpdateURLHandlerFunc(func(params urls.UpdateURLParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation urls.UpdateURL has not yet been implemented")
+	if api.LinksUpdateLinkHandler == nil {
+		api.LinksUpdateLinkHandler = links.UpdateLinkHandlerFunc(func(params links.UpdateLinkParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation links.UpdateLink has not yet been implemented")
 		})
 	}
 

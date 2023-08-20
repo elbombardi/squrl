@@ -12,30 +12,27 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// AccountUpdate account update
+// AccountUpdated account updated
 //
-// swagger:model AccountUpdate
-type AccountUpdate struct {
+// swagger:model AccountUpdated
+type AccountUpdated struct {
 
 	// status
 	Status string `json:"status,omitempty"`
-
-	// username
-	Username string `json:"username,omitempty"`
 }
 
-// Validate validates this account update
-func (m *AccountUpdate) Validate(formats strfmt.Registry) error {
+// Validate validates this account updated
+func (m *AccountUpdated) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this account update based on context it is used
-func (m *AccountUpdate) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this account updated based on context it is used
+func (m *AccountUpdated) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *AccountUpdate) MarshalBinary() ([]byte, error) {
+func (m *AccountUpdated) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -43,8 +40,8 @@ func (m *AccountUpdate) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *AccountUpdate) UnmarshalBinary(b []byte) error {
-	var res AccountUpdate
+func (m *AccountUpdated) UnmarshalBinary(b []byte) error {
+	var res AccountUpdated
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

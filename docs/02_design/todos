@@ -1,5 +1,8 @@
-Logs
+Services
 Tests
 Dockerization/Compose
-CICD Github actions ==> AWS Fragate
-Monitoring
+CICD Github actions 
+Integration tests
+AWS Fragate
+Monitoring (prometheus..etc)
+And Maybe UI if time allows

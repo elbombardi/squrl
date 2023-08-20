@@ -64,7 +64,7 @@ func LoadConfig() (config Config, err error) {
 func LogConfig(config *Config) {
 	slog.Debug("Configuration is : ")
 	for _, key := range viper.AllKeys() {
-		slog.Debug(fmt.Sprintf("     %s = %v", strings.ToUpper(key), viper.Get(key)))
+		slog.Debug(fmt.Sprintf("%s = %v", strings.ToUpper(key), viper.Get(key)))
 	}
 }
 

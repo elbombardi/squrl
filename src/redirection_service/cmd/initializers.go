@@ -23,6 +23,14 @@ func initializeApp() (*routes.Server, error) {
 		Level: util.LogLevel(config.LogLevel),
 	})
 	logger := slog.New(logHandler)
+	logger = logger.With(
+		slog.Group("program_info",
+			slog.Int("pid", os.Getpid()),
+			slog.String("component", "squrl.RedirectionService"),
+			slog.String("version", util.VERSION),
+			slog.String("environment", config.Environment),
+		),
+	)
 	slog.SetDefault(logger)
 	util.LogConfig(&config)
 

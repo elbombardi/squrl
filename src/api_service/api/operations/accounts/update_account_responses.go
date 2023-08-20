@@ -26,7 +26,7 @@ type UpdateAccountOK struct {
 	/*
 	  In: Body
 	*/
-	Payload string `json:"body,omitempty"`
+	Payload *models.AccountUpdated `json:"body,omitempty"`
 }
 
 // NewUpdateAccountOK creates UpdateAccountOK with default headers values
@@ -36,13 +36,13 @@ func NewUpdateAccountOK() *UpdateAccountOK {
 }
 
 // WithPayload adds the payload to the update account o k response
-func (o *UpdateAccountOK) WithPayload(payload string) *UpdateAccountOK {
+func (o *UpdateAccountOK) WithPayload(payload *models.AccountUpdated) *UpdateAccountOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the update account o k response
-func (o *UpdateAccountOK) SetPayload(payload string) {
+func (o *UpdateAccountOK) SetPayload(payload *models.AccountUpdated) {
 	o.Payload = payload
 }
 
@@ -50,9 +50,11 @@ func (o *UpdateAccountOK) SetPayload(payload string) {
 func (o *UpdateAccountOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 

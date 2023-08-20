@@ -7,12 +7,9 @@ package models
 
 import (
 	"context"
-	"encoding/json"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // URLUpdate URL update
@@ -24,130 +21,17 @@ type URLUpdate struct {
 	NewLongURL string `json:"new_long_url,omitempty"`
 
 	// short url key
-	// Required: true
-	ShortURLKey *string `json:"short_url_key"`
+	ShortURLKey string `json:"short_url_key,omitempty"`
 
 	// status
-	// Enum: [active inactive]
 	Status string `json:"status,omitempty"`
 
 	// tracking status
-	// Enum: [active inactive]
 	TrackingStatus string `json:"tracking_status,omitempty"`
 }
 
 // Validate validates this URL update
 func (m *URLUpdate) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateShortURLKey(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateStatus(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTrackingStatus(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *URLUpdate) validateShortURLKey(formats strfmt.Registry) error {
-
-	if err := validate.Required("short_url_key", "body", m.ShortURLKey); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var urlUpdateTypeStatusPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["active","inactive"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		urlUpdateTypeStatusPropEnum = append(urlUpdateTypeStatusPropEnum, v)
-	}
-}
-
-const (
-
-	// URLUpdateStatusActive captures enum value "active"
-	URLUpdateStatusActive string = "active"
-
-	// URLUpdateStatusInactive captures enum value "inactive"
-	URLUpdateStatusInactive string = "inactive"
-)
-
-// prop value enum
-func (m *URLUpdate) validateStatusEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, urlUpdateTypeStatusPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *URLUpdate) validateStatus(formats strfmt.Registry) error {
-	if swag.IsZero(m.Status) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateStatusEnum("status", "body", m.Status); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var urlUpdateTypeTrackingStatusPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["active","inactive"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		urlUpdateTypeTrackingStatusPropEnum = append(urlUpdateTypeTrackingStatusPropEnum, v)
-	}
-}
-
-const (
-
-	// URLUpdateTrackingStatusActive captures enum value "active"
-	URLUpdateTrackingStatusActive string = "active"
-
-	// URLUpdateTrackingStatusInactive captures enum value "inactive"
-	URLUpdateTrackingStatusInactive string = "inactive"
-)
-
-// prop value enum
-func (m *URLUpdate) validateTrackingStatusEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, urlUpdateTypeTrackingStatusPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *URLUpdate) validateTrackingStatus(formats strfmt.Registry) error {
-	if swag.IsZero(m.TrackingStatus) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateTrackingStatusEnum("tracking_status", "body", m.TrackingStatus); err != nil {
-		return err
-	}
-
 	return nil
 }
 

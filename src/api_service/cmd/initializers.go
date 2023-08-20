@@ -8,6 +8,7 @@ import (
 
 	"github.com/elbombardi/squrl/src/api_service/api"
 	"github.com/elbombardi/squrl/src/api_service/api/operations"
+	"github.com/elbombardi/squrl/src/api_service/core"
 	"github.com/elbombardi/squrl/src/api_service/handlers"
 	"github.com/elbombardi/squrl/src/api_service/util"
 	"github.com/elbombardi/squrl/src/db"
@@ -27,23 +28,24 @@ func initializeApp() (*api.Server, error) {
 	}
 
 	// Initializing logger
-	logHandler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		Level: util.LogLevel(config.LogLevel),
 	})
 	logger := slog.New(logHandler)
+	logger = logger.With(
+		slog.Group("program_info",
+			slog.Int("pid", os.Getpid()),
+			slog.String("component", "squrl.api"),
+			slog.String("version", util.VERSION),
+			slog.String("environment", config.Environment),
+		),
+	)
 	slog.SetDefault(logger)
 	util.LogConfig(&config)
 
-	// Initializing API server
-	swaggerSpec, err := loads.Embedded(api.SwaggerJSON, api.FlatSwaggerJSON)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	adminAPI := operations.NewAdminAPI(swaggerSpec)
-	server := api.NewServer(adminAPI)
-
 	// Initializing db connection
-	slog.Info("Initializing Database connection..")
+	slog.Info("Initializing database connection..")
 	store, err := db.GetStoreInstance(db.DBConf{
 		DriverName:     config.DriverName,
 		DataSourceName: config.DBSource,
@@ -53,7 +55,7 @@ func initializeApp() (*api.Server, error) {
 		MaxLifeTime:    config.DBMaxLifeTime,
 	})
 	if err != nil {
-		slog.Error("Unable to initialize connection de database", "Details", err)
+		slog.Error("Unable to initialize database connection", "Details", err)
 		return nil, err
 	}
 	if store == nil {
@@ -79,16 +81,44 @@ func initializeApp() (*api.Server, error) {
 		}
 		slog.Info("No db schema change")
 	} else {
-		slog.Info("DB Schema migration successful")
+		slog.Info("DB schema migration successful")
 	}
 
-	// Initializing endpoints handlers
-	slog.Info("Initializing Handlers..")
-	handlers := &handlers.Handlers{
+	// Initializing API server
+	swaggerSpec, err := loads.Embedded(api.SwaggerJSON, api.FlatSwaggerJSON)
+	if err != nil {
+		slog.Error("Error while initializing API server", "Details", err)
+		return nil, err
+	}
+	adminAPI := operations.NewAdminAPI(swaggerSpec)
+	adminAPI.Logger = func(s string, i ...interface{}) {
+		slog.Info(fmt.Sprintf(s, i...))
+	}
+	server := api.NewServer(adminAPI)
+
+	// Initializing services
+	slog.Info("Initializing services..")
+	authenticator := core.AuthenticationService{
+		AccountRepository: store,
+		Config:            &config,
+	}
+	accountsManager := core.AccountsService{
+		AccountRepository: store,
+		Config:            &config,
+	}
+	linksManager := core.LinksService{
 		AccountRepository: store,
 		URLRepository:     store,
-		ClickRepository:   store,
 		Config:            &config,
+	}
+
+	// Initializing endpoint handlers
+	slog.Info("Initializing Handlers..")
+	handlers := &handlers.Handlers{
+		Authenticator:   &authenticator,
+		AccountsManager: &accountsManager,
+		LinksManager:    &linksManager,
+		Config:          &config,
 	}
 	handlers.InstallHandlers(adminAPI)
 
