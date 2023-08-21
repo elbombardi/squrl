@@ -13,17 +13,18 @@ import (
 )
 
 type LinksService struct {
-	db.URLRepository
+	db.LinkRepository
 	db.AccountRepository
 	*util.Config
+	*slog.Logger
 }
 
-func (service *LinksService) Shorten(longUrl string, user *User) (*Link, error) {
+func (s *LinksService) Shorten(longUrl string, user *User) (*Link, error) {
 
 	// Check if the user is authenticated
 	if user == nil {
 		return nil, CoreError{
-			Code:    ERR_UNAUTHORIZED,
+			Code:    ErrUnauthorized,
 			Message: "Unauthorized access",
 		}
 	}
@@ -31,57 +32,60 @@ func (service *LinksService) Shorten(longUrl string, user *User) (*Link, error) 
 	// Validate params
 	parsedUrl, err := validateUrl(longUrl)
 	if err != nil {
-		slog.Error("Shorten URL bad params", "Details", err)
+		s.Error("Shorten URL bad params", "Details", err)
 		return nil, CoreError{
-			Code:    ERR_BAD_PARAMS,
+			Code:    ErrBadParams,
 			Message: err.Error(),
 		}
 	}
 
 	// Check if the account exists
-	account, err := service.AccountRepository.GetAccountByUsername(context.Background(), user.Username)
+	account, err := s.GetAccountByUsername(context.Background(), user.Username)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			slog.Error("Account not found", "Account", user)
+			s.Error("Account not found", "Account", user)
 			return nil, CoreError{
-				Code:    ERR_ACCOUNT_NOT_FOUND,
+				Code:    ErrAccountNotFound,
 				Message: "Account not found",
 			}
 		}
-		slog.Error("Unexpected error while retrieving account by username", "Username", user, "Detail", err)
+		s.Error("Unexpected error while retrieving account by username", "Username", user, "Detail", err)
 		return nil, err
 	}
 
 	// Check if the account is active
 	if !account.Enabled {
-		slog.Info("Account disabled", "Account", user)
+		s.Error("Account is disabled and cannot be used to access the service", "Account", user)
 		return nil, CoreError{
-			Code:    ERR_ACCOUNT_DISABLED,
+			Code:    ErrAccountDisabled,
 			Message: "Account disabled",
 		}
 	}
 
 	// Generate short URL key
-	shortURLKey, err := service.generateShortURLKey(&account)
-	if err != nil {
-		slog.Error("Unexpected error while generating short URL", "Details", err)
-		return nil, err
+	tryAgain := true
+	var shortURLKey string
+	for tryAgain {
+		tryAgain, shortURLKey, err = s.generateShortURLKey(&account)
+		if err != nil {
+			s.Error("Unexpected error while generating short URL", "Details", err)
+			return nil, err
+		}
 	}
 
 	// Insert the new short URL in the database
-	err = service.URLRepository.InsertNewURL(context.Background(), db.InsertNewURLParams{
+	err = s.InsertNewLink(context.Background(), db.InsertNewLinkParams{
 		ShortUrlKey: sql.NullString{String: shortURLKey, Valid: true},
 		LongUrl:     longUrl,
 		AccountID:   account.ID,
 	})
 	if err != nil {
-		slog.Error("Error inserting new URL in DB", "Details", err)
+		s.Error("Error inserting new URL in DB", "Details", err)
 		return nil, err
 	}
 
-	slog.Info("New short URL created successfully", "Account", user, "LongUrl", longUrl)
-	shortUrl := service.buildShortUrl(&account, shortURLKey)
-
+	s.Info("New short URL created successfully", "Account", user, "LongUrl", longUrl)
+	shortUrl := s.buildShortUrl(&account, shortURLKey)
 	// Return the short URL
 	return &Link{
 		LongUrl:         *parsedUrl,
@@ -92,31 +96,27 @@ func (service *LinksService) Shorten(longUrl string, user *User) (*Link, error) 
 	}, nil
 }
 
-func (service *LinksService) generateShortURLKey(account *db.Account) (string, error) {
+func (s *LinksService) generateShortURLKey(account *db.Account) (bool, string, error) {
 	shortURLKey := util.GenerateRandomString(6)
 
 	// Check if the url key is unique
-	exists, err := service.URLRepository.CheckShortUrlKeyExists(context.Background(), db.CheckShortUrlKeyExistsParams{
+	exists, err := s.CheckShortUrlKeyExists(context.Background(), db.CheckShortUrlKeyExistsParams{
 		ShortUrlKey: sql.NullString{String: shortURLKey, Valid: true},
 		AccountID:   account.ID,
 	})
 	if err != nil {
-		return "", err
+		return false, "", err
 	}
 
-	if exists {
-		return service.generateShortURLKey(account)
-	}
-
-	return shortURLKey, nil
+	return exists, shortURLKey, nil
 }
 
-func (service *LinksService) Update(params *LinkUpdateParams, user *User) (*Link, error) {
+func (s *LinksService) Update(params *LinkUpdateParams, user *User) (*Link, error) {
 
 	// Check if the user is authenticated
 	if user == nil {
 		return nil, CoreError{
-			Code:    ERR_UNAUTHORIZED,
+			Code:    ErrUnauthorized,
 			Message: "unauthorized access",
 		}
 	}
@@ -124,39 +124,39 @@ func (service *LinksService) Update(params *LinkUpdateParams, user *User) (*Link
 	//Validate params
 	parsedUrl, err := validateParams(params)
 	if err != nil {
-		slog.Error("Bad UpdateURL params", "Details", err)
+		s.Error("Bad UpdateURL params", "Details", err)
 		return nil, CoreError{
-			Code:    ERR_BAD_PARAMS,
+			Code:    ErrBadParams,
 			Message: err.Error(),
 		}
 	}
 
 	// Check if the account exists
-	account, err := service.AccountRepository.GetAccountByUsername(context.Background(), user.Username)
+	account, err := s.GetAccountByUsername(context.Background(), user.Username)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			slog.Error("Account not found", "Account", user)
+			s.Error("Account not found", "Account", user)
 			return nil, CoreError{
-				Code:    ERR_ACCOUNT_NOT_FOUND,
+				Code:    ErrAccountNotFound,
 				Message: "account not found",
 			}
 		}
-		slog.Error("Unexpected error while retrieving account by username",
+		s.Error("Unexpected error while retrieving account by username",
 			"Username", user, "Details", err)
 		return nil, err
 	}
 
 	// Check if the account is active
 	if !account.Enabled {
-		slog.Info("Account disabled", "Account", account.Username)
+		s.Error("Account is disabled, and cannot be used to access the service", "Account", account.Username)
 		return nil, CoreError{
-			Code:    ERR_ACCOUNT_DISABLED,
+			Code:    ErrAccountDisabled,
 			Message: "account disabled",
 		}
 	}
 
-	savedLink, err := service.URLRepository.GetURLByAccountIDAndShortURLKey(context.Background(),
-		db.GetURLByAccountIDAndShortURLKeyParams{
+	savedLink, err := s.GetLinkByAccountIDAndShortURLKey(context.Background(),
+		db.GetLinkByAccountIDAndShortURLKeyParams{
 			AccountID: account.ID,
 			ShortUrlKey: sql.NullString{
 				String: params.ShortUrlKey,
@@ -165,25 +165,25 @@ func (service *LinksService) Update(params *LinkUpdateParams, user *User) (*Link
 		})
 	if err != nil {
 		if err == sql.ErrNoRows {
-			slog.Error("URL not found", "Account", account.Username, "ShortURLKey", params.ShortUrlKey)
+			s.Error("URL not found", "Account", account.Username, "ShortURLKey", params.ShortUrlKey)
 			return nil, CoreError{
-				Code:    ERR_LINK_NOT_FOUND,
+				Code:    ErrLinkNotFound,
 				Message: "url not found",
 			}
 		}
-		slog.Error("Unxpected error while retrieving short URL", "Account", account.Username,
+		s.Error("Unxpected error while retrieving short URL", "Account", account.Username,
 			"ShortURLKey", params.ShortUrlKey, "Details", err)
 		return nil, err
 	}
 
 	if params.NewLongURL.IsSet {
 		savedLink.LongUrl = params.NewLongURL.Value
-		err = service.URLRepository.UpdateLongURL(context.Background(), db.UpdateLongURLParams{
+		err = s.UpdateLinkLongURL(context.Background(), db.UpdateLinkLongURLParams{
 			LongUrl: params.NewLongURL.Value,
 			ID:      savedLink.ID,
 		})
 		if err != nil {
-			slog.Error("Unexpected error while updating long URL", "Account", account.Username,
+			s.Error("Unexpected error while updating long URL", "Account", account.Username,
 				"ShortURLKey", params.ShortUrlKey, "Details", err)
 			return nil, err
 		}
@@ -191,12 +191,12 @@ func (service *LinksService) Update(params *LinkUpdateParams, user *User) (*Link
 
 	if params.Enabled.IsSet {
 		savedLink.Enabled = params.Enabled.Value
-		err = service.URLRepository.UpdateURLStatus(context.Background(), db.UpdateURLStatusParams{
+		err = s.UpdateLinkStatus(context.Background(), db.UpdateLinkStatusParams{
 			Enabled: params.Enabled.Value,
 			ID:      savedLink.ID,
 		})
 		if err != nil {
-			slog.Error("Unexpected error while updating URL enabled status", "Account", account.Username,
+			s.Error("Unexpected error while updating URL enabled status", "Account", account.Username,
 				"ShortURLKey", params.ShortUrlKey, "Details", err)
 			return nil, err
 		}
@@ -204,13 +204,13 @@ func (service *LinksService) Update(params *LinkUpdateParams, user *User) (*Link
 
 	if params.TrackingEnabled.IsSet {
 		savedLink.TrackingEnabled = params.TrackingEnabled.Value
-		err = service.URLRepository.UpdateURLTrackingStatus(context.Background(),
-			db.UpdateURLTrackingStatusParams{
+		err = s.UpdateLinkTrackingStatus(context.Background(),
+			db.UpdateLinkTrackingStatusParams{
 				TrackingEnabled: params.TrackingEnabled.Value,
 				ID:              savedLink.ID,
 			})
 		if err != nil {
-			slog.Error("Unexpected error while updating URL's tracking enabled status", "Account", account.Username,
+			s.Error("Unexpected error while updating URL's tracking enabled status", "Account", account.Username,
 				"ShortURLKey", params.ShortUrlKey, "Details", err)
 			return nil, err
 		}
@@ -220,7 +220,7 @@ func (service *LinksService) Update(params *LinkUpdateParams, user *User) (*Link
 		parsedUrl, _ = url.Parse(savedLink.LongUrl)
 	}
 
-	slog.Info("URL updated successfully", "Account", account.Username, "Params", *params)
+	s.Info("URL updated successfully", "Account", account.Username, "Params", *params)
 	return &Link{
 		ShortUrlKey:     params.ShortUrlKey,
 		LongUrl:         *parsedUrl,
@@ -266,7 +266,7 @@ func validateUrl(rawUrl string) (*url.URL, error) {
 	return parsedUrl, nil
 }
 
-func (service *LinksService) buildShortUrl(account *db.Account, shortUrlKey string) url.URL {
-	shortUrl, _ := url.Parse(fmt.Sprintf("%v/%v/%v", service.Config.RedirectionBaseURL, account.Prefix, shortUrlKey))
+func (s *LinksService) buildShortUrl(account *db.Account, shortUrlKey string) url.URL {
+	shortUrl, _ := url.Parse(fmt.Sprintf("%v/%v/%v", s.RedirectionBaseURL, account.Prefix, shortUrlKey))
 	return *shortUrl
 }

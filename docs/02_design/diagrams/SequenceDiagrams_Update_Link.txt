@@ -1,6 +1,6 @@
-title Update Short URL
+title Update Link
 
-Customer->API: PUT /api/short-url
+Customer->API: PUT /v1/links
 
 API->API: Authenticate Customer
 alt #ffcccc Error: Authentication failed
@@ -12,12 +12,12 @@ alt #ffcccc Error: Invalid request data
 API-->Customer: HTTP 400 Bad Request
 end
 
-API->API: Verify Customer Status
-alt #ffcccc Error: Customer is not active
+API->API: Verify account status
+alt #ffcccc Error: Account is not active
 API-->Customer: HTTP 401 Unauthorized
 end
 
-API->Database: Load Short URL (customer id + short url key)
+API->Database: Load Short URL (account id + short url key)
 alt #ffcccc Error: Invalid request data
 API<--Database: No short URL found
 API-->Customer: HTTP 404 Not found

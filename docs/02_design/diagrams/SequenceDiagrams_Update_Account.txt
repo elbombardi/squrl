@@ -1,0 +1,18 @@
+title Update an account
+
+Admin->API: PUT /v1/accounts
+alt #ffcccc Error: Authentication failed
+API-->Admin: HTTP 401
+end 
+
+API->Database: Does account exist (by username)?
+alt #ffcccc Error: account not found
+API<--Database: account does not exist
+API-->Admin: HTTP 404 Not Found
+end 
+API<--Database: Account
+
+API->Database: Update account status (enabled or disabled)
+Database-->API: Account updated
+API-->Admin: HTTP 200 Created
+

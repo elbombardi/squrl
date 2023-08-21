@@ -8,7 +8,7 @@ import (
 )
 
 // Handler for the POST /urls endpoint
-func (handlers *Handlers) HandleCreateLink(params links.CreateLinkParams, principal any) middleware.Responder {
+func (h *Handlers) HandleCreateLink(params links.CreateLinkParams, principal any) middleware.Responder {
 
 	if params.Body == nil {
 		return links.NewCreateLinkBadRequest().WithPayload(&models.Error{
@@ -16,22 +16,22 @@ func (handlers *Handlers) HandleCreateLink(params links.CreateLinkParams, princi
 		})
 	}
 
-	shortUrl, err := handlers.LinksManager.Shorten(params.Body.LongURL, principal.(*core.User))
+	shortUrl, err := h.LinksManager.Shorten(params.Body.LongURL, principal.(*core.User))
 
 	if err != nil {
-		coreError, ok := err.(*core.CoreError)
+		coreErr, ok := err.(core.CoreError)
 		switch {
-		case ok && coreError.Code == core.ERR_BAD_PARAMS:
+		case ok && coreErr.Code == core.ErrBadParams:
 			return links.NewCreateLinkBadRequest().WithPayload(&models.Error{
-				Message: coreError.Message,
+				Message: coreErr.Message,
 			})
-		case ok && coreError.Code == core.ERR_UNAUTHORIZED:
+		case ok && coreErr.Code == core.ErrUnauthorized:
 			return links.NewCreateLinkUnauthorized().WithPayload(&models.Error{
 				Message: "Unauthorized access"})
-		case ok && coreError.Code == core.ERR_ACCOUNT_NOT_FOUND:
+		case ok && coreErr.Code == core.ErrAccountNotFound:
 			return links.NewCreateLinkUnauthorized().WithPayload(&models.Error{
 				Message: "Account not found for this username: " + principal.(*core.User).Username})
-		case ok && coreError.Code == core.ERR_ACCOUNT_DISABLED:
+		case ok && coreErr.Code == core.ErrAccountDisabled:
 			return links.NewCreateLinkUnauthorized().WithPayload(&models.Error{
 				Message: "Account disabled"})
 		default:

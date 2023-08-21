@@ -11,22 +11,31 @@ import (
 // Authentication using username/password
 //
 // Returns a JWT token
-func (handlers *Handlers) HandleLogin(params general.LoginParams) middleware.Responder {
+func (h *Handlers) HandleLogin(params general.LoginParams) middleware.Responder {
 
-	token, err := handlers.Authenticator.Authenticate(params.Login.Username, params.Login.Password)
+	if params.Login == nil {
+		return general.NewLoginBadRequest().WithPayload(&models.Error{
+			Message: "Request body is required",
+		})
+	}
+
+	token, err := h.Authenticate(params.Login.Username, params.Login.Password)
 
 	if err != nil {
-		coreError, ok := err.(*core.CoreError)
+		coreError, ok := err.(core.CoreError)
 		switch {
-		case ok && coreError.Code == core.ERR_ACCOUNT_NOT_FOUND:
-			return general.NewLoginBadRequest().WithPayload(&models.Error{
+		case ok && coreError.Code == core.ErrBadParams:
+			return general.NewLoginUnauthorized().WithPayload(&models.Error{
+				Message: coreError.Message})
+		case ok && coreError.Code == core.ErrAccountNotFound:
+			return general.NewLoginUnauthorized().WithPayload(&models.Error{
 				Message: "Invalid credentials"})
-		case ok && coreError.Code == core.ERR_UNAUTHORIZED:
-			return general.NewLoginBadRequest().WithPayload(&models.Error{
+		case ok && coreError.Code == core.ErrUnauthorized:
+			return general.NewLoginUnauthorized().WithPayload(&models.Error{
 				Message: "Invalid credentials"})
 		default:
 			return general.NewLoginInternalServerError().WithPayload(&models.Error{
-				Message: "Unexpected server internal error",
+				Message: "Internal server error",
 			})
 		}
 	}

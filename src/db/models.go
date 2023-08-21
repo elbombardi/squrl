@@ -27,16 +27,16 @@ type Account struct {
 
 // Table holding click information
 type Click struct {
-	ID    int32
-	UrlID int32
+	ID     int32
+	LinkID int32
 	// Timestamp of click
 	ClickDateTime sql.NullTime
 	UserAgent     sql.NullString
 	IpAddress     sql.NullString
 }
 
-// Table holding URL information
-type Url struct {
+// Table holding Link information
+type Link struct {
 	ID int32
 	// 6 characters, case-sensitive
 	ShortUrlKey sql.NullString

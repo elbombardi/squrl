@@ -3,14 +3,14 @@ package routes
 import (
 	"fmt"
 
-	"github.com/elbombardi/squrl/src/db"
+	"github.com/elbombardi/squrl/src/redirection_service/core"
+	"github.com/elbombardi/squrl/src/redirection_service/util"
 	"github.com/gofiber/fiber/v2"
 )
 
 type Routes struct {
-	db.AccountRepository
-	db.URLRepository
-	db.ClickRepository
+	LinksManager core.LinksManager
+	*util.Config
 }
 
 type Server struct {

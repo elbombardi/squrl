@@ -11,17 +11,17 @@ import (
 )
 
 const insertNewClick = `-- name: InsertNewClick :exec
-INSERT INTO click (url_id, user_agent, ip_address)
+INSERT INTO click (link_id, user_agent, ip_address)
 VALUES ($1, $2, $3)
 `
 
 type InsertNewClickParams struct {
-	UrlID     int32
+	LinkID    int32
 	UserAgent sql.NullString
 	IpAddress sql.NullString
 }
 
 func (q *Queries) InsertNewClick(ctx context.Context, arg InsertNewClickParams) error {
-	_, err := q.db.ExecContext(ctx, insertNewClick, arg.UrlID, arg.UserAgent, arg.IpAddress)
+	_, err := q.db.ExecContext(ctx, insertNewClick, arg.LinkID, arg.UserAgent, arg.IpAddress)
 	return err
 }

@@ -16,28 +16,28 @@ type Handlers struct {
 	*util.Config
 }
 
-func (handlers *Handlers) InstallHandlers(api *operations.AdminAPI) {
-	api.GeneralHealthcheckHandler = general.HealthcheckHandlerFunc(handlers.HandleHealthcheck)
-	api.GeneralLoginHandler = general.LoginHandlerFunc(handlers.HandleLogin)
-	api.AccountsCreateAccountHandler = accounts.CreateAccountHandlerFunc(handlers.HandleCreateAccount)
-	api.AccountsUpdateAccountHandler = accounts.UpdateAccountHandlerFunc(handlers.HandleUpdateAccount)
-	api.LinksCreateLinkHandler = links.CreateLinkHandlerFunc(handlers.HandleCreateLink)
-	api.LinksUpdateLinkHandler = links.UpdateLinkHandlerFunc(handlers.HandleUpdateLink)
+func (h *Handlers) InstallHandlers(api *operations.AdminAPI) {
+	api.GeneralHealthcheckHandler = general.HealthcheckHandlerFunc(h.HandleHealthcheck)
+	api.GeneralLoginHandler = general.LoginHandlerFunc(h.HandleLogin)
+	api.AccountsCreateAccountHandler = accounts.CreateAccountHandlerFunc(h.HandleCreateAccount)
+	api.AccountsUpdateAccountHandler = accounts.UpdateAccountHandlerFunc(h.HandleUpdateAccount)
+	api.LinksCreateLinkHandler = links.CreateLinkHandlerFunc(h.HandleCreateLink)
+	api.LinksUpdateLinkHandler = links.UpdateLinkHandlerFunc(h.HandleUpdateLink)
 	api.BearerAuth = func(s string) (any, error) {
-		user, _ := handlers.Authenticator.Validate(s)
+		user, _ := h.Authenticator.Validate(s)
 		return user, nil
 	}
 }
 
-func encodeStatus(status string) core.Optional[bool] {
-	if status == "" {
+func encodeStatus(s string) core.Optional[bool] {
+	if s == "" {
 		return core.Optional[bool]{
 			IsSet: false,
 		}
 	}
 	return core.Optional[bool]{
 		IsSet: true,
-		Value: status == "active",
+		Value: s == "active",
 	}
 }
 

@@ -17,13 +17,13 @@ type AccountRepository interface {
 	UpdateAccountStatusByUsername(ctx context.Context, arg UpdateAccountStatusByUsernameParams) error
 }
 
-type URLRepository interface {
+type LinkRepository interface {
 	CheckShortUrlKeyExists(ctx context.Context, arg CheckShortUrlKeyExistsParams) (bool, error)
-	GetURLByAccountIDAndShortURLKey(ctx context.Context, arg GetURLByAccountIDAndShortURLKeyParams) (Url, error)
-	InsertNewURL(ctx context.Context, arg InsertNewURLParams) error
-	UpdateLongURL(ctx context.Context, arg UpdateLongURLParams) error
-	UpdateURLStatus(ctx context.Context, arg UpdateURLStatusParams) error
-	UpdateURLTrackingStatus(ctx context.Context, arg UpdateURLTrackingStatusParams) error
+	GetLinkByAccountIDAndShortURLKey(ctx context.Context, arg GetLinkByAccountIDAndShortURLKeyParams) (Link, error)
+	InsertNewLink(ctx context.Context, arg InsertNewLinkParams) error
+	UpdateLinkLongURL(ctx context.Context, arg UpdateLinkLongURLParams) error
+	UpdateLinkStatus(ctx context.Context, arg UpdateLinkStatusParams) error
+	UpdateLinkTrackingStatus(ctx context.Context, arg UpdateLinkTrackingStatusParams) error
 }
 type ClickRepository interface {
 	InsertNewClick(ctx context.Context, arg InsertNewClickParams) error
@@ -31,7 +31,7 @@ type ClickRepository interface {
 
 type Store interface {
 	AccountRepository
-	URLRepository
+	LinkRepository
 	ClickRepository
 }
 
@@ -81,8 +81,8 @@ func Finalize() error {
 	return dbInstance.Close()
 }
 
-func (store *SQLStore) Transactional(ctx context.Context, fn func(queries *Queries) error) error {
-	tx, err := store.DB.BeginTx(ctx, nil)
+func Transactional(ctx context.Context, db *sql.DB, fn func(queries *Queries) error) error {
+	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}

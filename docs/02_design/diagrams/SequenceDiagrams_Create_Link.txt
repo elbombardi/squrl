@@ -1,6 +1,6 @@
-title Create a new Short URL
+title Create a new short URL
 
-Customer->API: POST /api/short-url
+Customer->API: POST /v1/links
 
 API->API: Authenticate Customer
 alt #ffcccc Error: Authentication failed
@@ -12,8 +12,8 @@ alt #ffcccc Error: Invalid request data
 API-->Customer: HTTP 400 Bad Request
 end
 
-API->API: Verify Customer Status
-alt #ffcccc Error: Customer is not active
+API->API: Verify Account Status
+alt #ffcccc Error: Account is not active
 API-->Customer: HTTP 401 Unauthorized
 end
 

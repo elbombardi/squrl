@@ -6,6 +6,6 @@ import (
 )
 
 // Handler for the GET /health endpoint
-func (handlers *Handlers) HandleHealthcheck(healthcheck general.HealthcheckParams) middleware.Responder {
+func (h *Handlers) HandleHealthcheck(healthcheck general.HealthcheckParams) middleware.Responder {
 	return general.NewHealthcheckOK().WithPayload("OK")
 }

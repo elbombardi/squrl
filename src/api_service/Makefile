@@ -16,4 +16,16 @@ swagger_generate_documentation:
 run:
 	go run ./cmd --port 8080 --host localhost 
 
+test: 
+	@echo 
+	@echo 
+	@echo "______________Started Unit Testing API Service_____________________"
+	go test -v --coverprofile orders_service_cover.out -coverpkg=./... ./...
+	go tool cover --func=orders_service_cover.out
+	rm orders_service_cover.out
+	@echo "______________Finished Unit Testing API Service_____________________"
+	@echo 
+	@echo 
+
+
 .PHONY: swagger_generate swagger_validate swagger_generate_api_server swagger_generate_documentation run

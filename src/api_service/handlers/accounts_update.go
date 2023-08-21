@@ -8,7 +8,7 @@ import (
 )
 
 // Handler for the PUT /accounts endpoint
-func (handlers *Handlers) HandleUpdateAccount(params accounts.UpdateAccountParams, principal any) middleware.Responder {
+func (h *Handlers) HandleUpdateAccount(params accounts.UpdateAccountParams, principal any) middleware.Responder {
 
 	if params.Body == nil {
 		return accounts.NewUpdateAccountBadRequest().WithPayload(&models.Error{
@@ -22,22 +22,22 @@ func (handlers *Handlers) HandleUpdateAccount(params accounts.UpdateAccountParam
 		})
 	}
 
-	response, err := handlers.AccountsManager.Update(&core.UpdateAccountParams{
+	response, err := h.AccountsManager.Update(&core.UpdateAccountParams{
 		Enabled:  encodeStatus(params.Body.Status).Value,
 		Username: params.Body.Username,
 	}, principal.(*core.User))
 
 	if err != nil {
-		coreError, ok := err.(*core.CoreError)
+		coreErr, ok := err.(core.CoreError)
 		switch {
-		case ok && coreError.Code == core.ERR_BAD_PARAMS:
+		case ok && coreErr.Code == core.ErrBadParams:
 			return accounts.NewUpdateAccountBadRequest().WithPayload(&models.Error{
-				Message: coreError.Message,
+				Message: coreErr.Message,
 			})
-		case ok && coreError.Code == core.ERR_UNAUTHORIZED:
+		case ok && coreErr.Code == core.ErrUnauthorized:
 			return accounts.NewUpdateAccountUnauthorized().WithPayload(&models.Error{
 				Message: "Unauthorized access"})
-		case ok && coreError.Code == core.ERR_ACCOUNT_NOT_FOUND:
+		case ok && coreErr.Code == core.ErrAccountNotFound:
 			return accounts.NewUpdateAccountUnauthorized().WithPayload(&models.Error{
 				Message: "Account not found for this username: " + params.Body.Username})
 		default:

@@ -1,6 +1,6 @@
-title Create a new customer
+title Create a new account
 
-Admin->API: POST /api/customer
+Admin->API: POST /v1/accounts
 alt #ffcccc Error: Authentication failed
 API-->Admin: HTTP 401
 end 
@@ -12,9 +12,9 @@ API-->Admin: HTTP 400 Bad Request
 end 
 API<--Database: Username is unique
 
-API->API: Generate a unique customer prefix
-API->API: Generate a unique customer API Key
-API->Database: INSERT Into customer table
-Database-->API: Customer created
+API->API: Generate a unique account prefix
+API->API: Generate a unique account API Key
+API->Database: INSERT Into account table
+Database-->API: Account created
 API-->Admin: HTTP 200 Created
 

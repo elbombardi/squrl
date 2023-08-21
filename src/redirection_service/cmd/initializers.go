@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log/slog"
-	"os"
 
 	"github.com/elbombardi/squrl/src/db"
+	"github.com/elbombardi/squrl/src/redirection_service/core"
 	"github.com/elbombardi/squrl/src/redirection_service/routes"
 	"github.com/elbombardi/squrl/src/redirection_service/util"
 )
@@ -19,20 +19,7 @@ func initializeApp() (*routes.Server, error) {
 	}
 
 	// Initializing logger
-	logHandler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-		Level: util.LogLevel(config.LogLevel),
-	})
-	logger := slog.New(logHandler)
-	logger = logger.With(
-		slog.Group("program_info",
-			slog.Int("pid", os.Getpid()),
-			slog.String("component", "squrl.RedirectionService"),
-			slog.String("version", util.VERSION),
-			slog.String("environment", config.Environment),
-		),
-	)
-	slog.SetDefault(logger)
-	util.LogConfig(&config)
+	logger := util.NewLogger(&config)
 
 	// Initializing DB connection
 	slog.Info("Initializing Database connection..")
@@ -53,11 +40,20 @@ func initializeApp() (*routes.Server, error) {
 		return nil, fmt.Errorf("Could not connect to the database")
 	}
 
-	// Initalizing server
+	// Intializing services
+	slog.Info("Initializing Redirection Service..")
+	linksService := &core.LinksService{
+		LinkRepository:    store,
+		AccountRepository: store,
+		ClickRepository:   store,
+		Config:            &config,
+		Logger:            logger.With("service", "LinksService"),
+	}
+
+	// Initalizing routes
 	slog.Info("Initializing Redirection Server..")
 	return routes.NewServer(port, host, &routes.Routes{
-		AccountRepository: store,
-		URLRepository:     store,
-		ClickRepository:   store,
+		LinksManager: linksService,
+		Config:       &config,
 	}), nil
 }

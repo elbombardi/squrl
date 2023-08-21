@@ -13,22 +13,23 @@ import (
 type AccountsService struct {
 	db.AccountRepository
 	*util.Config
+	*slog.Logger
 }
 
-func (service *AccountsService) Create(params *CreateAccountParams, user *User) (*CreateAccountResponse, error) {
+func (s *AccountsService) Create(params *CreateAccountParams, user *User) (*CreateAccountResponse, error) {
 	// Check if the user is authenticated
 	if user == nil {
 		return nil, CoreError{
-			Code:    ERR_UNAUTHORIZED,
+			Code:    ErrUnauthorized,
 			Message: "Unauthorized access",
 		}
 	}
 
 	//This service is only accessible by the admin user
 	if !user.IsAdmin {
-		slog.Error("Unauthorized attempt to access CreateAccount by a non admin user", "User", user)
+		s.Error("Unauthorized attempt to access CreateAccount by a non admin user", "User", user)
 		return nil, CoreError{
-			Code:    ERR_UNAUTHORIZED,
+			Code:    ErrUnauthorized,
 			Message: "Unauthorized access",
 		}
 	}
@@ -36,23 +37,23 @@ func (service *AccountsService) Create(params *CreateAccountParams, user *User) 
 	//Check if the request is valid
 	err := validateCreateAccountParams(params)
 	if err != nil {
-		slog.Error("Invalid parameters in create account request", "Details", err)
+		s.Error("Invalid parameters in create account request", "Details", err)
 		return nil, CoreError{
-			Code:    ERR_BAD_PARAMS,
+			Code:    ErrBadParams,
 			Message: err.Error(),
 		}
 	}
 
 	//Check if the username is unique
-	exists, err := service.AccountRepository.CheckUsernameExists(context.Background(), params.Username)
+	exists, err := s.CheckUsernameExists(context.Background(), params.Username)
 	if err != nil {
-		slog.Error("Unexpected error while checking if username exists", "Details", err)
+		s.Error("Unexpected error while checking if username exists", "Details", err)
 		return nil, err
 	}
 	if exists {
-		slog.Error("Username already exists", "Username", params.Username)
+		s.Error("Username already exists", "Username", params.Username)
 		return nil, CoreError{
-			Code:    ERR_BAD_PARAMS,
+			Code:    ErrBadParams,
 			Message: "Username already exists",
 		}
 	}
@@ -61,9 +62,9 @@ func (service *AccountsService) Create(params *CreateAccountParams, user *User) 
 	var prefix string
 	tryAgain := true
 	for tryAgain {
-		tryAgain, prefix, err = service.generatePrefix()
+		tryAgain, prefix, err = s.generatePrefix()
 		if err != nil {
-			slog.Error("Unexpected error while generating prefix for the new account", "Details", err)
+			s.Error("Unexpected error while generating prefix for the new account", "Details", err)
 			return nil, err
 		}
 	}
@@ -72,24 +73,23 @@ func (service *AccountsService) Create(params *CreateAccountParams, user *User) 
 	password, hashedPassword := util.GeneratePassword()
 
 	// Insert the new account
-	err = service.AccountRepository.InsertNewAccount(context.Background(), db.InsertNewAccountParams{
+	err = s.InsertNewAccount(context.Background(), db.InsertNewAccountParams{
 		Prefix:         prefix,
 		HashedPassword: hashedPassword,
 		Username:       params.Username,
 		Email:          params.Email,
 	})
 	if err != nil {
-		slog.Error("Unexpected error while inserting new account in DB", "Details", err)
+		s.Error("Unexpected error while inserting new account in DB", "Details", err)
 		return nil, err
 	}
 
 	// Return response
-	slog.Info("New account created successfully", "Params", *params)
+	s.Info("New account created successfully", "Params", *params)
 	return &CreateAccountResponse{
 		Password: password,
 		Prefix:   prefix,
 	}, nil
-
 }
 
 func validateCreateAccountParams(params *CreateAccountParams) error {
@@ -119,31 +119,31 @@ func validateCreateAccountParams(params *CreateAccountParams) error {
 	return nil
 }
 
-func (service *AccountsService) generatePrefix() (bool, string, error) {
+func (s *AccountsService) generatePrefix() (bool, string, error) {
 	prefix := util.GenerateRandomString(3)
-	//Check if the prefix is unique
-	exists, err := service.AccountRepository.CheckPrefixExists(context.Background(), prefix)
+	// Check if the prefix is unique
+	exists, err := s.CheckPrefixExists(context.Background(), prefix)
 	if err != nil {
 		return false, "", err
 	}
 	return exists, prefix, nil
 }
 
-func (service *AccountsService) Update(params *UpdateAccountParams, user *User) (*UpdateAccountResponse, error) {
+func (s *AccountsService) Update(params *UpdateAccountParams, user *User) (*UpdateAccountResponse, error) {
 
 	// Check if the user is authenticated
 	if user == nil {
 		return nil, CoreError{
-			Code:    ERR_UNAUTHORIZED,
+			Code:    ErrUnauthorized,
 			Message: "unauthorized access",
 		}
 	}
 
-	// This endpoint is only accessible by the admin
+	// This service is only accessible by the admin
 	if !user.IsAdmin {
-		slog.Error("Unauthorized attempt to access UpdateAccount by a non admin user", "User", user)
+		s.Error("Unauthorized attempt to access UpdateAccount by a non admin user", "User", user)
 		return nil, CoreError{
-			Code:    ERR_UNAUTHORIZED,
+			Code:    ErrUnauthorized,
 			Message: "unauthorized access",
 		}
 	}
@@ -151,44 +151,47 @@ func (service *AccountsService) Update(params *UpdateAccountParams, user *User) 
 	// Validate params
 	err := validateUpdateAccountParams(params)
 	if err != nil {
-		slog.Error("Bad UpdateAccount params", "Details", err)
+		s.Error("Bad UpdateAccount params", "Details", err)
 		return nil, CoreError{
-			Code:    ERR_BAD_PARAMS,
+			Code:    ErrBadParams,
 			Message: err.Error(),
 		}
 	}
 
-	// Check if the customer exists
-	_, err = service.AccountRepository.GetAccountByUsername(context.Background(), params.Username)
+	// Check if the account exists
+	_, err = s.GetAccountByUsername(context.Background(), params.Username)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			slog.Error("Account not found for this username", "Username", params.Username)
+			s.Error("Account not found for this username", "Username", params.Username)
 			return nil, CoreError{
-				Code:    ERR_ACCOUNT_NOT_FOUND,
+				Code:    ErrAccountNotFound,
 				Message: "account not found",
 			}
 		}
-		slog.Error("Unexpected error while retrieving account by username", "Details", err)
+		s.Error("Unexpected error while retrieving account by username", "Details", err)
 		return nil, err
 	}
 
-	//Update customer
-	err = service.AccountRepository.UpdateAccountStatusByUsername(context.Background(), db.UpdateAccountStatusByUsernameParams{
+	//Update account
+	err = s.UpdateAccountStatusByUsername(context.Background(), db.UpdateAccountStatusByUsernameParams{
 		Username: params.Username,
 		Enabled:  params.Enabled,
 	})
 	if err != nil {
-		slog.Error("Unexpected error while updating account", "Details", err)
+		s.Error("Unexpected error while updating account", "Details", err)
 		return nil, err
 	}
 
-	slog.Info("Account updated successfully", "Params", *params)
+	s.Info("Account updated successfully", "Params", *params)
 	return &UpdateAccountResponse{
 		Enabled: params.Enabled,
 	}, nil
 }
 
 func validateUpdateAccountParams(params *UpdateAccountParams) error {
+	if params == nil {
+		return errors.New("missing parameters")
+	}
 	if params.Username == "" {
 		return errors.New("missing username")
 	}

@@ -3,12 +3,12 @@ package core
 import "net/url"
 
 const (
-	ERR_UNAUTHORIZED = iota
-	ERR_BAD_PARAMS
-	ERR_ACCOUNT_NOT_FOUND
-	ERR_ACCOUNT_DISABLED
-	ERR_LINK_NOT_FOUND
-	ERR_LINK_DISABLED
+	ErrUnauthorized = iota
+	ErrBadParams
+	ErrAccountNotFound
+	ErrAccountDisabled
+	ErrLinkNotFound
+	ErrLinkDisabled
 )
 
 type CoreError struct {

@@ -8,7 +8,7 @@ import (
 )
 
 // Handler for the POST /accounts endpoint
-func (handlers *Handlers) HandleCreateAccount(params accounts.CreateAccountParams, principal any) middleware.Responder {
+func (h *Handlers) HandleCreateAccount(params accounts.CreateAccountParams, principal any) middleware.Responder {
 
 	if params.Account == nil {
 		return accounts.NewCreateAccountBadRequest().WithPayload(&models.Error{
@@ -16,19 +16,19 @@ func (handlers *Handlers) HandleCreateAccount(params accounts.CreateAccountParam
 		})
 	}
 
-	response, err := handlers.AccountsManager.Create(&core.CreateAccountParams{
+	response, err := h.AccountsManager.Create(&core.CreateAccountParams{
 		Username: params.Account.Username,
 		Email:    params.Account.Email,
 	}, principal.(*core.User))
 
 	if err != nil {
-		coreError, ok := err.(*core.CoreError)
+		coreErr, ok := err.(core.CoreError)
 		switch {
-		case ok && coreError.Code == core.ERR_BAD_PARAMS:
+		case ok && coreErr.Code == core.ErrBadParams:
 			return accounts.NewCreateAccountBadRequest().WithPayload(&models.Error{
-				Message: coreError.Message,
+				Message: coreErr.Message,
 			})
-		case ok && coreError.Code == core.ERR_UNAUTHORIZED:
+		case ok && coreErr.Code == core.ErrUnauthorized:
 			return accounts.NewCreateAccountUnauthorized().WithPayload(&models.Error{
 				Message: "Unauthorized access"})
 		default:

@@ -17,60 +17,59 @@ const (
 type AuthenticationService struct {
 	db.AccountRepository
 	*util.Config
+	*slog.Logger
 }
 
-func (service *AuthenticationService) Authenticate(username string, password string) (token string, err error) {
+func (s *AuthenticationService) Authenticate(username string, password string) (token string, err error) {
 	var validatePassword func(password string) bool
 
 	// User/Password verification
 	if username == ADMIN_USERNAME {
 		validatePassword = func(password string) bool {
-			return password == service.Config.AdminPassword
+			return password == s.AdminPassword
 		}
 	} else {
-		account, err := service.AccountRepository.GetAccountByUsername(context.Background(), username)
+		account, err := s.GetAccountByUsername(context.Background(), username)
 		if err != nil {
 			if err == sql.ErrNoRows {
-				slog.Error("Account not found", "Account", username)
+				s.Error("Account not found", "Account", username)
 				return token, CoreError{
-					Code:    ERR_ACCOUNT_NOT_FOUND,
+					Code:    ErrAccountNotFound,
 					Message: "account not found",
 				}
-
 			}
-			slog.Error("Unexpected error while retrieving account by username",
+			s.Error("Unexpected error while retrieving account by username",
 				"Username", username, "Details", err)
 			return token, err
 		}
-		hashedPassword := account.HashedPassword
 		validatePassword = func(password string) bool {
-			return util.VerifyPassword(hashedPassword, password)
+			return util.VerifyPassword(account.HashedPassword, password)
 		}
 	}
 
 	if !validatePassword(password) {
-		slog.Error("Given password does not match with the stored password")
+		s.Error("Given password does not match with the stored password", "Username", username)
 		return token, CoreError{
-			Code:    ERR_UNAUTHORIZED,
+			Code:    ErrUnauthorized,
 			Message: "invalid credentials",
 		}
 	}
 
 	// Generate a JWT token
-	token, err = util.GenerateJWT(username, service.Config.TokenSymmetricKey)
+	token, err = util.GenerateJWT(username, s.TokenSymmetricKey)
 	if err != nil {
-		slog.Error("Error generating JWT token", "Details", err)
+		s.Error("Error generating JWT token", "Details", err)
 		return token, err
 	}
 
-	slog.Info("Login successful", "Username", username)
+	s.Info("Login successful", "Username", username)
 	return token, nil
 }
 
-func (service *AuthenticationService) Validate(token string) (*User, error) {
-	username, err := util.ValidateJWT(token, service.Config.TokenSymmetricKey)
+func (s *AuthenticationService) Validate(token string) (*User, error) {
+	username, err := util.ValidateJWT(token, s.TokenSymmetricKey)
 	if err != nil {
-		slog.Error("Error validating JWT Token", "Details", err)
+		s.Error("Error validating JWT Token", "Details", err)
 		return (*User)(nil), nil
 	}
 	return &User{

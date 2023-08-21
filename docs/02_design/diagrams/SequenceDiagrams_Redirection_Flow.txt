@@ -18,13 +18,9 @@ Redirection_Server<--Database: Short URL information.
 alt #ffcccc Short URL not found or disabled
 Redirection_Server-#red>User:HTTP 404, Error
 end
+alt #ffffdd If Short URL Tracking status = 'active'
+Redirection_Server-->Database: Insert new click
+end
 User<--Redirection_Server: HTTP 302 (Redirection to long URL)
 
-alt #ffffdd If Short URL Tracking status = 'active'
-Redirection_Server-->Peristence_Pool: Persist Click information (Asynchroneously)
-activate Peristence_Pool
-deactivate Redirection_Server
-Peristence_Pool->Database: Insert new click
-Peristence_Pool->Database: Update ShortUrl Aggregates
-deactivate Peristence_Pool
-end
+

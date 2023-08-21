@@ -16,7 +16,7 @@ Table account {
   note: "Table holding Account information"
 }
 
-Table url {
+Table link {
   id int [pk, increment]
   short_url_key varchar [note: '6 characters, case-sensitive']
   account_id int [not null]
@@ -31,22 +31,22 @@ Table url {
     (short_url_key, account_id) [unique, note: 'Composite unique index for short_url_key and account_id']
   }
 
-  note: "Table holding URL information"
+  note: "Table holding Link information"
 }
 
 Table click {
   id int [pk, increment]
-  url_id int [not null]
+  link_id int [not null]
   click_date_time timestamp [default: `now()`, note: 'Timestamp of click']
   user_agent varchar
   ip_address varchar
 
   Indexes {
-    url_id [note: 'Index for url_id column']
+    link_id [note: 'Index for link_id column']
   }
 
   note: "Table holding click information"
 }
 
-Ref: url.account_id > account.id  
-Ref: click.url_id > url.id  
+Ref: link.account_id > account.id  
+Ref: click.link_id > link.id  

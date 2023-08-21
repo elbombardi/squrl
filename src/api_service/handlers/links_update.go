@@ -8,7 +8,7 @@ import (
 )
 
 // Hanlder for the PUT /urls endpoint
-func (handlers *Handlers) HandleUpdateLink(params links.UpdateLinkParams, principal any) middleware.Responder {
+func (h *Handlers) HandleUpdateLink(params links.UpdateLinkParams, principal any) middleware.Responder {
 
 	if params.Body == nil {
 		return links.NewUpdateLinkBadRequest().WithPayload(&models.Error{
@@ -34,7 +34,7 @@ func (handlers *Handlers) HandleUpdateLink(params links.UpdateLinkParams, princi
 
 	encodeStatus(params.Body.Status)
 
-	link, err := handlers.LinksManager.Update(&core.LinkUpdateParams{
+	link, err := h.LinksManager.Update(&core.LinkUpdateParams{
 		ShortUrlKey: params.Body.ShortURLKey,
 		NewLongURL: core.Optional[string]{
 			Value: params.Body.NewLongURL,
@@ -45,22 +45,22 @@ func (handlers *Handlers) HandleUpdateLink(params links.UpdateLinkParams, princi
 	}, principal.(*core.User))
 
 	if err != nil {
-		coreError, ok := err.(*core.CoreError)
+		coreError, ok := err.(core.CoreError)
 		switch {
-		case ok && coreError.Code == core.ERR_BAD_PARAMS:
+		case ok && coreError.Code == core.ErrBadParams:
 			return links.NewUpdateLinkBadRequest().WithPayload(&models.Error{
 				Message: coreError.Message,
 			})
-		case ok && coreError.Code == core.ERR_UNAUTHORIZED:
+		case ok && coreError.Code == core.ErrUnauthorized:
 			return links.NewUpdateLinkUnauthorized().WithPayload(&models.Error{
 				Message: "Unauthorized access"})
-		case ok && coreError.Code == core.ERR_ACCOUNT_DISABLED:
+		case ok && coreError.Code == core.ErrAccountDisabled:
 			return links.NewUpdateLinkUnauthorized().WithPayload(&models.Error{
 				Message: "Account disabled"})
-		case ok && coreError.Code == core.ERR_ACCOUNT_NOT_FOUND:
+		case ok && coreError.Code == core.ErrAccountNotFound:
 			return links.NewUpdateLinkUnauthorized().WithPayload(&models.Error{
 				Message: "Account not found. Username: " + principal.(*core.User).Username})
-		case ok && coreError.Code == core.ERR_LINK_NOT_FOUND:
+		case ok && coreError.Code == core.ErrLinkNotFound:
 			return links.NewUpdateLinkNotFound().WithPayload(&models.Error{
 				Message: "Link not found. Username: " + principal.(*core.User).Username + ", ShortUrlKey: " + params.Body.ShortURLKey})
 		default:

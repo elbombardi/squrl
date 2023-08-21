@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"log/slog"
-	"os"
 
 	"github.com/elbombardi/squrl/src/api_service/api"
 	"github.com/elbombardi/squrl/src/api_service/api/operations"
@@ -28,21 +26,7 @@ func initializeApp() (*api.Server, error) {
 	}
 
 	// Initializing logger
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level: util.LogLevel(config.LogLevel),
-	})
-	logger := slog.New(logHandler)
-	logger = logger.With(
-		slog.Group("program_info",
-			slog.Int("pid", os.Getpid()),
-			slog.String("component", "squrl.api"),
-			slog.String("version", util.VERSION),
-			slog.String("environment", config.Environment),
-		),
-	)
-	slog.SetDefault(logger)
-	util.LogConfig(&config)
+	logger := util.NewLogger(&config)
 
 	// Initializing db connection
 	slog.Info("Initializing database connection..")
@@ -101,15 +85,18 @@ func initializeApp() (*api.Server, error) {
 	authenticator := core.AuthenticationService{
 		AccountRepository: store,
 		Config:            &config,
+		Logger:            logger.With("service", "AuthenticationService"),
 	}
 	accountsManager := core.AccountsService{
 		AccountRepository: store,
 		Config:            &config,
+		Logger:            logger.With("service", "AccountsService"),
 	}
 	linksManager := core.LinksService{
 		AccountRepository: store,
-		URLRepository:     store,
+		LinkRepository:    store,
 		Config:            &config,
+		Logger:            logger.With("service", "LinksService"),
 	}
 
 	// Initializing endpoint handlers
