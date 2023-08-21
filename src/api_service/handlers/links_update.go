@@ -70,7 +70,7 @@ func (h *Handlers) HandleUpdateLink(params links.UpdateLinkParams, principal any
 		}
 	}
 
-	return links.NewUpdateLinkOK().WithPayload(&links.UpdateLinkOKBody{
+	return links.NewUpdateLinkOK().WithPayload(&models.LinkUpdated{
 		LongURL:        link.LongUrl.String(),
 		Status:         decodeStatus(link.Enabled),
 		TrackingStatus: decodeStatus(link.TrackingEnabled),

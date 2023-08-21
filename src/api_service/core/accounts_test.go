@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func buildAccountService() (
+func setupAccountsService() (
 	*AccountsService,
 	*db_mocks.MockAccountRepository,
 	*util.Config,
@@ -31,7 +31,7 @@ func buildAccountService() (
 }
 
 func TestCreateWithNilUser(t *testing.T) {
-	s, _, _ := buildAccountService()
+	s, _, _ := setupAccountsService()
 
 	params := &CreateAccountParams{}
 
@@ -42,7 +42,7 @@ func TestCreateWithNilUser(t *testing.T) {
 }
 
 func TestCreateWithNonAdminUser(t *testing.T) {
-	s, _, _ := buildAccountService()
+	s, _, _ := setupAccountsService()
 
 	params := &CreateAccountParams{}
 	user := &User{Username: "user", IsAdmin: false}
@@ -54,7 +54,7 @@ func TestCreateWithNonAdminUser(t *testing.T) {
 }
 
 func TestCreateWithoutParams(t *testing.T) {
-	s, _, _ := buildAccountService()
+	s, _, _ := setupAccountsService()
 
 	params := (*CreateAccountParams)(nil)
 	user := &User{Username: "user", IsAdmin: true}
@@ -66,7 +66,7 @@ func TestCreateWithoutParams(t *testing.T) {
 }
 
 func TestCeateWithEmptyUsername(t *testing.T) {
-	s, _, _ := buildAccountService()
+	s, _, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &CreateAccountParams{Username: "", Email: "test@gmail.com"}
@@ -78,7 +78,7 @@ func TestCeateWithEmptyUsername(t *testing.T) {
 }
 
 func TestCreateWithEmptyEmail(t *testing.T) {
-	s, _, _ := buildAccountService()
+	s, _, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &CreateAccountParams{Username: "account", Email: ""}
@@ -90,7 +90,7 @@ func TestCreateWithEmptyEmail(t *testing.T) {
 }
 
 func TestCeateWithInvalidUsername(t *testing.T) {
-	s, _, _ := buildAccountService()
+	s, _, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &CreateAccountParams{Username: "####!!!!!!----", Email: "test@gmail.com"}
@@ -102,7 +102,7 @@ func TestCeateWithInvalidUsername(t *testing.T) {
 }
 
 func TestCreateWithInvalidEmail(t *testing.T) {
-	s, _, _ := buildAccountService()
+	s, _, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &CreateAccountParams{Username: "account", Email: "notanemail"}
@@ -114,7 +114,7 @@ func TestCreateWithInvalidEmail(t *testing.T) {
 }
 
 func TestCreateWithAlreadyExistingUsername(t *testing.T) {
-	s, accountRepo, _ := buildAccountService()
+	s, accountRepo, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &CreateAccountParams{Username: "account", Email: "account@gmail.com"}
@@ -127,7 +127,7 @@ func TestCreateWithAlreadyExistingUsername(t *testing.T) {
 }
 
 func TestCreateWithErrorWhenTestingUsernameExistance(t *testing.T) {
-	s, accountRepo, _ := buildAccountService()
+	s, accountRepo, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &CreateAccountParams{Username: "account", Email: "account@gmail.com"}
@@ -140,7 +140,7 @@ func TestCreateWithErrorWhenTestingUsernameExistance(t *testing.T) {
 }
 
 func TestCreateWithErrorWhileGeneratingPrefix(t *testing.T) {
-	s, accountRepo, _ := buildAccountService()
+	s, accountRepo, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &CreateAccountParams{Username: "account", Email: "account@gmail.com"}
@@ -154,7 +154,7 @@ func TestCreateWithErrorWhileGeneratingPrefix(t *testing.T) {
 }
 
 func TestCreateWithErrorWhilePersistingAccount(t *testing.T) {
-	s, accountRepo, _ := buildAccountService()
+	s, accountRepo, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &CreateAccountParams{Username: "account", Email: "account@gmail.com"}
@@ -169,7 +169,7 @@ func TestCreateWithErrorWhilePersistingAccount(t *testing.T) {
 }
 
 func TestCreateOk(t *testing.T) {
-	s, accountRepo, _ := buildAccountService()
+	s, accountRepo, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &CreateAccountParams{Username: "account", Email: "account@gmail.com"}
@@ -186,7 +186,7 @@ func TestCreateOk(t *testing.T) {
 }
 
 func TestUpdateWithNilUser(t *testing.T) {
-	s, _, _ := buildAccountService()
+	s, _, _ := setupAccountsService()
 
 	params := &UpdateAccountParams{}
 
@@ -197,7 +197,7 @@ func TestUpdateWithNilUser(t *testing.T) {
 }
 
 func TestUpdateWithNonAdminUser(t *testing.T) {
-	s, _, _ := buildAccountService()
+	s, _, _ := setupAccountsService()
 
 	params := &UpdateAccountParams{}
 	user := &User{Username: "user", IsAdmin: false}
@@ -209,7 +209,7 @@ func TestUpdateWithNonAdminUser(t *testing.T) {
 }
 
 func TestUpdateWithoutParams(t *testing.T) {
-	s, _, _ := buildAccountService()
+	s, _, _ := setupAccountsService()
 
 	params := (*UpdateAccountParams)(nil)
 	user := &User{Username: "user", IsAdmin: true}
@@ -221,7 +221,7 @@ func TestUpdateWithoutParams(t *testing.T) {
 }
 
 func TestUpdateWithNonExistentAccount(t *testing.T) {
-	s, accountRepo, _ := buildAccountService()
+	s, accountRepo, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &UpdateAccountParams{Username: "account1", Enabled: true}
@@ -234,7 +234,7 @@ func TestUpdateWithNonExistentAccount(t *testing.T) {
 }
 
 func TestUpdateWithErrorWhileCheckingAccount(t *testing.T) {
-	s, accountRepo, _ := buildAccountService()
+	s, accountRepo, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &UpdateAccountParams{Username: "account1", Enabled: true}
@@ -247,7 +247,7 @@ func TestUpdateWithErrorWhileCheckingAccount(t *testing.T) {
 }
 
 func TestUpdateWithErrorWhileUpdating(t *testing.T) {
-	s, accountRepo, _ := buildAccountService()
+	s, accountRepo, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &UpdateAccountParams{Username: "account1", Enabled: true}
@@ -261,7 +261,7 @@ func TestUpdateWithErrorWhileUpdating(t *testing.T) {
 }
 
 func TestUpdateOk(t *testing.T) {
-	s, accountRepo, _ := buildAccountService()
+	s, accountRepo, _ := setupAccountsService()
 
 	user := &User{Username: "admin", IsAdmin: true}
 	params := &UpdateAccountParams{Username: "account1", Enabled: false}

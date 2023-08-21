@@ -12,27 +12,27 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// URL URL
+// Link link
 //
-// swagger:model URL
-type URL struct {
+// swagger:model Link
+type Link struct {
 
 	// long url
 	LongURL string `json:"long_url,omitempty"`
 }
 
-// Validate validates this URL
-func (m *URL) Validate(formats strfmt.Registry) error {
+// Validate validates this link
+func (m *Link) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this URL based on context it is used
-func (m *URL) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this link based on context it is used
+func (m *Link) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *URL) MarshalBinary() ([]byte, error) {
+func (m *Link) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -40,8 +40,8 @@ func (m *URL) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *URL) UnmarshalBinary(b []byte) error {
-	var res URL
+func (m *Link) UnmarshalBinary(b []byte) error {
+	var res Link
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -19,7 +19,6 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 		UserAgent:     c.Get("User-Agent"),
 		IpAddress:     c.IP(),
 	})
-
 	if err != nil {
 		coreError, ok := err.(core.CoreError)
 		switch {
@@ -44,10 +43,12 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 
 func page404(c *fiber.Ctx) error {
 	c.Response().Header.SetContentType(fiber.MIMETextHTML)
+	c.Response().SetStatusCode(http.StatusNotFound)
 	return c.SendString(RESPONSE_404)
 }
 
 func page500(c *fiber.Ctx) error {
 	c.Response().Header.SetContentType(fiber.MIMETextHTML)
+	c.Response().SetStatusCode(http.StatusInternalServerError)
 	return c.SendString(RESPONSE_500)
 }

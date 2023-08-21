@@ -12,10 +12,10 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// URLCreated URL created
+// LinkCreated link created
 //
-// swagger:model URLCreated
-type URLCreated struct {
+// swagger:model LinkCreated
+type LinkCreated struct {
 
 	// short url
 	ShortURL string `json:"short_url,omitempty"`
@@ -24,18 +24,18 @@ type URLCreated struct {
 	ShortURLKey string `json:"short_url_key,omitempty"`
 }
 
-// Validate validates this URL created
-func (m *URLCreated) Validate(formats strfmt.Registry) error {
+// Validate validates this link created
+func (m *LinkCreated) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this URL created based on context it is used
-func (m *URLCreated) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this link created based on context it is used
+func (m *LinkCreated) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *URLCreated) MarshalBinary() ([]byte, error) {
+func (m *LinkCreated) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -43,8 +43,8 @@ func (m *URLCreated) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *URLCreated) UnmarshalBinary(b []byte) error {
-	var res URLCreated
+func (m *LinkCreated) UnmarshalBinary(b []byte) error {
+	var res LinkCreated
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

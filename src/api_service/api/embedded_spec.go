@@ -189,7 +189,7 @@ func init() {
             "name": "body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/URLUpdate"
+              "$ref": "#/definitions/LinkUpdate"
             }
           }
         ],
@@ -197,18 +197,7 @@ func init() {
           "200": {
             "description": "Success",
             "schema": {
-              "type": "object",
-              "properties": {
-                "long_url": {
-                  "type": "string"
-                },
-                "status": {
-                  "type": "string"
-                },
-                "tracking_status": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/LinkUpdated"
             }
           },
           "400": {
@@ -260,7 +249,7 @@ func init() {
             "name": "body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/URL"
+              "$ref": "#/definitions/Link"
             }
           }
         ],
@@ -268,7 +257,7 @@ func init() {
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/URLCreated"
+              "$ref": "#/definitions/LinkCreated"
             }
           },
           "400": {
@@ -395,6 +384,56 @@ func init() {
         }
       }
     },
+    "Link": {
+      "type": "object",
+      "properties": {
+        "long_url": {
+          "type": "string"
+        }
+      }
+    },
+    "LinkCreated": {
+      "type": "object",
+      "properties": {
+        "short_url": {
+          "type": "string"
+        },
+        "short_url_key": {
+          "type": "string"
+        }
+      }
+    },
+    "LinkUpdate": {
+      "type": "object",
+      "properties": {
+        "new_long_url": {
+          "type": "string"
+        },
+        "short_url_key": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "tracking_status": {
+          "type": "string"
+        }
+      }
+    },
+    "LinkUpdated": {
+      "type": "object",
+      "properties": {
+        "long_url": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "tracking_status": {
+          "type": "string"
+        }
+      }
+    },
     "LoginInfo": {
       "type": "object",
       "properties": {
@@ -413,42 +452,6 @@ func init() {
           "type": "boolean"
         },
         "token": {
-          "type": "string"
-        }
-      }
-    },
-    "URL": {
-      "type": "object",
-      "properties": {
-        "long_url": {
-          "type": "string"
-        }
-      }
-    },
-    "URLCreated": {
-      "type": "object",
-      "properties": {
-        "short_url": {
-          "type": "string"
-        },
-        "short_url_key": {
-          "type": "string"
-        }
-      }
-    },
-    "URLUpdate": {
-      "type": "object",
-      "properties": {
-        "new_long_url": {
-          "type": "string"
-        },
-        "short_url_key": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        },
-        "tracking_status": {
           "type": "string"
         }
       }
@@ -634,7 +637,7 @@ func init() {
             "name": "body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/URLUpdate"
+              "$ref": "#/definitions/LinkUpdate"
             }
           }
         ],
@@ -642,18 +645,7 @@ func init() {
           "200": {
             "description": "Success",
             "schema": {
-              "type": "object",
-              "properties": {
-                "long_url": {
-                  "type": "string"
-                },
-                "status": {
-                  "type": "string"
-                },
-                "tracking_status": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/LinkUpdated"
             }
           },
           "400": {
@@ -705,7 +697,7 @@ func init() {
             "name": "body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/URL"
+              "$ref": "#/definitions/Link"
             }
           }
         ],
@@ -713,7 +705,7 @@ func init() {
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/URLCreated"
+              "$ref": "#/definitions/LinkCreated"
             }
           },
           "400": {
@@ -840,6 +832,56 @@ func init() {
         }
       }
     },
+    "Link": {
+      "type": "object",
+      "properties": {
+        "long_url": {
+          "type": "string"
+        }
+      }
+    },
+    "LinkCreated": {
+      "type": "object",
+      "properties": {
+        "short_url": {
+          "type": "string"
+        },
+        "short_url_key": {
+          "type": "string"
+        }
+      }
+    },
+    "LinkUpdate": {
+      "type": "object",
+      "properties": {
+        "new_long_url": {
+          "type": "string"
+        },
+        "short_url_key": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "tracking_status": {
+          "type": "string"
+        }
+      }
+    },
+    "LinkUpdated": {
+      "type": "object",
+      "properties": {
+        "long_url": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "tracking_status": {
+          "type": "string"
+        }
+      }
+    },
     "LoginInfo": {
       "type": "object",
       "properties": {
@@ -858,42 +900,6 @@ func init() {
           "type": "boolean"
         },
         "token": {
-          "type": "string"
-        }
-      }
-    },
-    "URL": {
-      "type": "object",
-      "properties": {
-        "long_url": {
-          "type": "string"
-        }
-      }
-    },
-    "URLCreated": {
-      "type": "object",
-      "properties": {
-        "short_url": {
-          "type": "string"
-        },
-        "short_url_key": {
-          "type": "string"
-        }
-      }
-    },
-    "URLUpdate": {
-      "type": "object",
-      "properties": {
-        "new_long_url": {
-          "type": "string"
-        },
-        "short_url_key": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        },
-        "tracking_status": {
           "type": "string"
         }
       }

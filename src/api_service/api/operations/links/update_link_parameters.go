@@ -41,7 +41,7 @@ type UpdateLinkParams struct {
 	/*
 	  In: body
 	*/
-	Body *models.URLUpdate
+	Body *models.LinkUpdate
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -59,7 +59,7 @@ func (o *UpdateLinkParams) BindRequest(r *http.Request, route *middleware.Matche
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body models.URLUpdate
+		var body models.LinkUpdate
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("body", "body", "", err))
 		} else {

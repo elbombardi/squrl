@@ -26,7 +26,7 @@ type UpdateLinkOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *UpdateLinkOKBody `json:"body,omitempty"`
+	Payload *models.LinkUpdated `json:"body,omitempty"`
 }
 
 // NewUpdateLinkOK creates UpdateLinkOK with default headers values
@@ -36,13 +36,13 @@ func NewUpdateLinkOK() *UpdateLinkOK {
 }
 
 // WithPayload adds the payload to the update link o k response
-func (o *UpdateLinkOK) WithPayload(payload *UpdateLinkOKBody) *UpdateLinkOK {
+func (o *UpdateLinkOK) WithPayload(payload *models.LinkUpdated) *UpdateLinkOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the update link o k response
-func (o *UpdateLinkOK) SetPayload(payload *UpdateLinkOKBody) {
+func (o *UpdateLinkOK) SetPayload(payload *models.LinkUpdated) {
 	o.Payload = payload
 }
 

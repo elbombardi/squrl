@@ -78,7 +78,7 @@ func (s *LinksService) Resolve(params *ResolveLinkParams) (*Link, error) {
 }
 
 func (s *LinksService) getAccountInfo(prefix string) (*Account, error) {
-	dbAcc, err := s.AccountRepository.GetAccountByPrefix(context.Background(), prefix)
+	dbAcc, err := s.GetAccountByPrefix(context.Background(), prefix)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +91,7 @@ func (s *LinksService) getAccountInfo(prefix string) (*Account, error) {
 }
 
 func (s *LinksService) getLinkInfo(accountId int32, key string) (*Link, error) {
-	dbLink, err := s.LinkRepository.GetLinkByAccountIDAndShortURLKey(context.Background(),
+	dbLink, err := s.GetLinkByAccountIDAndShortURLKey(context.Background(),
 		db.GetLinkByAccountIDAndShortURLKeyParams{
 			AccountID: accountId,
 			ShortUrlKey: sql.NullString{

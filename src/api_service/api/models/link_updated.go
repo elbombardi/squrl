@@ -12,16 +12,13 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// URLUpdate URL update
+// LinkUpdated link updated
 //
-// swagger:model URLUpdate
-type URLUpdate struct {
+// swagger:model LinkUpdated
+type LinkUpdated struct {
 
-	// new long url
-	NewLongURL string `json:"new_long_url,omitempty"`
-
-	// short url key
-	ShortURLKey string `json:"short_url_key,omitempty"`
+	// long url
+	LongURL string `json:"long_url,omitempty"`
 
 	// status
 	Status string `json:"status,omitempty"`
@@ -30,18 +27,18 @@ type URLUpdate struct {
 	TrackingStatus string `json:"tracking_status,omitempty"`
 }
 
-// Validate validates this URL update
-func (m *URLUpdate) Validate(formats strfmt.Registry) error {
+// Validate validates this link updated
+func (m *LinkUpdated) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this URL update based on context it is used
-func (m *URLUpdate) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this link updated based on context it is used
+func (m *LinkUpdated) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *URLUpdate) MarshalBinary() ([]byte, error) {
+func (m *LinkUpdated) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -49,8 +46,8 @@ func (m *URLUpdate) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *URLUpdate) UnmarshalBinary(b []byte) error {
-	var res URLUpdate
+func (m *LinkUpdated) UnmarshalBinary(b []byte) error {
+	var res LinkUpdated
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -26,7 +26,7 @@ type CreateLinkOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.URLCreated `json:"body,omitempty"`
+	Payload *models.LinkCreated `json:"body,omitempty"`
 }
 
 // NewCreateLinkOK creates CreateLinkOK with default headers values
@@ -36,13 +36,13 @@ func NewCreateLinkOK() *CreateLinkOK {
 }
 
 // WithPayload adds the payload to the create link o k response
-func (o *CreateLinkOK) WithPayload(payload *models.URLCreated) *CreateLinkOK {
+func (o *CreateLinkOK) WithPayload(payload *models.LinkCreated) *CreateLinkOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the create link o k response
-func (o *CreateLinkOK) SetPayload(payload *models.URLCreated) {
+func (o *CreateLinkOK) SetPayload(payload *models.LinkCreated) {
 	o.Payload = payload
 }
 

@@ -41,7 +41,7 @@ type CreateLinkParams struct {
 	/*
 	  In: body
 	*/
-	Body *models.URL
+	Body *models.Link
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -59,7 +59,7 @@ func (o *CreateLinkParams) BindRequest(r *http.Request, route *middleware.Matche
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body models.URL
+		var body models.Link
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("body", "body", "", err))
 		} else {

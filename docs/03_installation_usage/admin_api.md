@@ -143,7 +143,7 @@ Create a new link
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
 | Authorization | `header` | string | `string` |  |  |  | Bearer <JWT Token> |
-| body | `body` | [URL](#url) | `models.URL` | |  | |  |
+| body | `body` | [Link](#link) | `models.Link` | |  | |  |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -163,7 +163,7 @@ Status: OK
    
   
 
-[URLCreated](#url-created)
+[LinkCreated](#link-created)
 
 ##### <span id="create-link-400"></span> 400 - Bad Request
 Status: Bad Request
@@ -372,7 +372,7 @@ Update Link
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
 | Authorization | `header` | string | `string` |  |  |  | Bearer <JWT Token> |
-| body | `body` | [URLUpdate](#url-update) | `models.URLUpdate` | |  | |  |
+| body | `body` | [LinkUpdate](#link-update) | `models.LinkUpdate` | |  | |  |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -393,7 +393,7 @@ Status: OK
    
   
 
-[UpdateLinkOKBody](#update-link-o-k-body)
+[LinkUpdated](#link-updated)
 
 ##### <span id="update-link-400"></span> 400 - Bad Request
 Status: Bad Request
@@ -430,25 +430,6 @@ Status: Internal Server Error
   
 
 [Error](#error)
-
-###### Inlined models
-
-**<span id="update-link-o-k-body"></span> UpdateLinkOKBody**
-
-
-  
-
-
-
-**Properties**
-
-| Name | Type | Go type | Required | Default | Description | Example |
-|------|------|---------|:--------:| ------- |-------------|---------|
-| long_url | string| `string` |  | |  |  |
-| status | string| `string` |  | |  |  |
-| tracking_status | string| `string` |  | |  |  |
-
-
 
 ## Models
 
@@ -531,6 +512,72 @@ Status: Internal Server Error
 
 
 
+### <span id="link"></span> Link
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| long_url | string| `string` |  | |  |  |
+
+
+
+### <span id="link-created"></span> LinkCreated
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| short_url | string| `string` |  | |  |  |
+| short_url_key | string| `string` |  | |  |  |
+
+
+
+### <span id="link-update"></span> LinkUpdate
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| new_long_url | string| `string` |  | |  |  |
+| short_url_key | string| `string` |  | |  |  |
+| status | string| `string` |  | |  |  |
+| tracking_status | string| `string` |  | |  |  |
+
+
+
+### <span id="link-updated"></span> LinkUpdated
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| long_url | string| `string` |  | |  |  |
+| status | string| `string` |  | |  |  |
+| tracking_status | string| `string` |  | |  |  |
+
+
+
 ### <span id="login-info"></span> LoginInfo
 
 
@@ -560,54 +607,5 @@ Status: Internal Server Error
 |------|------|---------|:--------:| ------- |-------------|---------|
 | success | boolean| `bool` |  | |  |  |
 | token | string| `string` |  | |  |  |
-
-
-
-### <span id="url"></span> URL
-
-
-  
-
-
-
-**Properties**
-
-| Name | Type | Go type | Required | Default | Description | Example |
-|------|------|---------|:--------:| ------- |-------------|---------|
-| long_url | string| `string` |  | |  |  |
-
-
-
-### <span id="url-created"></span> URLCreated
-
-
-  
-
-
-
-**Properties**
-
-| Name | Type | Go type | Required | Default | Description | Example |
-|------|------|---------|:--------:| ------- |-------------|---------|
-| short_url | string| `string` |  | |  |  |
-| short_url_key | string| `string` |  | |  |  |
-
-
-
-### <span id="url-update"></span> URLUpdate
-
-
-  
-
-
-
-**Properties**
-
-| Name | Type | Go type | Required | Default | Description | Example |
-|------|------|---------|:--------:| ------- |-------------|---------|
-| new_long_url | string| `string` |  | |  |  |
-| short_url_key | string| `string` |  | |  |  |
-| status | string| `string` |  | |  |  |
-| tracking_status | string| `string` |  | |  |  |
 
 

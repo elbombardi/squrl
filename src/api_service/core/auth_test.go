@@ -16,7 +16,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func buildAuthService() (
+func setupAuthService() (
 	*AuthenticationService,
 	*db_mocks.MockAccountRepository,
 	*util.Config,
@@ -52,7 +52,7 @@ func generateJWT(
 }
 
 func TestAuthenticateWithAdminAndInvalidePassword(t *testing.T) {
-	authService, _, _ := buildAuthService()
+	authService, _, _ := setupAuthService()
 
 	token, err := authService.Authenticate(ADMIN_USERNAME, "invalid")
 
@@ -62,7 +62,7 @@ func TestAuthenticateWithAdminAndInvalidePassword(t *testing.T) {
 }
 
 func TestAuthenticateAccountNotFound(t *testing.T) {
-	authService, accountRepo, _ := buildAuthService()
+	authService, accountRepo, _ := setupAuthService()
 
 	accountRepo.On("GetAccountByUsername", mock.Anything, "unknown").Return(db.Account{}, sql.ErrNoRows)
 
@@ -74,7 +74,7 @@ func TestAuthenticateAccountNotFound(t *testing.T) {
 }
 
 func TestAuthenticateUnexpectedErrorWhileLoadingAccount(t *testing.T) {
-	authService, accountRepo, _ := buildAuthService()
+	authService, accountRepo, _ := setupAuthService()
 
 	accountRepo.On("GetAccountByUsername", mock.Anything, "unknown").Return(db.Account{}, errors.New("unexpected error"))
 
@@ -86,7 +86,7 @@ func TestAuthenticateUnexpectedErrorWhileLoadingAccount(t *testing.T) {
 }
 
 func TestAuthenticateNonAdminInvalidCredentials(t *testing.T) {
-	authService, accountRepo, _ := buildAuthService()
+	authService, accountRepo, _ := setupAuthService()
 
 	accountRepo.On("GetAccountByUsername", mock.Anything, "account1").Return(db.Account{
 		HashedPassword: "wrongpassword!",
@@ -101,7 +101,7 @@ func TestAuthenticateNonAdminInvalidCredentials(t *testing.T) {
 }
 
 func TestAuthenticateOk(t *testing.T) {
-	authService, accountRepo, config := buildAuthService()
+	authService, accountRepo, config := setupAuthService()
 
 	accountRepo.On("GetAccountByUsername", mock.Anything, "account1").Return(db.Account{
 		HashedPassword: util.HashPassword("password"),
@@ -123,7 +123,7 @@ func TestAuthenticateOk(t *testing.T) {
 }
 
 func TestValidateWithoutBearerPrefix(t *testing.T) {
-	authService, _, _ := buildAuthService()
+	authService, _, _ := setupAuthService()
 
 	user, _ := authService.Validate("invalid")
 
@@ -131,7 +131,7 @@ func TestValidateWithoutBearerPrefix(t *testing.T) {
 }
 
 func TestValidateInvalidNumberOfSegments(t *testing.T) {
-	authService, _, _ := buildAuthService()
+	authService, _, _ := setupAuthService()
 
 	user, _ := authService.Validate("Bearer invalid")
 
@@ -139,7 +139,7 @@ func TestValidateInvalidNumberOfSegments(t *testing.T) {
 }
 
 func TestValidateInvalidSignMethod(t *testing.T) {
-	authService, _, config := buildAuthService()
+	authService, _, config := setupAuthService()
 
 	jwtToken, err := generateJWT("account1", config.TokenSymmetricKey, "squrl",
 		jwt.SigningMethodHS512, time.Now().Add(time.Hour*8).Unix())
@@ -152,7 +152,7 @@ func TestValidateInvalidSignMethod(t *testing.T) {
 }
 
 func TestValidateInvalidIss(t *testing.T) {
-	authService, _, config := buildAuthService()
+	authService, _, config := setupAuthService()
 
 	jwtToken, _ := generateJWT("account1", config.TokenSymmetricKey, "badiss",
 		jwt.SigningMethodHS256, time.Now().Add(time.Hour*8).Unix())
@@ -163,7 +163,7 @@ func TestValidateInvalidIss(t *testing.T) {
 }
 
 func TestValidateExpriedToken(t *testing.T) {
-	authService, _, config := buildAuthService()
+	authService, _, config := setupAuthService()
 
 	jwtToken, _ := generateJWT("account1", config.TokenSymmetricKey, "squrl",
 		jwt.SigningMethodHS256, time.Now().Add(-time.Hour*8).Unix())
@@ -174,7 +174,7 @@ func TestValidateExpriedToken(t *testing.T) {
 }
 
 func TestValidateInvalidSecret(t *testing.T) {
-	authService, _, _ := buildAuthService()
+	authService, _, _ := setupAuthService()
 
 	jwtToken, _ := generateJWT("account1", "somerandomkey", "squrl",
 		jwt.SigningMethodHS256, time.Now().Add(time.Hour*8).Unix())
@@ -185,7 +185,7 @@ func TestValidateInvalidSecret(t *testing.T) {
 }
 
 func TestValidateOk(t *testing.T) {
-	authService, _, config := buildAuthService()
+	authService, _, config := setupAuthService()
 
 	jwtToken, _ := generateJWT("account1", config.TokenSymmetricKey, "squrl",
 		jwt.SigningMethodHS256, time.Now().Add(time.Hour*8).Unix())

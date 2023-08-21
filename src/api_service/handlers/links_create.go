@@ -16,7 +16,7 @@ func (h *Handlers) HandleCreateLink(params links.CreateLinkParams, principal any
 		})
 	}
 
-	shortUrl, err := h.LinksManager.Shorten(params.Body.LongURL, principal.(*core.User))
+	link, err := h.LinksManager.Shorten(params.Body.LongURL, principal.(*core.User))
 
 	if err != nil {
 		coreErr, ok := err.(core.CoreError)
@@ -41,8 +41,8 @@ func (h *Handlers) HandleCreateLink(params links.CreateLinkParams, principal any
 		}
 	}
 
-	return links.NewCreateLinkOK().WithPayload(&models.URLCreated{
-		ShortURL:    shortUrl.ShortUrl.String(),
-		ShortURLKey: shortUrl.ShortUrlKey,
+	return links.NewCreateLinkOK().WithPayload(&models.LinkCreated{
+		ShortURL:    link.ShortUrl.String(),
+		ShortURLKey: link.ShortUrlKey,
 	})
 }

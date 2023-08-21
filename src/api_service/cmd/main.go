@@ -31,4 +31,5 @@ func main() {
 	if err != nil {
 		slog.Error("Unexpected error", "Details", err)
 	}
+
 }

@@ -150,13 +150,13 @@ paths:
         - name: body
           in: body
           schema:
-            $ref: '#/definitions/URL'
+            $ref: '#/definitions/Link'
 
       responses:
         200:
           description: Success
           schema:
-            $ref: '#/definitions/URLCreated'
+            $ref: '#/definitions/LinkCreated'
         400:
           description: Bad Request
           schema:
@@ -185,20 +185,14 @@ paths:
         - name: body
           in: body
           schema:
-            $ref: '#/definitions/URLUpdate'
+            $ref: '#/definitions/LinkUpdate'
 
       responses:
         200:
           description: Success
           schema:
-            type: object
-            properties:
-              long_url:
-                type: string
-              status:
-                type: string
-              tracking_status:
-                type: string
+            $ref: '#/definitions/LinkUpdated'
+            
         400:
           description: Bad Request
           schema:
@@ -272,13 +266,13 @@ definitions:
       status:
         type: string
 
-  URL:
+  Link:
     type: object
     properties:
       long_url:
         type: string 
   
-  URLCreated:
+  LinkCreated:
     type: object
     properties:
       short_url_key:
@@ -286,12 +280,22 @@ definitions:
       short_url:
         type: string
 
-  URLUpdate:
+  LinkUpdate:
     type: object
     properties:
       short_url_key:
         type: string
       new_long_url:
+        type: string
+      status:
+        type: string
+      tracking_status:
+        type: string
+
+  LinkUpdated:
+    type: object
+    properties:
+      long_url:
         type: string
       status:
         type: string
