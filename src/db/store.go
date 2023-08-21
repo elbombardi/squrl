@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"log/slog"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -56,19 +55,11 @@ func GetStoreInstance(conf DBConf) (*SQLStore, error) {
 	if dbInstance == nil {
 		var err error
 
-		retry := 3
-		for retry > 0 {
-			dbInstance, err = sql.Open(conf.DriverName, conf.DataSourceName)
-			if err != nil {
-				return nil, err
-			}
-			err = dbInstance.Ping()
-			if err != nil {
-				slog.Error("Database connection failed. Retrying in 5 seconds.", "retry", retry)
-				retry--
-				time.Sleep(5 * time.Second)
-			}
+		dbInstance, err = sql.Open(conf.DriverName, conf.DataSourceName)
+		if err != nil {
+			return nil, err
 		}
+		err = dbInstance.Ping()
 		if err != nil {
 			return nil, err
 		}
