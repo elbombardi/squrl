@@ -30,5 +30,3 @@ jobs:
     - name: Coverage
       run: go tool cover --func=api_service_cover.out
 
-    	
-
