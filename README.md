@@ -1,3 +1,7 @@
+<p align="center">
+    <a href="../../actions/workflows/api_service_build.yml"><img src="../../actions/workflows/api_service_build.yml/badge.svg" alt="" style="max-width: 100%;"></a>
+</p>
+
 # URL Shortner Application
 
 ## Requirements
