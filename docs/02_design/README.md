@@ -126,7 +126,7 @@ func generateRandomString(n int) string {
   ```
 ### 3. Create ShortURL:
 #### 3.1. Sequence diagram:
-<p align="center"><img src="images/Sequence_Create_Short_URL.png"/></p>
+<p align="center"><img src="images/Sequence_Create_Link.png"/></p>
 
 #### 3.2. Endpoint details :
    - Endpoint: `/v2/links/`
@@ -166,7 +166,7 @@ func generateRandomString(n int) string {
 
 ### 4. Update ShortURL:
 #### 4.1. Sequence diagram:
-<p align="center"><img src="images/Sequence_Update_Short_URL.png"/></p>
+<p align="center"><img src="images/Sequence_Update_Link.png"/></p>
 
 #### 4.2. Endpoint details :
    - Endpoint: `/v2/links/`
