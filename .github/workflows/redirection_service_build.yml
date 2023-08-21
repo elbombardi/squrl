@@ -29,3 +29,4 @@ jobs:
     
     - name: Coverage
       run: go tool cover --func=redirection_service_cover.out
+  

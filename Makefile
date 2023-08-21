@@ -16,5 +16,25 @@ run_redirection_service :
 sqlc:
 	sqlc generate
 
+docker_build:
+	docker build . -f src/api_service/Dockerfile -t squrl_api_service
+	docker build . -f src/redirection_service/Dockerfile -t squrl_redirection_service
+
+docker_clean: 
+	docker stop squrl_db
+	docker stop squrl_redirection_service
+	docker stop squrl_api_service
+	docker rm squrl_db
+	docker rm squrl_redirection_service
+	docker rm squrl_api_service
+
+compose:
+	make compose_down
+	docker-compose up --build 
+
+compose_down:
+	docker-compose down
+
+
 .PHONY: swagger_install swagger_validate swagger_generate_orders_server swagger_generate_validation_server swagger_generate_documentation
 

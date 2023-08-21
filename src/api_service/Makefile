@@ -20,9 +20,9 @@ test:
 	@echo 
 	@echo 
 	@echo "______________Started Unit Testing API Service_____________________"
-	go test -v --coverprofile orders_service_cover.out -coverpkg=./... ./...
-	go tool cover --func=orders_service_cover.out
-	rm orders_service_cover.out
+	go test -v --coverprofile api_service_cover.out -coverpkg=./... ./...
+	go tool cover --func=api_service_cover.out
+	rm api_service_cover.out
 	@echo "______________Finished Unit Testing API Service_____________________"
 	@echo 
 	@echo 
