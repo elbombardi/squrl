@@ -18,6 +18,7 @@ import (
 )
 
 func initializeApp() (*api.Server, error) {
+
 	// Loading configuration
 	config, err := util.LoadConfig()
 	if err != nil {
