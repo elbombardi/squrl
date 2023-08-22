@@ -7,6 +7,7 @@ import (
 )
 
 func finalizeApp() {
+
 	slog.Info("Closing Database connection..")
 	db.Finalize()
 }
