@@ -8,11 +8,13 @@ on:
     branches: [ "main" ]
     paths:
       - src/api_service/**
+      - src/db/**
 
   pull_request:
     branches: [ "main" ]
     paths:
       - src/api_service/**
+      - src/db/**
 
 jobs:
 
