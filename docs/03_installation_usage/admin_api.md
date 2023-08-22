@@ -77,7 +77,6 @@ Create a new account
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| Authorization | `header` | string | `string` |  |  |  | Bearer <JWT Token> |
 | account | `body` | [Account](#account) | `models.Account` | |  | |  |
 
 #### All responses
@@ -142,7 +141,6 @@ Create a new link
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| Authorization | `header` | string | `string` |  |  |  | Bearer <JWT Token> |
 | body | `body` | [Link](#link) | `models.Link` | |  | |  |
 
 #### All responses
@@ -296,7 +294,6 @@ Update an account
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| Authorization | `header` | string | `string` |  |  |  | Bearer <JWT Token> |
 | body | `body` | [AccountUpdate](#account-update) | `models.AccountUpdate` | |  | |  |
 
 #### All responses
@@ -371,7 +368,6 @@ Update Link
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| Authorization | `header` | string | `string` |  |  |  | Bearer <JWT Token> |
 | body | `body` | [LinkUpdate](#link-update) | `models.LinkUpdate` | |  | |  |
 
 #### All responses

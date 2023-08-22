@@ -46,12 +46,6 @@ func init() {
         "operationId": "UpdateAccount",
         "parameters": [
           {
-            "type": "string",
-            "description": "Bearer \u003cJWT Token\u003e",
-            "name": "Authorization",
-            "in": "header"
-          },
-          {
             "name": "body",
             "in": "body",
             "schema": {
@@ -105,12 +99,6 @@ func init() {
         "summary": "Create an account",
         "operationId": "CreateAccount",
         "parameters": [
-          {
-            "type": "string",
-            "description": "Bearer \u003cJWT Token\u003e",
-            "name": "Authorization",
-            "in": "header"
-          },
           {
             "name": "account",
             "in": "body",
@@ -180,12 +168,6 @@ func init() {
         "operationId": "UpdateLink",
         "parameters": [
           {
-            "type": "string",
-            "description": "Bearer \u003cJWT Token\u003e",
-            "name": "Authorization",
-            "in": "header"
-          },
-          {
             "name": "body",
             "in": "body",
             "schema": {
@@ -239,12 +221,6 @@ func init() {
         "summary": "Create a new linkL",
         "operationId": "CreateLink",
         "parameters": [
-          {
-            "type": "string",
-            "description": "Bearer \u003cJWT Token\u003e",
-            "name": "Authorization",
-            "in": "header"
-          },
           {
             "name": "body",
             "in": "body",
@@ -494,12 +470,6 @@ func init() {
         "operationId": "UpdateAccount",
         "parameters": [
           {
-            "type": "string",
-            "description": "Bearer \u003cJWT Token\u003e",
-            "name": "Authorization",
-            "in": "header"
-          },
-          {
             "name": "body",
             "in": "body",
             "schema": {
@@ -553,12 +523,6 @@ func init() {
         "summary": "Create an account",
         "operationId": "CreateAccount",
         "parameters": [
-          {
-            "type": "string",
-            "description": "Bearer \u003cJWT Token\u003e",
-            "name": "Authorization",
-            "in": "header"
-          },
           {
             "name": "account",
             "in": "body",
@@ -628,12 +592,6 @@ func init() {
         "operationId": "UpdateLink",
         "parameters": [
           {
-            "type": "string",
-            "description": "Bearer \u003cJWT Token\u003e",
-            "name": "Authorization",
-            "in": "header"
-          },
-          {
             "name": "body",
             "in": "body",
             "schema": {
@@ -687,12 +645,6 @@ func init() {
         "summary": "Create a new linkL",
         "operationId": "CreateLink",
         "parameters": [
-          {
-            "type": "string",
-            "description": "Bearer \u003cJWT Token\u003e",
-            "name": "Authorization",
-            "in": "header"
-          },
           {
             "name": "body",
             "in": "body",

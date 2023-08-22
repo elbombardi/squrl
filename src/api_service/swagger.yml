@@ -69,10 +69,6 @@ paths:
       security:
         - Bearer: []
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          description: "Bearer <JWT Token>"
         - name: account
           in: body
           schema:
@@ -103,10 +99,6 @@ paths:
       security:
         - Bearer: []
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          description: "Bearer <JWT Token>"
         - name: body
           in: body
           schema:
@@ -143,10 +135,6 @@ paths:
       security:
         - Bearer: []
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          description: "Bearer <JWT Token>"
         - name: body
           in: body
           schema:
@@ -178,10 +166,6 @@ paths:
       security:
         - Bearer: []      
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          description: "Bearer <JWT Token>"
         - name: body
           in: body
           schema:
