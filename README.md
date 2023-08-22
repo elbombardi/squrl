@@ -4,7 +4,7 @@
 </p>
 <p align="center">
     <a href="../../actions/workflows/api_service_docker_ci.yml"><img src="../../actions/workflows/api_service_docker_ci.yml/badge.svg" alt="" style="max-width: 100%;"></a>
-     <a href="../../actions/workflows/redirection_docker_ci.yml"><img src="../../actions/workflows/redirection_docker_ci.yml/badge.svg" alt="" style="max-width: 100%;"></a>
+     <a href="../../actions/workflows/redirection_service_docker_ci.yml"><img src="../../actions/workflows/redirection_service_docker_ci.yml/badge.svg" alt="" style="max-width: 100%;"></a>
 </p>
 
 # URL Shortner Application
