@@ -32,6 +32,17 @@ jobs:
     - name: Test
       run: go test -v --coverprofile redirection_service_cover.out ./src/redirection_service/...
     
-    - name: Coverage
+    - name: Coverage badge
+      uses: ncruces/go-coverage-report@v0
+      with:
+        report: 'true'
+        chart: 'true'
+        amend: 'false'
+      if: |
+        matrix.os == 'ubuntu-latest' &&
+        github.event_name == 'push'  
+      continue-on-error: true
+
+    - name: Detailed coverage report
       run: go tool cover --func=redirection_service_cover.out
   

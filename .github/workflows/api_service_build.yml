@@ -34,6 +34,17 @@ jobs:
     - name: Test
       run: go test -v --coverprofile api_service_cover.out ./src/api_service/...
     
-    - name: Coverage
+    - name: Coverage badge
+      uses: ncruces/go-coverage-report@v0
+      with:
+        report: 'true'
+        chart: 'true'
+        amend: 'false'
+      if: |
+        matrix.os == 'ubuntu-latest' &&
+        github.event_name == 'push'  
+      continue-on-error: true
+
+    - name: Coverage detailed report
       run: go tool cover --func=api_service_cover.out
 
