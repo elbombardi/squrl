@@ -28,21 +28,20 @@ jobs:
 
     - name: Build
       run: go build -v ./src/redirection_service/...
+  
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
 
     - name: Test
       run: go test -v --coverprofile redirection_service_cover.out ./src/redirection_service/...
     
-    - name: Coverage badge
-      uses: ncruces/go-coverage-report@v0
-      with:
-        report: 'true'
-        chart: 'true'
-        amend: 'false'
-      if: |
-        matrix.os == 'ubuntu-latest' &&
-        github.event_name == 'push'  
-      continue-on-error: true
-
     - name: Detailed coverage report
       run: go tool cover --func=redirection_service_cover.out
   
