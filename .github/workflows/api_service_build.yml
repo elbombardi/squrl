@@ -31,6 +31,11 @@ jobs:
     - name: Build
       run: go build -v ./src/api_service/...
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
     - name: Test
       run: go test -v --coverprofile api_service_cover.out ./src/api_service/...
     
@@ -40,9 +45,6 @@ jobs:
         report: 'true'
         chart: 'true'
         amend: 'false'
-      if: |
-        matrix.os == 'ubuntu-latest' &&
-        github.event_name == 'push'  
       continue-on-error: true
 
     - name: Coverage detailed report
