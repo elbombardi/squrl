@@ -63,11 +63,11 @@ func GetStoreInstance(conf DBConf) (*SQLStore, error) {
 
 		retries := 3
 		for retries > 0 {
+			retries--
 			err = dbInstance.Ping()
 			if err != nil {
 				slog.Error("Error while pinging the database. Retrying in 5 seconds", "Details", err)
 				time.Sleep(5 * time.Second)
-				retries--
 			}
 		}
 		if err != nil {
