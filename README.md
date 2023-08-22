@@ -3,7 +3,8 @@
      <a href="../../actions/workflows/redirection_service_build.yml"><img src="../../actions/workflows/redirection_service_build.yml/badge.svg" alt="" style="max-width: 100%;"></a>
 </p>
 <p align="center">
-[![api_service_docker_ci](https://github.com/elbombardi/squrl/actions/workflows/api_service_docker_ci.yml/badge.svg)](https://github.com/elbombardi/squrl/actions/workflows/api_service_docker_ci.yml)
+    <a href="../../actions/workflows/api_service_docker_ci.yml"><img src="../../actions/workflows/api_service_docker_ci.yml/badge.svg" alt="" style="max-width: 100%;"></a>
+     <a href="../../actions/workflows/redirection_docker_ci.yml"><img src="../../actions/workflows/redirection_docker_ci.yml/badge.svg" alt="" style="max-width: 100%;"></a>
 </p>
 
 # URL Shortner Application
