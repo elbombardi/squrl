@@ -17,7 +17,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/github"
 )
 
-func initializeApp() (*api.Server, error) 
+func initializeApp() (*api.Server, error) {
 	// Loading configuration
 	config, err := util.LoadConfig()
 	if err != nil {
