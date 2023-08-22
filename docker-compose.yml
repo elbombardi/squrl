@@ -22,10 +22,9 @@ services:
       DB_MAX_OPEN_CONNS: 10
       DB_MAX_IDLE_TIME: 1s
       DB_MAX_LIFE_TIME: 30s
-      # HOST: 0.0.0.0
       ADMIN_PASSWORD: 1qty5pNbtcSC5zb
       TOKEN_SYMMETRIC_KEY: BOPF5DbwQ3Zds4Npvc46UfL3QaOBOQdv
-      REDIRECTION_SERVER_BASE_URL: http://redirection_service:8085
+      REDIRECTION_SERVER_BASE_URL: http://0.0.0.0:8085
       LOG_LEVEL: debug
       ENVIRONMENT: compose
     expose:
@@ -48,13 +47,12 @@ services:
       DB_MAX_OPEN_CONNS: 10
       DB_MAX_IDLE_TIME: 1s
       DB_MAX_LIFE_TIME: 30s
-      # HOST: 0.0.0.0
       LOG_LEVEL: debug
       ENVIRONMENT: compose
     expose:
-      - "8080"
+      - "8085"
     ports:
-      - "8085:8080"
+      - "8085:8085"
     depends_on:
       - db
     entrypoint: ["/app/redirection_service", "--port", "8085", "--host", "0.0.0.0"]
