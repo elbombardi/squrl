@@ -61,7 +61,7 @@ func GetStoreInstance(conf DBConf) (*SQLStore, error) {
 			return nil, err
 		}
 
-		retries := 3
+		retries := 5
 		for retries > 0 {
 			retries--
 			err = dbInstance.Ping()
