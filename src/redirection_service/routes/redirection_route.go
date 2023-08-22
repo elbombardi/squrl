@@ -23,12 +23,13 @@ func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
 		coreError, ok := err.(core.CoreError)
 		switch {
 		case ok && coreError.Code == core.ErrAccountNotFound:
-			return page404(c)
+			fallthrough
 		case ok && coreError.Code == core.ErrAccountDisabled:
 			fallthrough
 		case ok && coreError.Code == core.ErrLinkNotFound:
 			fallthrough
 		case ok && coreError.Code == core.ErrLinkDisabled:
+			return page404(c)
 		case ok && coreError.Code == core.ErrBadParams:
 			fallthrough
 		default:
