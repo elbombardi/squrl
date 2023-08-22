@@ -7,7 +7,7 @@
         <mxCell id="q-OhYP1uOF4gDPvKc08G-1" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="220" y="160" width="470" height="300" as="geometry" />
         </mxCell>
-        <mxCell id="MTcJnHc71G5RBtE0BJgJ-23" value="Modifies Customer &lt;br&gt;&amp;amp; Short URL data" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.14;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;edgeStyle=orthogonalEdgeStyle;curved=1;" parent="1" source="SudhCIIvP9Om_FVVBhZo-3" target="MTcJnHc71G5RBtE0BJgJ-4" edge="1">
+        <mxCell id="MTcJnHc71G5RBtE0BJgJ-23" value="Modifies Account &lt;br&gt;&amp;amp; Short URL data" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.14;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;edgeStyle=orthogonalEdgeStyle;curved=1;" parent="1" source="SudhCIIvP9Om_FVVBhZo-3" target="MTcJnHc71G5RBtE0BJgJ-4" edge="1">
           <mxGeometry x="0.0282" y="-8" relative="1" as="geometry">
             <mxPoint x="407" y="258.3662674650699" as="sourcePoint" />
             <mxPoint x="624" y="257.5" as="targetPoint" />
@@ -31,7 +31,7 @@
         <mxCell id="SudhCIIvP9Om_FVVBhZo-5" value="Redirection Server" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.traditional_server;fillColor=#00BEF2;gradientColor=none;" parent="1" vertex="1">
           <mxGeometry x="367" y="350" width="46.5" height="63" as="geometry" />
         </mxCell>
-        <mxCell id="SudhCIIvP9Om_FVVBhZo-12" value="Manages Customers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.017;entryY=0.238;entryDx=0;entryDy=0;entryPerimeter=0;curved=1;" parent="1" source="SudhCIIvP9Om_FVVBhZo-7" target="SudhCIIvP9Om_FVVBhZo-3" edge="1">
+        <mxCell id="SudhCIIvP9Om_FVVBhZo-12" value="Manages Accounts" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.017;entryY=0.238;entryDx=0;entryDy=0;entryPerimeter=0;curved=1;" parent="1" source="SudhCIIvP9Om_FVVBhZo-7" target="SudhCIIvP9Om_FVVBhZo-3" edge="1">
           <mxGeometry x="-0.0649" y="-13" relative="1" as="geometry">
             <mxPoint y="1" as="offset" />
           </mxGeometry>
@@ -44,7 +44,7 @@
             <mxPoint x="1" y="1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="SudhCIIvP9Om_FVVBhZo-8" value="Customer" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.user;" parent="1" vertex="1">
+        <mxCell id="SudhCIIvP9Om_FVVBhZo-8" value="Account" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.user;" parent="1" vertex="1">
           <mxGeometry x="90" y="305" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="SudhCIIvP9Om_FVVBhZo-10" value="Clicks on the short URL" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;" parent="1" source="SudhCIIvP9Om_FVVBhZo-9" target="SudhCIIvP9Om_FVVBhZo-5" edge="1">

@@ -1,7 +1,5 @@
-Tests
-Dockerization/Compose
-CICD Github actions 
-Integration tests
-AWS Fragate
-Monitoring (prometheus..etc)
-And Maybe UI if time allows
+- Tests: add unit testing to the db layer
+- Tests: add end to end testing 
+- Monitoring: add prometheus support
+- CICD: Push docker to ghcr.io
+- CICD : Github action to deploy on AWS Fargate (cloudformation)   
