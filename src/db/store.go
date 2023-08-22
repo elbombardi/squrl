@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"log/slog"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -59,7 +60,16 @@ func GetStoreInstance(conf DBConf) (*SQLStore, error) {
 		if err != nil {
 			return nil, err
 		}
-		err = dbInstance.Ping()
+
+		retries := 3
+		for retries > 0 {
+			err = dbInstance.Ping()
+			if err != nil {
+				slog.Error("Error while pinging the database. Retrying in 5 seconds", "Details", err)
+				time.Sleep(5 * time.Second)
+				retries--
+			}
+		}
 		if err != nil {
 			return nil, err
 		}
