@@ -48,6 +48,16 @@ jobs:
     - name: Coverage report
       run: go tool cover --func=api_service_cover.out
 
+    - name: Quality Gate - Test coverage shall be above threshold
+      run: |
+        threshold=80
+        coverage=$(go tool cover -func=api_service_cover.out | grep total | awk '{print $3}')
+        if [ $coverage -lt $threshold ]; then
+          echo "Coverage is below threshold ($threshold < $coverage)"
+          exit 1
+        fi
+        echo "Coverage is above threshold ($threshold < $coverage)"
+
   docker:
     needs: test
     runs-on: ubuntu-latest
