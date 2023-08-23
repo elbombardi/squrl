@@ -12,6 +12,7 @@ type MockAccountRepository struct {
 }
 
 func (r *MockAccountRepository) CheckPrefixExists(ctx context.Context, prefix string) (bool, error) {
+
 	args := r.Called(ctx, prefix)
 
 	if rf, ok := args.Get(0).(func(context.Context, string) (bool, error)); ok {
