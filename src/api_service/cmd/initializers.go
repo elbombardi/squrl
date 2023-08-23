@@ -11,10 +11,6 @@ import (
 	"github.com/elbombardi/squrl/src/api_service/util"
 	"github.com/elbombardi/squrl/src/db"
 	"github.com/go-openapi/loads"
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-	_ "github.com/golang-migrate/migrate/v4/source/github"
 )
 
 func initializeApp() (*api.Server, error) {
@@ -50,23 +46,15 @@ func initializeApp() (*api.Server, error) {
 
 	// Checking DB schema migration
 	slog.Info("Check for db schema changes..")
-	driver, err := postgres.WithInstance(store.DB, &postgres.Config{})
-	m, err := migrate.NewWithDatabaseInstance(
-		"file://../db/migration",
-		"postgres", driver)
+	migrated, err := db.MigrateIfNeeded("file://../db/migration")
 	if err != nil {
-		slog.Error("Error preparing db migrations", "Details", err)
+		slog.Error("Error while checking for db schema changes", "Details", err)
 		return nil, err
 	}
-	err = m.Up()
-	if err != nil {
-		if err != migrate.ErrNoChange {
-			slog.Error("Error executing db migrations", "Details", err)
-			return nil, err
-		}
-		slog.Info("No db schema change")
-	} else {
+	if migrated {
 		slog.Info("DB schema migration successful")
+	} else {
+		slog.Info("No DB schema changes")
 	}
 
 	// Initializing API server

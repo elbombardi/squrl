@@ -3,8 +3,14 @@ package db
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log/slog"
 	"time"
+
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/golang-migrate/migrate/v4/source/github"
 
 	_ "github.com/lib/pq"
 )
@@ -84,6 +90,26 @@ func GetStoreInstance(conf DBConf) (*SQLStore, error) {
 		DB:      dbInstance,
 		Queries: New(dbInstance),
 	}, nil
+}
+
+func MigrateIfNeeded(schemaURL string) (bool, error) {
+	driver, err := postgres.WithInstance(dbInstance, &postgres.Config{})
+	m, err := migrate.NewWithDatabaseInstance(
+		schemaURL,
+		"postgres", driver)
+	if err != nil {
+		return false, fmt.Errorf("Error preparing db migrations (%v)", err)
+	}
+	err = m.Up()
+	if err != nil {
+		if err != migrate.ErrNoChange {
+			return false, fmt.Errorf("Error executing db migrations (%v)", err)
+		}
+		// No Changes
+		return false, nil
+	}
+	// Migration successful
+	return true, nil
 }
 
 func Finalize() error {
