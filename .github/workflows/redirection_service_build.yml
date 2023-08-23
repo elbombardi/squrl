@@ -28,7 +28,7 @@ jobs:
     - name: Build
       run: go build -v ./src/redirection_service/...
   
-  docker:
+  test:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -45,7 +45,7 @@ jobs:
     - name: Detailed coverage report
       run: go tool cover --func=redirection_service_cover.out
   
-   test:
+   docker:
     needs: [build, test]
     steps:
     - uses: actions/checkout@v3
