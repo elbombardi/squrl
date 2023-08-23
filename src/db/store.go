@@ -58,6 +58,10 @@ type DBConf struct {
 	MaxLifeTime    time.Duration
 }
 
+// GetStoreInstance returns a singleton instance of the SQLStore
+// If the instance is not initialized, it will initialize it
+// with the provided configuration
+// If the instance is already initialized, it will return the existing instance
 func GetStoreInstance(conf DBConf) (*SQLStore, error) {
 	if dbInstance == nil {
 		var err error
@@ -92,6 +96,12 @@ func GetStoreInstance(conf DBConf) (*SQLStore, error) {
 	}, nil
 }
 
+// MigrateIfNeeded checks if the database schema needs to be migrated
+// and performs the migration if needed.
+// schemaURL is the path to the directory containing the migration files
+// e.g. file://../db/migration
+//
+// Returns true if the migration was performed, false if no migration was needed
 func MigrateIfNeeded(schemaURL string) (bool, error) {
 	driver, err := postgres.WithInstance(dbInstance, &postgres.Config{})
 	m, err := migrate.NewWithDatabaseInstance(

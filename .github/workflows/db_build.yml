@@ -41,7 +41,7 @@ jobs:
         go-version: '1.21'
 
     - name: Test
-      run: go test --coverprofile cover.out ./src/api_service/...
+      run: go test --coverprofile cover.out ./src/db/...
     
     - name: Coverage report
       run: go tool cover --func=cover.out
