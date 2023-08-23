@@ -50,7 +50,7 @@ jobs:
 
     - name: Quality Gate - Test coverage shall be above threshold
       env: 
-        COVERAGE_THRESHOLD: 80
+        COVERAGE_THRESHOLD: ${{ vars.COVERAGE_THRESHOLD }}
       run: |
         echo "Coverage threshold is      : $COVERAGE_THRESHOLD %"
         totalCoverage=$(go tool cover -func=cover.out | grep total | grep -o -E '[0-9]+\.[0-9]+')

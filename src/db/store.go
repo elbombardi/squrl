@@ -63,6 +63,7 @@ type DBConf struct {
 // with the provided configuration
 // If the instance is already initialized, it will return the existing instance
 func GetStoreInstance(conf DBConf) (*SQLStore, error) {
+
 	if dbInstance == nil {
 		var err error
 
