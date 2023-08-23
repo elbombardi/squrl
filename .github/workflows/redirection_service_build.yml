@@ -45,3 +45,11 @@ jobs:
     
     - name: Detailed coverage report
       run: go tool cover --func=redirection_service_cover.out
+
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file src/redirection_service/Dockerfile --tag squrl_redirection_service:$(date +%s)
