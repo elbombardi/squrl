@@ -15,6 +15,7 @@ on:
       - src/redirection_service/**
       - src/db/**
 jobs:
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -44,4 +45,3 @@ jobs:
     
     - name: Detailed coverage report
       run: go tool cover --func=redirection_service_cover.out
-  
