@@ -38,7 +38,7 @@ func (h *Handlers) HandleUpdateAccount(params accounts.UpdateAccountParams, prin
 			return accounts.NewUpdateAccountUnauthorized().WithPayload(&models.Error{
 				Message: "Unauthorized access"})
 		case ok && coreErr.Code == core.ErrAccountNotFound:
-			return accounts.NewUpdateAccountUnauthorized().WithPayload(&models.Error{
+			return accounts.NewUpdateAccountNotFound().WithPayload(&models.Error{
 				Message: "Account not found for this username: " + params.Body.Username})
 		default:
 			return accounts.NewUpdateAccountInternalServerError().WithPayload(&models.Error{

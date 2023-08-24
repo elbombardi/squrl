@@ -160,6 +160,65 @@ func TestHandleCreateAccountWithoutToken(t *testing.T) {
 	require.Equal(t, http.StatusUnauthorized, res.StatusCode, "Unexpected status code")
 }
 
+func TestHandleCreateAccountBadParams(t *testing.T) {
+	helper, err := setup()
+	require.NoError(t, err, "Error while setting up the test")
+	ts := httptest.NewServer(helper.Handler)
+	defer ts.Close()
+
+	helper.Authenticator.On("Validate", mock.Anything, mock.Anything).Return(&core.User{
+		Username: "admin",
+		IsAdmin:  true,
+	}, nil)
+
+	helper.AccountsManager.On("Create", mock.Anything, mock.Anything).Return((*core.CreateAccountResponse)(nil), core.CoreError{
+		Code:    core.ErrBadParams,
+		Message: "Bad params",
+	})
+
+	reqBody, err := json.Marshal(models.Account{
+		Username: "test",
+		Email:    "test@gmail.com",
+	})
+	req, err := http.NewRequest("POST", ts.URL+"/v1/accounts", bytes.NewReader(reqBody))
+	require.NoError(t, err, "Error while creating request")
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer token")
+
+	res, err := http.DefaultClient.Do(req)
+	require.NoError(t, err, "Error while sending request")
+	require.Equal(t, http.StatusBadRequest, res.StatusCode, "Unexpected status code")
+}
+
+func TestHandleCreateAccountBadJson(t *testing.T) {
+	helper, err := setup()
+	require.NoError(t, err, "Error while setting up the test")
+	ts := httptest.NewServer(helper.Handler)
+	defer ts.Close()
+
+	helper.Authenticator.On("Validate", mock.Anything, mock.Anything).Return(&core.User{
+		Username: "admin",
+		IsAdmin:  true,
+	}, nil)
+
+	helper.AccountsManager.On("Create", mock.Anything, mock.Anything).Return(&core.CreateAccountResponse{
+		Password: "password",
+		Prefix:   "prefix",
+	}, nil)
+
+	reqBody := []byte("bad json") // <==== Bad JSON
+	req, err := http.NewRequest("POST", ts.URL+"/v1/accounts", bytes.NewReader(reqBody))
+	require.NoError(t, err, "Error while creating request")
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer token")
+
+	res, err := http.DefaultClient.Do(req)
+	require.NoError(t, err, "Error while sending request")
+	require.Equal(t, http.StatusBadRequest, res.StatusCode, "Unexpected status code")
+}
+
 func TestHandleCreateAccountWithNoParams(t *testing.T) {
 	helper, err := setup()
 	require.NoError(t, err, "Error while setting up the test")
