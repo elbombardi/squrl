@@ -3,6 +3,8 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -16,6 +18,7 @@ import (
 	mocks_util "github.com/elbombardi/squrl/src/api_service/mocks/util"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 
 	"github.com/elbombardi/squrl/src/api_service/util"
 	"github.com/go-openapi/loads"
@@ -62,12 +65,73 @@ func setup() (*TestHelper, error) {
 		return nil, err
 	}
 	helper.Handler = server.GetHandler()
+
 	return helper, nil
 }
 
-func TestHandleCreateAccountOK(t *testing.T) {
+func TestHandleCreateAccountWithUnexpectedError(t *testing.T) {
 	helper, err := setup()
-	assert.NoError(t, err, "Error while setting up the test")
+	require.NoError(t, err, "Error while setting up the test")
+	ts := httptest.NewServer(helper.Handler)
+	defer ts.Close()
+
+	helper.Authenticator.On("Validate", mock.Anything, mock.Anything).Return(&core.User{
+		Username: "admin",
+		IsAdmin:  true,
+	}, nil)
+
+	helper.AccountsManager.On("Create", mock.Anything, mock.Anything).Return((*core.CreateAccountResponse)(nil), errors.New("unexpected error"))
+
+	reqBody, err := json.Marshal(models.Account{
+		Username: "test",
+		Email:    "test@gmail.com",
+	})
+	req, err := http.NewRequest("POST", ts.URL+"/v1/accounts", bytes.NewReader(reqBody))
+	if err != nil {
+		fmt.Println(err)
+	}
+	require.NoError(t, err, "Error while creating request")
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer token")
+
+	res, err := http.DefaultClient.Do(req)
+	assert.NoError(t, err, "Expected error while sending request")
+	assert.Equal(t, http.StatusInternalServerError, res.StatusCode, "Unexpected status code")
+}
+
+func TestHandleCreateAccountWithAuthorizationError(t *testing.T) {
+	helper, err := setup()
+	require.NoError(t, err, "Error while setting up the test")
+	ts := httptest.NewServer(helper.Handler)
+	defer ts.Close()
+
+	helper.Authenticator.On("Validate", mock.Anything, mock.Anything).Return((*core.User)(nil), nil)
+
+	helper.AccountsManager.On("Create", mock.Anything, mock.Anything).Return((*core.CreateAccountResponse)(nil), core.CoreError{
+		Code:    core.ErrUnauthorized,
+		Message: "Unauthorized access",
+	})
+
+	reqBody, err := json.Marshal(models.Account{
+		Username: "test",
+		Email:    "test@gmail.com",
+	})
+	req, err := http.NewRequest("POST", ts.URL+"/v1/accounts", bytes.NewReader(reqBody))
+	require.NoError(t, err, "Error while creating request")
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer token")
+
+	res, err := http.DefaultClient.Do(req)
+	fmt.Println(err)
+	require.NoError(t, err, "Error while sending request")
+	require.Equal(t, http.StatusUnauthorized, res.StatusCode, "Unexpected status code")
+}
+
+func TestHandleCreateAccountWithoutToken(t *testing.T) {
+	helper, err := setup()
+	require.NoError(t, err, "Error while setting up the test")
 	ts := httptest.NewServer(helper.Handler)
 	defer ts.Close()
 
@@ -86,21 +150,80 @@ func TestHandleCreateAccountOK(t *testing.T) {
 		Email:    "test@gmail.com",
 	})
 	req, err := http.NewRequest("POST", ts.URL+"/v1/accounts", bytes.NewReader(reqBody))
-	assert.NoError(t, err, "Error while creating request")
+	require.NoError(t, err, "Error while creating request")
+
+	req.Header.Set("Content-Type", "application/json")
+	// req.Header.Set("Authorization", "Bearer token")
+
+	res, err := http.DefaultClient.Do(req)
+	require.NoError(t, err, "Error while sending request")
+	require.Equal(t, http.StatusUnauthorized, res.StatusCode, "Unexpected status code")
+}
+
+func TestHandleCreateAccountWithNoParams(t *testing.T) {
+	helper, err := setup()
+	require.NoError(t, err, "Error while setting up the test")
+	ts := httptest.NewServer(helper.Handler)
+	defer ts.Close()
+
+	helper.Authenticator.On("Validate", mock.Anything, mock.Anything).Return(&core.User{
+		Username: "admin",
+		IsAdmin:  true,
+	}, nil)
+
+	helper.AccountsManager.On("Create", mock.Anything, mock.Anything).Return(&core.CreateAccountResponse{
+		Password: "password",
+		Prefix:   "prefix",
+	}, nil)
+
+	reqBody := []byte("") // <==== empty body
+	req, err := http.NewRequest("POST", ts.URL+"/v1/accounts", bytes.NewReader(reqBody))
+	require.NoError(t, err, "Error while creating request")
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer token")
 
 	res, err := http.DefaultClient.Do(req)
-	assert.NoError(t, err, "Error while sending request")
-	assert.Equal(t, http.StatusOK, res.StatusCode, "Unexpected status code")
+	require.NoError(t, err, "Error while sending request")
+	require.Equal(t, http.StatusBadRequest, res.StatusCode, "Unexpected status code")
+}
+
+func TestHandleCreateAccountOK(t *testing.T) {
+	helper, err := setup()
+	require.NoError(t, err, "Error while setting up the test")
+	ts := httptest.NewServer(helper.Handler)
+	defer ts.Close()
+
+	helper.Authenticator.On("Validate", mock.Anything, mock.Anything).Return(&core.User{
+		Username: "admin",
+		IsAdmin:  true,
+	}, nil)
+
+	helper.AccountsManager.On("Create", mock.Anything, mock.Anything).Return(&core.CreateAccountResponse{
+		Password: "password",
+		Prefix:   "prefix",
+	}, nil)
+
+	reqBody, err := json.Marshal(models.Account{
+		Username: "test",
+		Email:    "test@gmail.com",
+	})
+	req, err := http.NewRequest("POST", ts.URL+"/v1/accounts", bytes.NewReader(reqBody))
+	require.NoError(t, err, "Error while creating request")
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer token")
+
+	res, err := http.DefaultClient.Do(req)
+	require.NoError(t, err, "Error while sending request")
+	require.Equal(t, http.StatusOK, res.StatusCode, "Unexpected status code")
 
 	respBody, _ := io.ReadAll(res.Body)
 
 	accountCreated := &models.AccountCreated{}
 	err = json.Unmarshal(respBody, accountCreated)
-	assert.NoError(t, err, "Error while unmarshalling response body")
+	require.NoError(t, err, "Error while unmarshalling response body")
 
-	assert.Equal(t, "password", accountCreated.Password, "Unexpected password")
-	assert.Equal(t, "prefix", accountCreated.Prefix, "Unexpected prefix")
+	require.Equal(t, "password", accountCreated.Password, "Unexpected password")
+	require.Equal(t, "prefix", accountCreated.Prefix, "Unexpected prefix")
 }
