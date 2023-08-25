@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/elbombardi/squrl/src/db"
-	db_mocks "github.com/elbombardi/squrl/src/db/mocks"
 	util_mocks "github.com/elbombardi/squrl/src/redirection_service/mocks/util"
 	"github.com/elbombardi/squrl/src/redirection_service/util"
 	"github.com/stretchr/testify/assert"
@@ -16,14 +15,14 @@ import (
 
 func setup() (
 	*LinksService,
-	*db_mocks.MockAccountRepository,
-	*db_mocks.MockLinkRepository,
-	*db_mocks.MockClickRepository,
+	*db.MockAccountRepository,
+	*db.MockLinkRepository,
+	*db.MockClickRepository,
 	*util.Config,
 ) {
-	accountRepo := new(db_mocks.MockAccountRepository)
-	linkRepo := new(db_mocks.MockLinkRepository)
-	clickRepo := new(db_mocks.MockClickRepository)
+	accountRepo := new(db.MockAccountRepository)
+	linkRepo := new(db.MockLinkRepository)
+	clickRepo := new(db.MockClickRepository)
 	config := util_mocks.MockConfig()
 	return &LinksService{
 			AccountRepository: accountRepo,

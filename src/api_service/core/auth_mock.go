@@ -1,7 +1,6 @@
 package core
 
 import (
-	"github.com/elbombardi/squrl/src/api_service/core"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -18,11 +17,11 @@ func (m *MockAuthenticator) Authenticate(username string, password string) (toke
 	return args.String(0), args.Error(1)
 }
 
-func (m *MockAuthenticator) Validate(token string) (user *core.User, err error) {
+func (m *MockAuthenticator) Validate(token string) (user *User, err error) {
 	args := m.Called(token)
 
-	if rf, ok := args.Get(0).(func(token string) (user *core.User, err error)); ok {
+	if rf, ok := args.Get(0).(func(token string) (user *User, err error)); ok {
 		return rf(token)
 	}
-	return args.Get(0).(*core.User), args.Error(1)
+	return args.Get(0).(*User), args.Error(1)
 }

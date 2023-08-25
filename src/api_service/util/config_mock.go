@@ -1,9 +1,7 @@
 package util
 
-import "github.com/elbombardi/squrl/src/api_service/util"
-
-func MockConfig() *util.Config {
-	return &util.Config{
+func MockConfig() *Config {
+	return &Config{
 		Environment:        "test",
 		DriverName:         "postgres",
 		DBSource:           "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable",

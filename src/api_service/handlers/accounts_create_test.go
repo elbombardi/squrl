@@ -14,8 +14,6 @@ import (
 	"github.com/elbombardi/squrl/src/api_service/api/models"
 	"github.com/elbombardi/squrl/src/api_service/api/operations"
 	"github.com/elbombardi/squrl/src/api_service/core"
-	mocks_core "github.com/elbombardi/squrl/src/api_service/mocks/core"
-	mocks_util "github.com/elbombardi/squrl/src/api_service/mocks/util"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -26,9 +24,9 @@ import (
 
 type TestHelper struct {
 	Handlers        *Handlers
-	AccountsManager *mocks_core.MockAccountsManager
-	Authenticator   *mocks_core.MockAuthenticator
-	LinksManager    *mocks_core.MockLinksManager
+	AccountsManager *core.MockAccountsManager
+	Authenticator   *core.MockAuthenticator
+	LinksManager    *core.MockLinksManager
 	Config          *util.Config
 	Handler         http.Handler
 }
@@ -45,10 +43,10 @@ func setup() (*TestHelper, error) {
 	server := api.NewServer(adminAPI)
 
 	helper := &TestHelper{
-		AccountsManager: new(mocks_core.MockAccountsManager),
-		Authenticator:   new(mocks_core.MockAuthenticator),
-		LinksManager:    new(mocks_core.MockLinksManager),
-		Config:          mocks_util.MockConfig(),
+		AccountsManager: new(core.MockAccountsManager),
+		Authenticator:   new(core.MockAuthenticator),
+		LinksManager:    new(core.MockLinksManager),
+		Config:          util.MockConfig(),
 	}
 
 	helper.Handlers = &Handlers{

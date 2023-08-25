@@ -34,14 +34,14 @@ func ValidateJWT(bearerToken, tokenSymmetricKey string) (string, error) {
 		return "", errors.New(fmt.Sprintln(err))
 	}
 	if token.Method != jwt.SigningMethodHS256 {
-		return "", errors.New(fmt.Sprint("Invalid JWT signing method"))
+		return "", errors.New(fmt.Sprint("invalid JWT signing method"))
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return "", errors.New(fmt.Sprint("Invalid JWT token"))
+		return "", errors.New(fmt.Sprint("invalid JWT token"))
 	}
 	if claims["iss"] != "squrl" {
-		return "", errors.New(fmt.Sprint("Invalid issuer ", claims["iss"]))
+		return "", errors.New(fmt.Sprint("invalid issuer ", claims["iss"]))
 	}
 	return claims["user"].(string), nil
 }
