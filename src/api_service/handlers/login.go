@@ -25,11 +25,12 @@ func (h *Handlers) HandleLogin(params general.LoginParams) middleware.Responder 
 		coreError, ok := err.(core.CoreError)
 		switch {
 		case ok && coreError.Code == core.ErrBadParams:
-			return general.NewLoginUnauthorized().WithPayload(&models.Error{
+			return general.NewLoginBadRequest().WithPayload(&models.Error{
 				Message: coreError.Message})
 		case ok && coreError.Code == core.ErrAccountNotFound:
-			return general.NewLoginUnauthorized().WithPayload(&models.Error{
-				Message: "Invalid credentials"})
+			fallthrough
+		case ok && coreError.Code == core.ErrAccountDisabled:
+			fallthrough
 		case ok && coreError.Code == core.ErrUnauthorized:
 			return general.NewLoginUnauthorized().WithPayload(&models.Error{
 				Message: "Invalid credentials"})

@@ -90,7 +90,8 @@ func TestAuthenticateNonAdminInvalidCredentials(t *testing.T) {
 
 	accountRepo.On("GetAccountByUsername", mock.Anything, "account1").Return(db.Account{
 		HashedPassword: "wrongpassword!",
-		Username:       "unknown",
+		Username:       "account1",
+		Enabled:        true,
 	}, nil)
 
 	token, err := authService.Authenticate("account1", "password")
@@ -105,7 +106,8 @@ func TestAuthenticateOk(t *testing.T) {
 
 	accountRepo.On("GetAccountByUsername", mock.Anything, "account1").Return(db.Account{
 		HashedPassword: util.HashPassword("password"),
-		Username:       "unknown",
+		Username:       "account1",
+		Enabled:        true,
 	}, nil)
 
 	token, err := authService.Authenticate("account1", "password")

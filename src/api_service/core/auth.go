@@ -42,6 +42,13 @@ func (s *AuthenticationService) Authenticate(username string, password string) (
 				"Username", username, "Details", err)
 			return token, err
 		}
+		if !account.Enabled {
+			s.Error("Account disabled", "Account", username)
+			return token, CoreError{
+				Code:    ErrAccountDisabled,
+				Message: "account disabled",
+			}
+		}
 		validatePassword = func(password string) bool {
 			return util.VerifyPassword(account.HashedPassword, password)
 		}
