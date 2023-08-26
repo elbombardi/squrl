@@ -38,8 +38,10 @@ func TestAccounts(t *testing.T) {
 	require.Equal(t, Account{}, account, "Account should be empty")
 
 	err = testStore.InsertNewAccount(ctx, InsertNewAccountParams{
-		Prefix:   prefix,
-		Username: username,
+		Prefix:         prefix,
+		Username:       username,
+		Email:          "email@gmail.com",
+		HashedPassword: "$2a$1",
 	})
 	require.NoError(t, err, "Error should be nil")
 
