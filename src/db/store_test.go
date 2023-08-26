@@ -2,6 +2,8 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"os"
 	"testing"
 
@@ -65,4 +67,24 @@ func TestTransactional(t *testing.T) {
 		})
 	})
 	require.NoError(t, err, "Error should be nil")
+
+	account, err := testStore.GetAccountByPrefix(ctx, "tst")
+	require.NoError(t, err, "Error should be nil")
+	require.Equal(t, "username", account.Username, "Username should be equal")
+	require.Equal(t, "tst", account.Prefix, "Prefix should be equal")
+
+	err = testStore.Transactional(ctx, func(queries *Queries) error {
+		testStore.InsertNewAccount(ctx, InsertNewAccountParams{
+			Prefix:         "tst2",
+			Username:       "username",
+			Email:          "email@gmail.com",
+			HashedPassword: "$2a$1",
+		})
+		return errors.New("error")
+	})
+	require.Error(t, err, "Error should not be nil")
+
+	_, err = testStore.GetAccountByPrefix(ctx, "tst2")
+	require.Error(t, err, "Error should not be nil")
+	require.Equal(t, sql.ErrNoRows, err, "Error should be sql.ErrNoRows")
 }
