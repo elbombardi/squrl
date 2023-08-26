@@ -15,7 +15,6 @@ import (
 // UpdateAccountStatusByUsername(ctx context.Context, arg UpdateAccountStatusByUsernameParams) error
 
 func TestAccounts(t *testing.T) {
-
 	ctx := context.Background()
 
 	prefix := "tst"
