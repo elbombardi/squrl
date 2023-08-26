@@ -8,6 +8,8 @@ import (
 )
 
 func TestCheckPrefixExists(t *testing.T) {
+	setup()
+	defer teardown()
 	ctx := context.Background()
 
 	prefix := "tst"
@@ -29,6 +31,8 @@ func TestCheckPrefixExists(t *testing.T) {
 }
 
 func TestCheckUsernameExists(t *testing.T) {
+	setup()
+	defer teardown()
 	ctx := context.Background()
 
 	username := "username"
@@ -50,6 +54,8 @@ func TestCheckUsernameExists(t *testing.T) {
 }
 
 func TestGetAccountByPrefix(t *testing.T) {
+	setup()
+	defer teardown()
 	ctx := context.Background()
 
 	prefix := "tst"
@@ -76,6 +82,8 @@ func TestGetAccountByPrefix(t *testing.T) {
 }
 
 func TestGetAccountByUsername(t *testing.T) {
+	setup()
+	defer teardown()
 	ctx := context.Background()
 
 	username := "username"
@@ -102,6 +110,8 @@ func TestGetAccountByUsername(t *testing.T) {
 }
 
 func TestUpdateAccountStatusByUsername(t *testing.T) {
+	setup()
+	defer teardown()
 	ctx := context.Background()
 
 	username := "username"

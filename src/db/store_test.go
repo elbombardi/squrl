@@ -27,15 +27,23 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 
-	dbSchemaDir := "file://./migration"
-	_, err = MigrateIfNeeded(dbSchemaDir)
-	if err != nil {
-		panic(err)
-	}
 	code := m.Run()
-	err = DropAll(dbSchemaDir)
+
+	os.Exit(code)
+}
+
+func setup() {
+	dbSchemaDir := "file://./migration"
+	_, err := MigrateIfNeeded(dbSchemaDir)
 	if err != nil {
 		panic(err)
 	}
-	os.Exit(code)
+}
+
+func teardown() {
+	dbSchemaDir := "file://./migration"
+	err := DropAll(dbSchemaDir)
+	if err != nil {
+		panic(err)
+	}
 }

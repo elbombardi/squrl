@@ -11,6 +11,8 @@ import (
 // (ctx context.Context, arg UpdateLinkTrackingStatusParams) error
 
 func TestCheckShortUrlKeyExists(t *testing.T) {
+	setup()
+	defer teardown()
 	ctx := context.Background()
 
 	exists, err := testStore.CheckShortUrlKeyExists(ctx, CheckShortUrlKeyExistsParams{
@@ -44,6 +46,8 @@ func TestCheckShortUrlKeyExists(t *testing.T) {
 }
 
 func TestGetLinkByAccountIDAndShortURLKey(t *testing.T) {
+	setup()
+	defer teardown()
 	ctx := context.Background()
 
 	link, err := testStore.GetLinkByAccountIDAndShortURLKey(ctx, GetLinkByAccountIDAndShortURLKeyParams{
@@ -84,6 +88,8 @@ func TestGetLinkByAccountIDAndShortURLKey(t *testing.T) {
 }
 
 func TestUpdateLinkLongURL(t *testing.T) {
+	setup()
+	defer teardown()
 	ctx := context.Background()
 
 	err := testStore.InsertNewAccount(ctx, InsertNewAccountParams{
@@ -119,6 +125,8 @@ func TestUpdateLinkLongURL(t *testing.T) {
 }
 
 func TestUpdateLinkTrackingStatus(t *testing.T) {
+	setup()
+	defer teardown()
 	ctx := context.Background()
 
 	err := testStore.InsertNewAccount(ctx, InsertNewAccountParams{
@@ -154,6 +162,8 @@ func TestUpdateLinkTrackingStatus(t *testing.T) {
 }
 
 func TestUpdateLinkStatus(t *testing.T) {
+	setup()
+	defer teardown()
 	ctx := context.Background()
 
 	err := testStore.InsertNewAccount(ctx, InsertNewAccountParams{
