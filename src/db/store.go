@@ -114,13 +114,31 @@ func MigrateIfNeeded(schemaURL string) (bool, error) {
 	err = m.Up()
 	if err != nil {
 		if err != migrate.ErrNoChange {
-			return false, fmt.Errorf("Error executing db migrations (%v)", err)
+			return false, fmt.Errorf("error executing db migrations (%v)", err)
 		}
 		// No Changes
 		return false, nil
 	}
+
 	// Migration successful
 	return true, nil
+}
+
+// DropAll drops all tables in the database
+// schemaURL is the path to the directory containing the migration files
+// e.g. file://../db/migration
+//
+// Returns an error if the drop failed
+func DropAll(schemaURL string) error {
+	driver, err := postgres.WithInstance(dbInstance, &postgres.Config{})
+	m, err := migrate.NewWithDatabaseInstance(
+		schemaURL,
+		"postgres", driver)
+	if err != nil {
+		return fmt.Errorf("error dropping database (%v)", err)
+	}
+	err = m.Down()
+	return err
 }
 
 func Finalize() error {
