@@ -40,6 +40,7 @@ type Store interface {
 	AccountRepository
 	LinkRepository
 	ClickRepository
+	Transactional(ctx context.Context, fn func(queries *Queries) error) error
 }
 
 type SQLStore struct {
@@ -148,8 +149,8 @@ func Finalize() error {
 	return dbInstance.Close()
 }
 
-func Transactional(ctx context.Context, db *sql.DB, fn func(queries *Queries) error) error {
-	tx, err := db.BeginTx(ctx, nil)
+func (store *SQLStore) Transactional(ctx context.Context, fn func(queries *Queries) error) error {
+	tx, err := store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}

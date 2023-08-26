@@ -1,8 +1,11 @@
 package db
 
 import (
+	"context"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 const (
@@ -47,4 +50,19 @@ func teardown() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func TestTransactional(t *testing.T) {
+	setup()
+	defer teardown()
+	ctx := context.Background()
+	err := testStore.Transactional(ctx, func(queries *Queries) error {
+		return testStore.InsertNewAccount(ctx, InsertNewAccountParams{
+			Prefix:         "tst",
+			Username:       "username",
+			Email:          "email@gmail.com",
+			HashedPassword: "$2a$1",
+		})
+	})
+	require.NoError(t, err, "Error should be nil")
 }
