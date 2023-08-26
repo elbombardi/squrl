@@ -22,14 +22,13 @@ func TestMain(m *testing.M) {
 		MaxIdleTime:    1,
 		MaxLifeTime:    1,
 	})
-
 	if err != nil {
 		panic(err)
 	}
 
 	code := m.Run()
 
-	testStore.DB.Close()
+	Finalize()
 
 	os.Exit(code)
 }
