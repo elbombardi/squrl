@@ -17,8 +17,8 @@ func TestMain(m *testing.M) {
 	testStore, err = GetStoreInstance(DBConf{
 		DriverName:     dbDriver,
 		DataSourceName: dbSource,
-		MaxIdleConns:   1,
-		MaxOpenConns:   20,
+		MaxIdleConns:   10,
+		MaxOpenConns:   30,
 		MaxIdleTime:    1,
 		MaxLifeTime:    1,
 	})
