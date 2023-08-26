@@ -17,10 +17,10 @@ func TestMain(m *testing.M) {
 	testStore, err = GetStoreInstance(DBConf{
 		DriverName:     dbDriver,
 		DataSourceName: dbSource,
-		MaxIdleConns:   10,
-		MaxOpenConns:   10,
-		MaxIdleTime:    10,
-		MaxLifeTime:    10,
+		MaxIdleConns:   1,
+		MaxOpenConns:   20,
+		MaxIdleTime:    1,
+		MaxLifeTime:    1,
 	})
 
 	if err != nil {
@@ -28,6 +28,8 @@ func TestMain(m *testing.M) {
 	}
 
 	code := m.Run()
+
+	testStore.DB.Close()
 
 	os.Exit(code)
 }

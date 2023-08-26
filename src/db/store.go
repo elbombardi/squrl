@@ -138,7 +138,6 @@ func DropAll(schemaURL string) error {
 		return fmt.Errorf("error dropping database (%v)", err)
 	}
 	err = m.Down()
-	fmt.Println("Dropped all tables", err)
 	return err
 }
 
