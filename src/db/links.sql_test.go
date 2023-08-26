@@ -55,7 +55,7 @@ func TestGetLinkByAccountIDAndShortURLKey(t *testing.T) {
 		ShortUrlKey: sql.NullString{String: "test", Valid: true},
 	})
 	require.Error(t, err, "Error should not be nil")
-	require.EqualError(t, err, "sql: no rows in result set", "Error should be sql: no rows in result set")
+	require.Equal(t, sql.ErrNoRows, err, "Error should be sql.ErrNoRows")
 	require.Equal(t, Link{}, link, "Link should be empty")
 
 	err = testStore.InsertNewAccount(ctx, InsertNewAccountParams{

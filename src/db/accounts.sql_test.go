@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -61,7 +62,7 @@ func TestGetAccountByPrefix(t *testing.T) {
 	prefix := "tst"
 	account, err := testStore.GetAccountByPrefix(ctx, prefix)
 	require.Error(t, err, "Error should not be nil")
-	require.EqualError(t, err, "sql: no rows in result set", "Error should be sql: no rows in result set")
+	require.Equal(t, sql.ErrNoRows, err, "Error should be sql.ErrNoRows")
 	require.Equal(t, Account{}, account, "Account should be empty")
 
 	err = testStore.InsertNewAccount(ctx, InsertNewAccountParams{
@@ -89,7 +90,7 @@ func TestGetAccountByUsername(t *testing.T) {
 	username := "username"
 	account, err := testStore.GetAccountByUsername(ctx, username)
 	require.Error(t, err, "Error should not be nil")
-	require.EqualError(t, err, "sql: no rows in result set", "Error should be sql: no rows in result set")
+	require.Equal(t, sql.ErrNoRows, err, "Error should be sql.ErrNoRows")
 	require.Equal(t, Account{}, account, "Account should be empty")
 
 	err = testStore.InsertNewAccount(ctx, InsertNewAccountParams{
@@ -117,7 +118,7 @@ func TestUpdateAccountStatusByUsername(t *testing.T) {
 	username := "username"
 	account, err := testStore.GetAccountByUsername(ctx, username)
 	require.Error(t, err, "Error should not be nil")
-	require.EqualError(t, err, "sql: no rows in result set", "Error should be sql: no rows in result set")
+	require.Equal(t, sql.ErrNoRows, err, "Error should be sql.ErrNoRows")
 	require.Equal(t, Account{}, account, "Account should be empty")
 
 	err = testStore.InsertNewAccount(ctx, InsertNewAccountParams{
