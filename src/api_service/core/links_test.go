@@ -7,18 +7,19 @@ import (
 
 	"github.com/elbombardi/squrl/src/api_service/util"
 	"github.com/elbombardi/squrl/src/db"
+	mock_db "github.com/elbombardi/squrl/src/db/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
 func setupLinksService() (
 	*LinksService,
-	*db.MockAccountRepository,
-	*db.MockLinkRepository,
+	*mock_db.MockAccountRepository,
+	*mock_db.MockLinkRepository,
 	*util.Config,
 ) {
-	accountRepo := new(db.MockAccountRepository)
-	linkRepo := new(db.MockLinkRepository)
+	accountRepo := new(mock_db.MockAccountRepository)
+	linkRepo := new(mock_db.MockLinkRepository)
 	config := util.MockConfig()
 	return &LinksService{
 			AccountRepository: accountRepo,

@@ -10,16 +10,17 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/elbombardi/squrl/src/api_service/util"
 	"github.com/elbombardi/squrl/src/db"
+	db_mocks "github.com/elbombardi/squrl/src/db/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
 func setupAuthService() (
 	*AuthenticationService,
-	*db.MockAccountRepository,
+	*db_mocks.MockAccountRepository,
 	*util.Config,
 ) {
-	accountRepo := new(db.MockAccountRepository)
+	accountRepo := new(db_mocks.MockAccountRepository)
 	config := util.MockConfig()
 	return &AuthenticationService{
 			AccountRepository: accountRepo,
