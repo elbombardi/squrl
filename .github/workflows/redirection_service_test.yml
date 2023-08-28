@@ -1,19 +1,16 @@
 # This workflow will build a golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 
-name: db_build
+name: redirection_service_build
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - src/db/**
-
   pull_request:
     branches: [ "main" ]
     paths:
-      - src/db/**
-
+      - .github/workflows/**
+      - src/redirection_service/**
+      - src/db/**   
+      
 jobs:
 
   build:
@@ -27,26 +24,11 @@ jobs:
         go-version: '1.21'
 
     - name: Build
-      run: go build -v ./src/db/...
-
+      run: go build -v ./src/redirection_service/...
+  
   test:
     needs: build
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_DB: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-          
     steps:
     - uses: actions/checkout@v3
 
@@ -56,9 +38,9 @@ jobs:
         go-version: '1.21'
 
     - name: Test
-      run: go test --coverprofile cover.out ./src/db/...
+      run: go test --coverprofile cover.out ./src/redirection_service/...
     
-    - name: Coverage report
+    - name: Detailed coverage report
       run: go tool cover --func=cover.out
 
     - name: Quality Gate - Test coverage shall be above threshold
@@ -74,3 +56,11 @@ jobs:
           echo "[KO] Total coverage is below threshold ($COVERAGE_THRESHOLD > $totalCoverage)"
           exit 1
         fi
+
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file src/redirection_service/Dockerfile --tag squrl_redirection_service:$(date +%s)
