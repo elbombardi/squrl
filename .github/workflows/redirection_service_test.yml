@@ -53,7 +53,7 @@ jobs:
           exit 1
         fi
 
-  docker:
+  docker_redirection_service:
     needs: test_redirection_service
     runs-on: ubuntu-latest
     steps:
