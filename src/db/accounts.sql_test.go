@@ -122,7 +122,7 @@ func TestUpdateAccountStatusByUsername(t *testing.T) {
 	require.Equal(t, Account{}, account, "Account should be empty")
 
 	err = testStore.InsertNewAccount(ctx, InsertNewAccountParams{
-		Prefix:         "tst",
+		Prefix:         "tdst",
 		Username:       username,
 		Email:          "email@gmail.com",
 		HashedPassword: "$2a$1",
