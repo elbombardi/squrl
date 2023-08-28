@@ -1,9 +1,9 @@
 <p align="center">
-    <a href="../../actions/workflows/db_build.yml"><img src="../../actions/workflows/db_build.yml/badge.svg" alt="" style="max-width: 100%;"></a>
+    <a href="../../actions/workflows/db_test.yml"><img src="../../actions/workflows/db_test.yml/badge.svg" alt="" style="max-width: 100%;"></a>
     <br/>
-    <a href="../../actions/workflows/api_service_build.yml"><img src="../../actions/workflows/api_service_build.yml/badge.svg" alt="" style="max-width: 100%;"></a>
+    <a href="../../actions/workflows/api_service_test.yml"><img src="../../actions/workflows/api_service_test.yml/badge.svg" alt="" style="max-width: 100%;"></a>
     <br/>
-     <a href="../../actions/workflows/redirection_service_build.yml"><img src="../../actions/workflows/redirection_service_build.yml/badge.svg" alt="" style="max-width: 100%;"></a>
+     <a href="../../actions/workflows/redirection_service_test.yml"><img src="../../actions/workflows/redirection_service_test.yml/badge.svg" alt="" style="max-width: 100%;"></a>
 </p>
 
 # URL Shortner Application
