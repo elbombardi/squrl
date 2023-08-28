@@ -6,10 +6,6 @@ name: redirection_service_test
 on:
   pull_request:
     branches: [ "main" ]
-    paths:
-      - .github/workflows/**
-      - src/redirection_service/**
-      - src/db/**   
 
 jobs:
 

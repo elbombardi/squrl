@@ -6,9 +6,6 @@ name: db_test
 on:
   pull_request:
     branches: [ "main" ]
-    paths:
-      - .github/workflows/**
-      - src/db/**
 
 jobs:
 
