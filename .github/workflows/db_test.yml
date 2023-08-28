@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  build_db_test:
+  build_db:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -22,8 +22,8 @@ jobs:
     - name: Build
       run: go build -v ./src/db/...
 
-  test_db_test:
-    needs: build_db_test
+  test_db:
+    needs: build_db
     runs-on: ubuntu-latest
     services:
       postgres:
