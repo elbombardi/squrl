@@ -4,7 +4,7 @@
 FROM golang:1.21.0-alpine3.18 AS builder
 WORKDIR /app
 COPY . .
-RUN pi_service /app/src/api_service/cmd
+RUN go build -o api_service /app/src/api_service/cmd
 
 # Run stage
 FROM alpine:3.18
