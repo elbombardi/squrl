@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  build:
+  build_redirection_service:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -22,8 +22,8 @@ jobs:
     - name: Build
       run: go build -v ./src/redirection_service/...
   
-  test:
-    needs: build
+  test_redirection_service:
+    needs: build_redirection_service
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
         fi
 
   docker:
-    needs: test
+    needs: test_redirection_service
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
