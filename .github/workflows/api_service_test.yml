@@ -4,17 +4,10 @@
 name: api_service_build
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - .github/workflows/api_service_build.yml
-      - src/api_service/**
-      - src/db/**
-
   pull_request:
     branches: [ "main" ]
     paths:
-      - .github/workflows/api_service_build.yml
+      - .github/workflows/**
       - src/api_service/**
       - src/db/**
 
@@ -72,47 +65,3 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file src/api_service/Dockerfile --tag squrl_api_service:$(date +%s)
 
-  deploy:
-    needs: docker
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Checkout repo
-      uses: actions/checkout@v3
-
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1 
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-    
-    - name: Build, tag, and push image to Amazon ECR (tag=github.sha)
-      id: build-image-tag
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: squrl_api_service
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
-        docker build --file src/api_service/Dockerfile --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-    
-    - name: Build, tag, and push image to Amazon ECR (tag=latest)
-      id: build-image-latest
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: squrl_api_service
-        IMAGE_TAG: latest
-      run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
-        docker build --file src/api_service/Dockerfile --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
