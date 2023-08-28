@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  build:
+  build_api_service:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -22,8 +22,8 @@ jobs:
     - name: Build
       run: go build -v ./src/api_service/...
 
-  test:
-    needs: build
+  test_api_service:
+    needs: build_api_service
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -53,8 +53,8 @@ jobs:
           exit 1
         fi
 
-  docker:
-    needs: test
+  docker_api_service:
+    needs: test_api_service
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
