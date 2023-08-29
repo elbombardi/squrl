@@ -1,5 +1,15 @@
-- Tests: add unit testing to the db layer
-- Tests: add end to end testing 
-- Monitoring: add prometheus support
-- CICD: Push docker to ghcr.io
-- CICD : Github action to deploy on AWS Fargate (cloudformation)   
+(done)    Authentication login 
+(done)    Authorization with jwt
+(done)    Logs
+(done)    Tests
+(done)    Dockerization
+(done)    Continuous integration using Github actions (build & test & coverage gate)
+(done)    Continuous deployment to ECR using Github actions (build & push docker image)
+----------------------------------------
+    Deploy database in RDS
+    Add Kubernetes support
+    Github actions to deploy to EKS
+    Add Monitoring, metrics and tracing
+    End to end tests
+    Benchmarking tests
+    
