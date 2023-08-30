@@ -5,8 +5,8 @@
 (done)    Dockerization
 (done)    Continuous integration using Github actions (build & test & coverage gate)
 (done)    Continuous deployment to ECR using Github actions (build & push docker image)
+(done)    Deploy database to the cloud (RDS or other)
 ----------------------------------------
-    Deploy database in RDS
     Add Kubernetes support
     Github actions to deploy to EKS
     Add Monitoring, metrics and tracing

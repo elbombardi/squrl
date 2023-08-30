@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: squrl-api-service-configmap
+  labels:
+    app: squrl-api-service
+data:
+  DB_SOURCE: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
+  ENV: Minikube
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: squrl-api-service-deployment
+  labels:
+    app: squrl-api-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: squrl-api-service
+  template:
+    metadata:
+      labels:
+        app: squrl-api-service
+    spec:
+      containers:
+      - name: squrl-api-service
+        image: docker.io/library/squrl-api-service:latest
+        imagePullPolicy: Never
+        env:
+            - name: DB_SOURCE
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_SOURCE
+                  name: squrl-api-service-configmap
+            - name: ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: ENV
+                  name: squrl-api-service-configmap
+        ports:
+        - containerPort: 8080

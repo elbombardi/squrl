@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: squrl-redirection-service-deployment
+  labels:
+    app: squrl-redirection-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: squrl-redirection-service
+  template:
+    metadata:
+      labels:
+        app: squrl-redirection-service
+    spec:
+      containers:
+      - name: squrl-redirection-service
+        image: docker.io/library/squrl-redirection-service:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8085
