@@ -1,7 +1,9 @@
 package routes
 
 import (
+	"log/slog"
 	"net/http"
+	"strings"
 
 	"github.com/elbombardi/squrl/src/redirection_service/core"
 	"github.com/gofiber/fiber/v2"
@@ -9,8 +11,13 @@ import (
 
 // Route that handles redirections requests (GET "/:account_prefix/:short_url_key")
 func (r *Routes) RedirectRoute(c *fiber.Ctx) error {
-	accountPrefix := c.Params("account_prefix")
-	shortURLKey := c.Params("short_url_key")
+	params := strings.Split(string(c.Context().Path()), "/")
+	if len(params) != 3 {
+		return page404(c)
+	}
+	accountPrefix := params[1]
+	shortURLKey := params[2]
+	slog.Debug("Redirection requst received", "accountPrefix", accountPrefix, "shortURLKey", shortURLKey)
 
 	link, err := r.LinksManager.Resolve(&core.ResolveLinkParams{
 		ShortUrl:      c.Request().URI().String(),

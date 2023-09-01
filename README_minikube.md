@@ -7,9 +7,15 @@
 minikube start --static-ip=192.168.200.200
 ```
 
-* Add the following line to your /etc/hosts file : 
+* Add the following lines to your /etc/hosts file : 
 ```
-192.168.200.200 minikube
+192.168.200.200 squrl.local
+192.168.200.200 api.squrl.local
+```
+
+* Enable the ingress addon : 
+```bash
+minikube addons enable ingress
 ```
 
 * Point your shell to minikube's docker-daemon: 
@@ -24,18 +30,18 @@ make docker-build
 
 ## 2. Apply the manifests with kubectl
 ```bash
-kubectl apply -f kubernetes/local
+kubectl apply -f kubernetes/minikube
 ```
 
 ## 3. Check the status of the pods and services
 ```bash
-kubectl get all
+kubectl get all 
 ```
 
 ## 4. See the logs of the pods
 * For the API service : 
 ```bash
-kubectl logs -f deployment.apps/squrl-api-deployment
+kubectl logs  -f deployment.apps/squrl-api-deployment
 ```
 
 * For the redirection service :
@@ -46,21 +52,21 @@ kubectl logs -f deployment.apps/squrl-redirection-deployment
 ## 5. Connect to the database with dbeaver
 * Download dbeaver : https://dbeaver.io/download/
 * Connect to the database with the following parameters : 
-    * Host : minikube
+    * Host : squrl.local
     * Port : 30001
     * Database : postgres
     * User : postgres
     * Password : postgres
 
 ## 5. Test the application
-Use the API server : http://minikube:30000/v1/docs
+Use the API server : http://api.squrl.local/v1/docs
 
 Note : the admin password is : **admin**
 
 ## 6 Reapply the manifests
 If you want to reapply the manifests, you can use the following command : 
 ```bash
-kubectl apply -f kubernetes/local --force
+kubectl apply -f kubernetes/minikube --force
 ```
 
 ## 7. Cleanup

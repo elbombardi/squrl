@@ -1,28 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: squrl-redirection-deployment
+  name: squrl-api-deployment
   labels:
-    app: squrl-redirection
+    app: squrl-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: squrl-redirection
+      app: squrl-api
   template:
     metadata:
       labels:
-        app: squrl-redirection
+        app: squrl-api
     spec:
       containers:
-      - name: squrl-redirection
-        image: docker.io/library/squrl-redirection-service:latest
+      - name: squrl-api
+        image: docker.io/library/squrl-api-service:latest
         imagePullPolicy: Never
         env:
           - name: DB_SOURCE
             value: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
           - name: ENVIRONMENT
             value: minikube
+          - name: REDIRECTION_SERVER_BASE_URL
+            value: http://squrl.local
+          - name: ADMIN_PASSWORD
+            value: admin
 
         ports:
         - containerPort: 8080
@@ -30,16 +34,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: squrl-redirection-service
+  name: squrl-api-service
   labels:
-    app: squrl-redirection
+    app: squrl-api
 spec:
   selector:
-    app: squrl-redirection
-  type: LoadBalancer
+    app: squrl-api
   ports:
     - protocol: TCP
-      port: 8085
+      port: 8080
       targetPort: 8080
-      nodePort: 30005
-    
