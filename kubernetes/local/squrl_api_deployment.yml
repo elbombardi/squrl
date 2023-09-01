@@ -1,43 +1,46 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: squrl-api-service-configmap
-  labels:
-    app: squrl-api-service
-data:
-  DB_SOURCE: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
-  ENV: Minikube
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: squrl-api-service-deployment
+  name: squrl-api-deployment
   labels:
-    app: squrl-api-service
+    app: squrl-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: squrl-api-service
+      app: squrl-api
   template:
     metadata:
       labels:
-        app: squrl-api-service
+        app: squrl-api
     spec:
       containers:
-      - name: squrl-api-service
+      - name: squrl-api
         image: docker.io/library/squrl-api-service:latest
         imagePullPolicy: Never
         env:
-            - name: DB_SOURCE
-              valueFrom:
-                configMapKeyRef:
-                  key: DB_SOURCE
-                  name: squrl-api-service-configmap
-            - name: ENV
-              valueFrom:
-                configMapKeyRef:
-                  key: ENV
-                  name: squrl-api-service-configmap
+          - name: DB_SOURCE
+            value: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
+          - name: ENVIRONMENT
+            value: minikube
+          - name: REDIRECTION_SERVER_BASE_URL
+            value: http://minikube:30005
+
         ports:
         - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: squrl-api-service
+  labels:
+    app: squrl-api
+spec:
+  selector:
+    app: squrl-api
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000
