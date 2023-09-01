@@ -22,15 +22,6 @@ spec:
     requests:
       storage: 2Gi
   volumeName: postgres-volume
-# ---
-# apiVersion: v1
-# kind: Secret
-# metadata:
-#   name: postgres-secret
-# type: Opaque
-# data:
-#   POSTGRES_USER: cG9zdGdyZXM=     # printf postgres | base64
-#   POSTGRES_PASSWORD: cGFzc3dvcmQ= # printf password | base64
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -48,6 +39,7 @@ spec:
   serviceName: postgres
   template:
     metadata:
+  
       labels:
         app: postgres
         role: service
@@ -60,16 +52,8 @@ spec:
               value: trust
             - name: POSTGRES_USER
               value: postgres
-              # valueFrom:
-              #   secretKeyRef:
-              #     key: POSTGRES_USER
-              #     name: postgres-secret
             - name: POSTGRES_PASSWORD
               value: postgres
-              # valueFrom:
-              #   secretKeyRef:
-              #     key: POSTGRES_PASSWORD
-              #     name: postgres-secret
           ports:
             - containerPort: 5432
               name: postgres

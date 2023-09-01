@@ -5,7 +5,7 @@ install_sqlc:
 	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 
 run_postgres:
-	docker run -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -p 5433:5432  postgres
+	docker run -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -p 5432:5432  postgres
 
 run_frontend_server:
 	go run ./src/frontend --port 8081 --host localhost

@@ -35,11 +35,24 @@ func setup() *Helper {
 		Config:       s.config,
 	}
 	s.app = fiber.New()
-	s.app.Get("/:account_prefix/:short_url_key", routes.RedirectRoute)
+	s.app.Get("/*", routes.RedirectRoute)
 	go func() {
 		s.app.Listen(":3000")
 	}()
 	return s
+}
+
+func TestRedirectionMalformedUrl(t *testing.T) {
+	s := setup()
+
+	s.linksManager.On("Resolve", mock.Anything).Return(&core.Link{}, core.CoreError{Code: core.ErrAccountNotFound})
+
+	req := httptest.NewRequest("GET", "/acc", nil)
+	res, err := s.app.Test(req)
+
+	require.NoError(t, err, "Error while testing the redirection route")
+	defer res.Body.Close()
+	require.Equal(t, 404, res.StatusCode, "Status code should be 404")
 }
 
 func TestRedirectionAccountNotFound(t *testing.T) {
