@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx
+spec: 
+  controller: k8s.io/ingress-nginx
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: squrl-ingress
+  # annotations:
+  #   nginx.ingress.kubernetes.io/rewrite-target: /
+
+spec: 
+  ingressClassName: nginx
+  rules:
+  - host: api.squr.li 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: squrl-api-service
+            port: 
+              number: 8080
+
+  - host: squr.li
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: squrl-redirection-service
+            port: 
+              number: 8080

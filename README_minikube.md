@@ -30,7 +30,7 @@ make docker-build
 
 ## 2. Apply the manifests with kubectl
 ```bash
-kubectl apply -f kubernetes/minikube
+kubectl apply -f deployments/minikube
 ```
 
 ## 3. Check the status of the pods and services
@@ -66,7 +66,7 @@ Note : the admin password is : **admin**
 ## 6 Reapply the manifests
 If you want to reapply the manifests, you can use the following command : 
 ```bash
-kubectl apply -f kubernetes/minikube --force
+kubectl apply -f deployments/minikube --force
 ```
 
 ## 7. Cleanup

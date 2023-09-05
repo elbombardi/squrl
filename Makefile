@@ -31,10 +31,10 @@ docker_clean:
 compose:
 	make compose_down
 	docker-compose up --build 
+	cd ../..
 
 compose_down:
 	docker-compose down
-
 
 .PHONY: swagger_install swagger_validate swagger_generate_orders_server swagger_generate_validation_server swagger_generate_documentation
 

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: squrl-config
+data:
+  ENVIRONMENT: eks
+  REDIRECTION_SERVER_BASE_URL: https://squr.li
+  LOG_LEVEL: info
+  

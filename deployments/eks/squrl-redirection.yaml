@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: squrl-redirection-deployment
+  labels:
+    app: squrl-redirection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: squrl-redirection
+  template:
+    metadata:
+      labels:
+        app: squrl-redirection
+    spec:
+      containers:
+      - name: squrl-redirection
+        image: 589393935197.dkr.ecr.us-east-1.amazonaws.com/squrl_redirection_service:dev
+        imagePullPolicy: Always
+        env:
+          - name: DB_SOURCE
+            valueFrom:
+              secretKeyRef:
+                name: squrl-secret
+                key: DB_SOURCE
+          - name: ENVIRONMENT
+            valueFrom:
+              configMapKeyRef:
+                name: squrl-config
+                key: ENVIRONMENT
+          - name: LOG_LEVEL
+            valueFrom:
+              configMapKeyRef:
+                name: squrl-config
+                key: LOG_LEVEL
+
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: squrl-redirection-service
+  labels:
+    app: squrl-redirection
+spec:
+  selector:
+    app: squrl-redirection
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+    

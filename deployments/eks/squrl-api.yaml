@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: squrl-api-deployment
+  labels:
+    app: squrl-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: squrl-api
+  template:
+    metadata:
+      labels:
+        app: squrl-api
+    spec:
+      containers:
+      - name: squrl-api
+        image: 589393935197.dkr.ecr.us-east-1.amazonaws.com/squrl_api_service:dev
+        env:
+          - name: DB_SOURCE
+            valueFrom:
+              secretKeyRef:
+                name: squrl-secret
+                key: DB_SOURCE
+          - name: ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: squrl-secret
+                key: ADMIN_PASSWORD
+          - name: TOKEN_SYMMETRIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: squrl-secret
+                key: TOKEN_SYMMETRIC_KEY
+          - name: ENVIRONMENT
+            valueFrom:
+              configMapKeyRef:
+                name: squrl-config
+                key: ENVIRONMENT
+          - name: REDIRECTION_SERVER_BASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: squrl-config
+                key: REDIRECTION_SERVER_BASE_URL
+          - name: LOG_LEVEL
+            valueFrom:
+              configMapKeyRef:
+                name: squrl-config
+                key: LOG_LEVEL
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: squrl-api-service
+  labels:
+    app: squrl-api
+spec:
+  selector:
+    app: squrl-api
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+
